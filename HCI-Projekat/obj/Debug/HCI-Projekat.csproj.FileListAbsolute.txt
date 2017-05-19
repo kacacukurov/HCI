@@ -75,3 +75,6 @@ C:\Users\PC-PC\Desktop\Projekat - HCI\HCI-Projekat\HCI-Projekat\obj\Debug\MainWi
 C:\Users\PC-PC\Desktop\Projekat - HCI\HCI-Projekat\HCI-Projekat\obj\Debug\HCI-Projekat.g.resources
 C:\Users\PC-PC\Desktop\Projekat - HCI\HCI-Projekat\HCI-Projekat\obj\Debug\HCI_Projekat.Properties.Resources.resources
 C:\Users\PC-PC\Desktop\Projekat - HCI\HCI-Projekat\HCI-Projekat\obj\Debug\HCI-Projekat.csproj.GenerateResource.Cache
+C:\Users\PC-PC\Desktop\HCI\HCI-Projekat\bin\Debug\HCI-Projekat.exe.config
+C:\Users\PC-PC\Desktop\HCI\HCI-Projekat\obj\Debug\HCI-Projekat.exe
+C:\Users\PC-PC\Desktop\HCI\HCI-Projekat\obj\Debug\HCI-Projekat.pdb

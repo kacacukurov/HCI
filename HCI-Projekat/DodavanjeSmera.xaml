@@ -10,34 +10,55 @@
     <Window.Resources>
         <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
         <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
+        <RoutedUICommand x:Key="otvoriDatum" Text="otvoriDatum"></RoutedUICommand>
     </Window.Resources>
 
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource odustani}" Executed="exitClickSmer"></CommandBinding>
         <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClickSmer"></CommandBinding>
+        <CommandBinding Command="{StaticResource otvoriDatum}" Executed="otvoriDatum"></CommandBinding>
     </Window.CommandBindings>
 
     <Window.InputBindings>
         <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+        <KeyBinding Key="Down" Modifiers="" Command="{StaticResource otvoriDatum}"></KeyBinding>
     </Window.InputBindings>
 
     <Grid>
         <DockPanel>
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlSmer">
                 <TabItem Header="Korak 1" Name="Korak1Smer" HorizontalAlignment="Center">
-                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
-                        <Button Width="60" Height="20" Content="Odustani" Click="exitClickSmer" Name="quitButtonTab" HorizontalAlignment="Right" Margin="0,0,80,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                        <Button Width="60" Height="20" Content="Završi" Click="finishClickSmer" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                    </StackPanel>
+                    <Grid>
+                        <TextBlock Text="Oznaka" HorizontalAlignment="Center" Margin="-60,20,0,0"/>
+                        <TextBox Name="OznakaSmera" Width="60" Height="20" Margin="60,20,0,0" VerticalAlignment="Top"/>
+
+                        <TextBlock Text="Naziv" HorizontalAlignment="Center" Margin="-55,60,0,0"/>
+                        <TextBox Name="NazivSmera" Width="60" Height="20" Margin="60, 60,0,0" VerticalAlignment="Top"  KeyDown="otvori"/>
+
+                        <TextBlock Text="Datum uvodjenja smera" HorizontalAlignment="Center" Margin="-150,100,0,0"/>
+                        <DatePicker Name="DatumUvodjenja" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="100" Margin="100,100,0,0" FirstDayOfWeek="Monday" AllowDrop="True"/>
+
+                        <TextBlock Text="Opis" HorizontalAlignment="Center" Margin="-55,140,0,0"/>
+                        <TextBox Name="OpisSmera" Width="150" Height="80" Margin="150,140,0,0" VerticalAlignment="Top" KeyDown="otvoriUnazad"/>
+
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
+                            <Button Width="60" Height="20" Content="Odustani"  Click="exitClickSmer" Name="quitButtonTab" HorizontalAlignment="Right" Margin="0,0,80,0">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Završi" Click="finishClickSmer" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                        </StackPanel>
+                        
+                    </Grid>
+                    <TabItem.InputBindings>
+                        <KeyBinding Key="Down" Modifiers="" Command="{StaticResource otvoriDatum}"></KeyBinding>
+                    </TabItem.InputBindings>
                 </TabItem>
             </TabControl>
         </DockPanel>

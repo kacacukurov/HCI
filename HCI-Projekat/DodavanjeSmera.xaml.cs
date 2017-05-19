@@ -34,5 +34,26 @@ namespace HCI_Projekat
             MessageBox.Show("Kraj");
             this.Close();
         }
+
+        private void otvoriDatum(object sender, RoutedEventArgs e)
+        {
+            DatumUvodjenja.IsDropDownOpen = true;
+        }
+
+        private void otvori(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Tab)
+            {
+                if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
+                    DatumUvodjenja.IsDropDownOpen = true;
+            }
+                
+        }
+
+        private void otvoriUnazad(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Tab && (Keyboard.Modifiers & ( ModifierKeys.Shift)) == ModifierKeys.Shift)
+                DatumUvodjenja.IsDropDownOpen = true;
+        }
     }
 }

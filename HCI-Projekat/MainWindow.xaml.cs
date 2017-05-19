@@ -20,10 +20,14 @@ namespace HCI_Projekat
     /// </summary>
     public partial class MainWindow : Window
     {
+        private RacunarskiCentar racunarskiCentar;
+
         public MainWindow()
         {
             InitializeComponent();
             KalendarTab.Focus();
+
+            racunarskiCentar = new RacunarskiCentar();
         }
 
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)

@@ -44,7 +44,7 @@ namespace HCI_Projekat
         string Opis
         {
             get { return opis; }
-            set { this.opsi = value; }
+            set { this.opis = value; }
         }
     }
 }

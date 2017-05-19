@@ -83,6 +83,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Predmet.cs" />
+    <Compile Include="RacunarskiCentar.cs" />
+    <Compile Include="Smer.cs" />
+    <Compile Include="Softver.cs" />
+    <Compile Include="Ucionica.cs" />
     <Page Include="DodavanjePredmeta.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

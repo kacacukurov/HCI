@@ -1,0 +1,45 @@
+﻿<Window x:Class="HCI_Projekat.DodavanjeSmera"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HCI_Projekat"
+        mc:Ignorable="d"
+        Title="Dodavanje smera" Height="500" Width="500">
+
+    <Window.Resources>
+        <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
+        <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource odustani}" Executed="exitClickSmer"></CommandBinding>
+        <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClickSmer"></CommandBinding>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+    </Window.InputBindings>
+
+    <Grid>
+        <DockPanel>
+            <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlSmer">
+                <TabItem Header="Korak 1" Name="Korak1Smer" HorizontalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
+                        <Button Width="60" Height="20" Content="Odustani" Click="exitClickSmer" Name="quitButtonTab" HorizontalAlignment="Right" Margin="0,0,80,0">
+                            <Button.InputBindings>
+                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                        <Button Width="60" Height="20" Content="Završi" Click="finishClickSmer" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
+                            <Button.InputBindings>
+                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</Window>

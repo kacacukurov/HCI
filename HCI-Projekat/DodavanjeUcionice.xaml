@@ -1,0 +1,71 @@
+﻿<Window x:Class="HCI_Projekat.DodavanjeUcionice"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HCI_Projekat"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Dodavanje učionice" Height="500" Width="500">
+
+    <Window.Resources>
+        <RoutedUICommand x:Key="sledeciKorak" Text="next"></RoutedUICommand>
+        <RoutedUICommand x:Key="prethodniKorak" Text="back"></RoutedUICommand>
+        <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
+        <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource sledeciKorak}" Executed="nextClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prethodniKorak}" Executed="backClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource odustani}" Executed="cancelClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClick"></CommandBinding>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
+        <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
+        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+    </Window.InputBindings>
+
+    <Grid>
+        <DockPanel>
+            <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlUcionica">
+                <TabItem Header="Korak 1" Name="Korak1Ucionica" HorizontalAlignment="Center">
+                    <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
+                        <Button Width="60" Height="20" Content="Sledeća &gt;" Click="nextClick" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0">
+                            <Button.InputBindings>
+                                <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                        <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab1" HorizontalAlignment="Right" Margin="0,-20,80,0">
+                            <Button.InputBindings>
+                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Korak 2" Name="Korak2Ucionica" HorizontalAlignment="Center">
+                    <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
+                        <Button Width="60" Height="20" Content="&lt; Nazad" Click="backClick" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0">
+                            <Button.InputBindings>
+                                <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                        <Button Width="60" Height="20" Content="Završi" Click="finishClick" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
+                            <Button.InputBindings>
+                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                        <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0">
+                            <Button.InputBindings>
+                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</Window>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,12 +22,15 @@ namespace HCI_Projekat
     {
         private Softver noviSoftver;
         private RacunarskiCentar racunarskiCentar;
+        private ObservableCollection<Softver> tabelaSoftvera;
 
-        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar)
+        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri)
         {
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
+            tabelaSoftvera = softveri;
             noviSoftver = new Softver();
+            oznakaSoftver.Focus();
         }
 
         private void nextClick(object sender, RoutedEventArgs e)
@@ -60,6 +64,7 @@ namespace HCI_Projekat
             noviSoftver.Proizvodjac = proizvodjacSoftver.Text;
             noviSoftver.Sajt = sajtSoftver.Text;
 
+            tabelaSoftvera.Add(noviSoftver);
             racunarskiCentar.DodajSoftver(noviSoftver);
             this.Close();
         }

@@ -22,11 +22,13 @@ namespace HCI_Projekat
     {
         private Predmet predmet;
         private RacunarskiCentar racunarskiCentar;
+        private ObservableCollection<Predmet> tabelaPredmeta;
 
-        public DodavanjePredmeta(RacunarskiCentar racunarskiCentar)
+        public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti)
         {
             predmet = new Predmet();
             this.racunarskiCentar = racunarskiCentar;
+            tabelaPredmeta = predmeti;
             
             InitializeComponent();
             ObservableCollection<string> listSmerovi = new ObservableCollection<string>();
@@ -90,9 +92,10 @@ namespace HCI_Projekat
                     predmet.OperativniSistem = Linux.Content.ToString();
                 else if ((bool)Svejedno.IsChecked)
                     predmet.OperativniSistem = Svejedno.Content.ToString();
-                predmet.Softver = racunarskiCentar.Softveri[SoftverPredmeta.Text];
-                racunarskiCentar.DodajPredmet(predmet);
+                predmet.Softver = SoftverPredmeta.Text;
 
+                tabelaPredmeta.Add(predmet);
+                racunarskiCentar.DodajPredmet(predmet);
                 this.Close();
             }
         }

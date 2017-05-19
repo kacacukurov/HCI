@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HCI_Projekat
 {
+    [Serializable]
     public class RacunarskiCentar
     {
         private Dictionary<string, Smer> smerovi;
@@ -48,7 +49,7 @@ namespace HCI_Projekat
             set { this.predmeti = value; }
         }
 
-        Dictionary<string, Ucionica> Ucionice
+        public Dictionary<string, Ucionica> Ucionice
         {
             get { return ucionice; }
             set { this.ucionice = value; }
@@ -71,6 +72,7 @@ namespace HCI_Projekat
             if (softveri.ContainsKey(noviSoftver.Oznaka))
                 return false;
             this.softveri.Add(noviSoftver.Oznaka, noviSoftver);
+            Console.WriteLine("Softvera: " + softveri.Count);
             return true;
         }
 
@@ -79,6 +81,7 @@ namespace HCI_Projekat
             if (ucionice.ContainsKey(novaUcionica.Oznaka))
                 return false;
             this.ucionice.Add(novaUcionica.Oznaka, novaUcionica);
+            Console.WriteLine("Ucionica: " + ucionice.Count);
             return true;
         }
     }

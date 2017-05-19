@@ -20,13 +20,13 @@ namespace HCI_Projekat
         private bool neophodnaTabla;
         private bool neophodnaPametnaTabla;
         private string operativniSistem;
-        private Softver softver;
+        private string softver;
 
         public Predmet() { }
 
         public Predmet(string oznaka, string naziv, Smer smer, string opis, int velicinaGrupe,
             int minDuzinaTermina, int brTermina, bool neophodanProjektor, bool neophodnaTabla, bool neophodnaPametnaTabla,
-            string operativniSistem, Softver softver)
+            string operativniSistem, string softver)
         {
             this.oznaka = oznaka;
             this.naziv = naziv;
@@ -108,7 +108,7 @@ namespace HCI_Projekat
             set { this.operativniSistem = value; }
         }
 
-        public Softver Softver
+        public string Softver
         {
             get { return softver; }
             set { this.softver = value; }

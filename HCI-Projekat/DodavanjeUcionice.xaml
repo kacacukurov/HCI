@@ -78,17 +78,18 @@
 
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="54,30,241,0" TextAlignment="Right" Text="Operativni sistem:" VerticalAlignment="Top" Width="97" />
                             <StackPanel Margin="183,31,53,299">
-                                <RadioButton HorizontalAlignment="Left" Content="Linux" Name="LinusOSUcionica" Width="72" Height="30" VerticalAlignment="Top" IsChecked="True"/>
+                                <RadioButton HorizontalAlignment="Left" Content="Linux" Name="LinuxOSUcionica" Width="72" Height="30" VerticalAlignment="Top" IsChecked="True"/>
                                 <RadioButton HorizontalAlignment="Left" Content="Windows" Name="WindowsOSUcionica" Width="72" Height="30" VerticalAlignment="Top"/>
                                 <RadioButton HorizontalAlignment="Left" Content="Windows i Linux" Name="WindowsAndLinusOSUcionica" Width="107" Height="30" VerticalAlignment="Top"/>
                             </StackPanel>
 
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="166,152,172,241" TextAlignment="Center" Text="Softver" Width="54" />
-                            <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="200" Width="390" Margin="0,180,0,0" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                            <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="200" Width="380" Margin="0,180,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="150"/>
-                                    <DataGridTextColumn Binding="{Binding Path = Verzija, FallbackValue='-'}" Header="Verzija" Width="150"/>
-                                    <DataGridCheckBoxColumn Binding="{Binding Path = Instalirano, FallbackValue='-'}" Header="Instalirano" Width="*"/>
+                                    <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100"/>
+                                    <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50"/>
+                                    <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="150"/>
+                                    <DataGridCheckBoxColumn Binding="{Binding Path = Instalirano, FallbackValue='-'}" Header="Potreban" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>

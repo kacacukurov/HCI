@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,11 +22,13 @@ namespace HCI_Projekat
     {
         private Smer smer;
         private RacunarskiCentar racunarskiCentar;
+        private ObservableCollection<Smer> tabelaSmerova;
 
-        public DodavanjeSmera(RacunarskiCentar racunarskiCentar)
+        public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi)
         {
             smer = new Smer();
             this.racunarskiCentar = racunarskiCentar;
+            tabelaSmerova = smerovi;
             InitializeComponent();
             OznakaSmera.Focus();
         }
@@ -43,6 +46,8 @@ namespace HCI_Projekat
                 smer.Oznaka = OznakaSmera.Text;
                 smer.Opis = OpisSmera.Text;
                 smer.Datum = DateTime.Parse(DatumUvodjenja.Text);
+
+                tabelaSmerova.Add(smer);
                 racunarskiCentar.DodajSmer(smer);
                 this.Close();
             }

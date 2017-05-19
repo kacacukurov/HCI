@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace HCI_Projekat
 {
-    public enum OSType
-    {
-        Linux, Windows, LinuxAndWindows
-    }
-
     [Serializable]
     public class Ucionica
     {
@@ -21,12 +16,15 @@ namespace HCI_Projekat
         private bool prisustvoTable;
         private bool prisustvoPametneTable;
         private string operativniSistem;
-        private Softver instaliraniSoftver;
+        private List<string> instaliraniSoftveri;
 
-        public Ucionica() { }
+        public Ucionica()
+        {
+            this.instaliraniSoftveri = new List<string>();
+        }
 
         public Ucionica(string oznaka, string opis, int brojRadnihMesta, bool prisustvoProjektora,
-            bool prisustvoTable, bool prisustvoPametneTable, string operativniSistem, Softver instaliraniSoftver)
+            bool prisustvoTable, bool prisustvoPametneTable, string operativniSistem, List<string> instaliraniSoftveri)
         {
             this.oznaka = oznaka;
             this.opis = opis;
@@ -35,7 +33,7 @@ namespace HCI_Projekat
             this.prisustvoTable = prisustvoTable;
             this.prisustvoPametneTable = prisustvoPametneTable;
             this.operativniSistem = operativniSistem;
-            this.instaliraniSoftver = instaliraniSoftver;
+            this.instaliraniSoftveri = instaliraniSoftveri;
         }
 
         public string Oznaka
@@ -71,7 +69,7 @@ namespace HCI_Projekat
         public bool PrisustvoPametneTable
         {
             get { return prisustvoPametneTable; }
-            set { this.PrisustvoPametneTable = value; }
+            set { this.prisustvoPametneTable = value; }
         }
 
         public string OperativniSistem
@@ -80,10 +78,10 @@ namespace HCI_Projekat
             set { this.operativniSistem = value; }
         }
 
-        public Softver InstaliraniSoftver
+        public List<string> InstaliraniSoftveri
         {
-            get { return instaliraniSoftver; }
-            set { this.instaliraniSoftver = value; }
+            get { return instaliraniSoftveri; }
+            set { this.instaliraniSoftveri = value; }
         }
     }
 }

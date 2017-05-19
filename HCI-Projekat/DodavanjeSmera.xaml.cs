@@ -61,14 +61,14 @@ namespace HCI_Projekat
             else if (NazivSmera.Text == "" || OznakaSmera.Text == "" || OpisSmera.Text == "" || DatumUvodjenja.Text == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
-                if (DatumUvodjenja.Text == "")
-                    DatumUvodjenja.Focus();
-                else if (OpisSmera.Text == "")
-                    OpisSmera.Focus();
-                else if (OznakaSmera.Text == "")
+                if (OznakaSmera.Text == "")
                     OznakaSmera.Focus();
                 else if (NazivSmera.Text == "")
                     NazivSmera.Focus();
+                else if (DatumUvodjenja.Text == "")
+                    DatumUvodjenja.Focus();
+                else if (OpisSmera.Text == "")
+                    OpisSmera.Focus();
                 return false;
             }
             return true;

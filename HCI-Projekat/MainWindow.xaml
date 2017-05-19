@@ -187,8 +187,55 @@
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl">
                 <TabItem Header="Kalendar" Name="KalendarTab"></TabItem>
                 <TabItem Header="Učionica" Name="UcionicaTab"></TabItem>
-                <TabItem Header="Predmet" Name="PredmetTab"></TabItem>
-                <TabItem Header="Smer" Name="SmerTab"></TabItem>
+                <TabItem Header="Predmet" Name="PredmetTab">
+                    <Grid>
+                        <DataGrid Name="tabelaPredmeta" VerticalAlignment="Top" HorizontalAlignment="Center" Height="200" Width="750" Margin="0,40,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100"/>
+                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50"/>
+                                <DataGridTextColumn Binding="{Binding Path = Smer.Oznaka, FallbackValue='-'}" Header="Smer" Width="50"/>
+                                <DataGridTextColumn Binding="{Binding Path = VelicinaGrupe , FallbackValue='-'}" Header="Vel. grupe" Width="70"/>
+                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Duz. termina" Width="80"/>
+                                <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Br. termina" Width="70"/>
+                                <DataGridTextColumn Binding="{Binding Path = NeophodanProjektor, FallbackValue='-'}" Header="Projektor" Width="80"/>
+                                <DataGridTextColumn Binding="{Binding Path = NeophodnaTabla, FallbackValue='-'}" Header="Tabla" Width="50"/>
+                                <DataGridTextColumn Binding="{Binding Path = NeophodnaPametnaTabla, FallbackValue='-'}" Header="Pametna tabla" Width="100"/>
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="OS" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="20">
+                            <Button Width="60" Height="20" Content="Izmeni" Click="IzmeniPredmet" Name="izmeniPredmet" HorizontalAlignment="Right" Margin="0,0,170,0" Background="DarkBlue" Foreground="White">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="I" Modifiers="" ></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Obriši" Name="obirisiPredmet" HorizontalAlignment="Right" Margin="0,-20,100,0" Background="DarkRed" Foreground="White">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Delete" Modifiers="" ></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="80" Height="20" Content="Novi predmet" Click="dodavanjePredmetaClick" Name="noviPredmet" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Smer" Name="SmerTab">
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="20">
+                        <Button Width="60" Height="20" Content="Izmeni" Name="izmeniSmer" HorizontalAlignment="Right" Margin="0,0,150,0" Background="DarkBlue" Foreground="White">
+                            <Button.InputBindings>
+                                <KeyBinding Key="I" Modifiers="" ></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                        <Button Width="60" Height="20" Content="Obriši" Name="obirisiSmer" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
+                            <Button.InputBindings>
+                                <KeyBinding Key="Delete" Modifiers="" ></KeyBinding>
+                            </Button.InputBindings>
+                        </Button>
+                        <Button Width="60" Height="20" Content="Novi smer" Click="dodavanjeSmeraClick" Name="noviSmer" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                        </Button>
+                    </StackPanel>
+                </TabItem>
                 <TabItem Header="Softver" Name="SoftverTab"></TabItem>
             </TabControl>
         </DockPanel>

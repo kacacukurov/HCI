@@ -51,6 +51,8 @@ namespace HCI_Projekat
                 this.SoftverPredmeta.Text = this.SoftverPredmeta.Items.GetItemAt(0).ToString();
             }
             OznakaPredmeta.Focus();
+
+            
         }
 
         private void nextClickPredmet(object sender, RoutedEventArgs e)
@@ -70,12 +72,7 @@ namespace HCI_Projekat
 
         private void finishClickPredmet(object sender, RoutedEventArgs e)
         {
-            if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text))
-            {
-                MessageBox.Show("Predmet sa ovom oznakom vec postoji!");
-                OznakaPredmeta.Text = "";
-                OznakaPredmeta.Focus();
-            }else
+            if (validacijaNovogPredmeta())
             {
                 predmet.Oznaka = OznakaPredmeta.Text;
                 predmet.Naziv = NazivPredmeta.Text;
@@ -95,9 +92,36 @@ namespace HCI_Projekat
                     predmet.OperativniSistem = Svejedno.Content.ToString();
                 predmet.Softver = racunarskiCentar.Softveri[SoftverPredmeta.Text];
                 racunarskiCentar.DodajPredmet(predmet);
+
+                this.Close();
             }
-            
-            this.Close();
+        }
+
+        private bool validacijaNovogPredmeta()
+        {
+            if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text))
+            {
+                MessageBox.Show("Predmet sa ovom oznakom vec postoji!");
+                OznakaPredmeta.Text = "";
+                OznakaPredmeta.Focus();
+                return false;
+            }else if(OznakaPredmeta.Text == "" || NazivPredmeta.Text == "" || SmerPredmeta.Text == "" || OpisPredmeta.Text == "" ||
+                SoftverPredmeta.Text == "")
+            {
+                MessageBox.Show("Niste popunili sva polja!");
+                if (OznakaPredmeta.Text == "")
+                    OznakaPredmeta.Focus();
+                else if (NazivPredmeta.Text == "")
+                    NazivPredmeta.Focus();
+                else if (SmerPredmeta.Text == "")
+                    SmerPredmeta.Focus();
+                else if (OpisPredmeta.Text == "")
+                    OpisPredmeta.Focus();
+                else if (SoftverPredmeta.Text == "")
+                    SoftverPredmeta.Focus();
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -43,12 +43,12 @@
                         <TextBox Name="OpisSmera" Width="150" Height="80" Margin="150,140,0,0" VerticalAlignment="Top" KeyDown="otvoriUnazad"/>
 
                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
-                            <Button Width="60" Height="20" Content="Odustani"  Click="exitClickSmer" Name="quitButtonTab" HorizontalAlignment="Right" Margin="0,0,80,0">
+                            <Button Width="60" Height="20" Content="Odustani"  Click="exitClickSmer" Name="quitButtonTab" HorizontalAlignment="Right" Margin="0,0,80,0" Background="DarkRed" Foreground="White">
                                 <Button.InputBindings>
                                     <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
                                 </Button.InputBindings>
                             </Button>
-                            <Button Width="60" Height="20" Content="Završi" Click="finishClickSmer" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
+                            <Button Width="60" Height="20" Content="Završi" Click="finishClickSmer" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
                                 <Button.InputBindings>
                                     <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
                                 </Button.InputBindings>

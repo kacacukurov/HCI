@@ -34,6 +34,9 @@ namespace HCI_Projekat
             racunarskiCentar = new RacunarskiCentar();
             DeserijalizacijaPodataka();
             Console.WriteLine(racunarskiCentar.Softveri.Count);
+
+            tabelaPredmeta.ItemsSource = racunarskiCentar.Predmeti.Values.ToList();
+            tabelaPredmeta.IsSynchronizedWithCurrentItem = true;
         }
 
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)
@@ -46,6 +49,7 @@ namespace HCI_Projekat
         {
             var predmetWindow = new DodavanjePredmeta(racunarskiCentar);
             predmetWindow.ShowDialog();
+            tabelaPredmeta.ItemsSource = racunarskiCentar.Predmeti.Values.ToList();
         }
 
         private void dodavanjeSmeraClick(object sender, RoutedEventArgs e)
@@ -138,6 +142,12 @@ namespace HCI_Projekat
                 fs.Close();
                 Console.WriteLine("Deserijalizacija uspesno izvrsena!\n");
             }
+        }
+
+        private void IzmeniPredmet (object sender, RoutedEventArgs e)
+        {
+            if (tabelaPredmeta.SelectedIndex != -1)
+                MessageBox.Show(tabelaPredmeta.SelectedIndex.ToString());
         }
     }
 }

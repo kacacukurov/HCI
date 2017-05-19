@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HCI_Projekat
 {
+    [Serializable]
     public class Predmet
     {
         private string oznaka;

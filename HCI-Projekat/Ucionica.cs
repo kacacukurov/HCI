@@ -11,6 +11,7 @@ namespace HCI_Projekat
         Linux, Windows, LinuxAndWindows
     }
 
+    [Serializable]
     public class Ucionica
     {
         private string oznaka;
@@ -19,13 +20,13 @@ namespace HCI_Projekat
         private bool prisustvoProjektora;
         private bool prisustvoTable;
         private bool prisustvoPametneTable;
-        private OSType operativniSistem;
+        private string operativniSistem;
         private Softver instaliraniSoftver;
 
         public Ucionica() { }
 
         public Ucionica(string oznaka, string opis, int brojRadnihMesta, bool prisustvoProjektora,
-            bool prisustvoTable, bool prisustvoPametneTable, OSType operativniSistem, Softver instaliraniSoftver)
+            bool prisustvoTable, bool prisustvoPametneTable, string operativniSistem, Softver instaliraniSoftver)
         {
             this.oznaka = oznaka;
             this.opis = opis;
@@ -37,49 +38,49 @@ namespace HCI_Projekat
             this.instaliraniSoftver = instaliraniSoftver;
         }
 
-        string Oznaka
+        public string Oznaka
         {
             get { return oznaka; }
             set { this.oznaka = value; }
         }
 
-        string Opis
+        public string Opis
         {
             get { return opis; }
             set { this.opis = value; }
         }
 
-        int BrojRadnihMesta
+        public int BrojRadnihMesta
         {
             get { return brojRadnihMesta; }
             set { this.brojRadnihMesta = value; }
         }
 
-        bool PrisustvoProjektora
+        public bool PrisustvoProjektora
         {
             get { return prisustvoProjektora; }
             set { this.prisustvoProjektora = value; }
         }
 
-        bool PrisustvoTable
+        public bool PrisustvoTable
         {
             get { return prisustvoTable; }
             set { this.prisustvoTable = value; }
         }
 
-        bool PrisustvoPametneTable
+        public bool PrisustvoPametneTable
         {
             get { return prisustvoPametneTable; }
             set { this.PrisustvoPametneTable = value; }
         }
 
-        OSType OperativniSistem
+        public string OperativniSistem
         {
             get { return operativniSistem; }
             set { this.operativniSistem = value; }
         }
 
-        Softver InstaliraniSoftver
+        public Softver InstaliraniSoftver
         {
             get { return instaliraniSoftver; }
             set { this.instaliraniSoftver = value; }

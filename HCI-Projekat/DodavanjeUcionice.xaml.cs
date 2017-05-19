@@ -19,9 +19,14 @@ namespace HCI_Projekat
     /// </summary>
     public partial class DodavanjeUcionice : Window
     {
-        public DodavanjeUcionice()
+        private Ucionica novaUcionica;
+        private RacunarskiCentar racunarskiCentar;
+
+        public DodavanjeUcionice(RacunarskiCentar racunarskiCentar)
         {
             InitializeComponent();
+            novaUcionica = new Ucionica();
+            this.racunarskiCentar = racunarskiCentar;
         }
 
         private void nextClick(object sender, RoutedEventArgs e)
@@ -42,6 +47,7 @@ namespace HCI_Projekat
         private void finishClick(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Zavrsi");
+            racunarskiCentar.DodajUcionicu(novaUcionica);
             this.Close();
         }
     }

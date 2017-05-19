@@ -19,9 +19,14 @@ namespace HCI_Projekat
     /// </summary>
     public partial class DodavanjeSoftvera : Window
     {
-        public DodavanjeSoftvera()
+        private Softver noviSoftver;
+        private RacunarskiCentar racunarskiCentar;
+
+        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar)
         {
             InitializeComponent();
+            this.racunarskiCentar = racunarskiCentar;
+            noviSoftver = new Softver();
         }
 
         private void nextClick(object sender, RoutedEventArgs e)
@@ -41,7 +46,21 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Zavrsi");
+            noviSoftver.Oznaka = oznakaSoftver.Text;
+            noviSoftver.Naziv = nazivSoftver.Text;
+            noviSoftver.Opis = opisSoftver.Text;
+            noviSoftver.GodIzdavanja = int.Parse(godinaSoftver.Text);
+            noviSoftver.Cena = double.Parse(cenaSoftver.Text);
+            if ((bool)WindowsOSSoftver.IsChecked)
+                noviSoftver.OperativniSistem = "Windows";
+            else if ((bool)LinusOSSoftver.IsChecked)
+                noviSoftver.OperativniSistem = "Linux";
+            else
+                noviSoftver.OperativniSistem = "Linux i Windows";
+            noviSoftver.Proizvodjac = proizvodjacSoftver.Text;
+            noviSoftver.Sajt = sajtSoftver.Text;
+
+            racunarskiCentar.DodajSoftver(noviSoftver);
             this.Close();
         }
     }

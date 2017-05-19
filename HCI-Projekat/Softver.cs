@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace HCI_Projekat
 {
+    [Serializable]
     public class Softver
     {
         private string oznaka;
         private string naziv;
-        private OSType operativniSistem;
+        private string operativniSistem;
         private string proizvodjac;
         private string sajt;
         private int godIzdavanja;
@@ -19,7 +20,7 @@ namespace HCI_Projekat
 
         public Softver() { }
 
-        public Softver(string oznaka, string naziv, OSType operativniSistem, string proizvodjac,
+        public Softver(string oznaka, string naziv, string operativniSistem, string proizvodjac,
             string sajt, int godIzdavanja, double cena, string opis)
         {
             this.oznaka = oznaka;
@@ -32,49 +33,49 @@ namespace HCI_Projekat
             this.opis = opis;
         }
 
-        string Oznaka
+        public string Oznaka
         {
             get { return oznaka; }
             set { this.oznaka = value; }
         }
 
-        string Naziv
+        public string Naziv
         {
             get { return naziv; }
             set { this.naziv = value; }
         }
 
-        OSType OperativniSistem
+        public string OperativniSistem
         {
             get { return operativniSistem; }
             set { this.operativniSistem = value; }
         }
 
-        string Proizvodjac
+        public string Proizvodjac
         {
             get { return proizvodjac; }
             set { this.proizvodjac = value; }
         }
 
-        string Sajt
+        public string Sajt
         {
             get { return sajt; }
             set { this.sajt = value; }
         }
 
-        int GodIzdavanja
+        public int GodIzdavanja
         {
             get { return godIzdavanja; }
             set { this.godIzdavanja = value; }
         }
 
-        double Cena
+        public double Cena
         {
             get { return cena; }
             set { this.cena = value; }
         }
 
-        string Opis
+        public string Opis
         {
             get { return opis; }
             set { this.opis = value; }

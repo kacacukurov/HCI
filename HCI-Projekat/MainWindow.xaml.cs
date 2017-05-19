@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace HCI_Projekat
 {
@@ -21,6 +24,7 @@ namespace HCI_Projekat
     public partial class MainWindow : Window
     {
         private RacunarskiCentar racunarskiCentar;
+        private static string imeFajla = "racunarskiCentar.xml";
 
         public MainWindow()
         {
@@ -28,11 +32,13 @@ namespace HCI_Projekat
             KalendarTab.Focus();
 
             racunarskiCentar = new RacunarskiCentar();
+            DeserijalizacijaPodataka();
+            Console.WriteLine(racunarskiCentar.Softveri.Count);
         }
 
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)
         {
-            var ucionicaWindow = new DodavanjeUcionice();
+            var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar);
             ucionicaWindow.ShowDialog();
         }
 
@@ -50,7 +56,7 @@ namespace HCI_Projekat
 
         private void dodavanjeSoftveraClick(object sender, RoutedEventArgs e)
         {
-            var softverWindow = new DodavanjeSoftvera();
+            var softverWindow = new DodavanjeSoftvera(racunarskiCentar);
             softverWindow.ShowDialog();
         }
 
@@ -61,6 +67,7 @@ namespace HCI_Projekat
 
         private void exitClick(object sender, RoutedEventArgs e)
         {
+            SerijalizacijaPodataka();
             mainWindow.Close();
         }
 
@@ -87,6 +94,51 @@ namespace HCI_Projekat
         private void redoClick(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Redo");
+        }
+
+        private void SerijalizacijaPodataka()
+        {
+            FileStream fs = new FileStream(imeFajla, FileMode.Create, FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fs);
+
+            DataContractSerializer serializer = new DataContractSerializer(typeof(RacunarskiCentar));
+
+            using (XmlTextWriter writer = new XmlTextWriter(sw))
+            {
+                // add formatting so the XML is easy to read in the log
+                writer.Formatting = Formatting.Indented;
+
+                serializer.WriteObject(writer, racunarskiCentar);
+
+                writer.Flush();
+                writer.Close();
+            }
+
+            sw.Close();
+            fs.Close();
+            Console.WriteLine("Serijalizacija uspesno izvrsena!\n");
+        }
+
+        private void DeserijalizacijaPodataka()
+        {
+            FileStream fs = null;
+            if (File.Exists(imeFajla))
+            {
+                fs = new FileStream(imeFajla, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+
+                DataContractSerializer serializer = new DataContractSerializer(typeof(RacunarskiCentar));
+
+                using (XmlTextReader reader = new XmlTextReader(sr))
+                {
+                    racunarskiCentar = (RacunarskiCentar)serializer.ReadObject(reader);
+                    reader.Close();
+                }
+
+                sr.Close();
+                fs.Close();
+                Console.WriteLine("Deserijalizacija uspesno izvrsena!\n");
+            }
         }
     }
 }

@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:toogle="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
         Title="Dodavanje predmeta" Height="500" Width="500">
@@ -32,37 +34,67 @@
         <DockPanel>
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlPredmet">
                 <TabItem Header="Korak 1" Name="Korak1Predmet" HorizontalAlignment="Center">
-                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
-                        <Button Width="60" Height="20" Content="Sledeća &gt;" Click="nextClickPredmet" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                        <Button Width="60" Height="20" Content="Odustani" Click="exitClickPredmet" Name="quitButton" HorizontalAlignment="Right" Margin="0,-20,80,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                    </StackPanel>
+                    <Grid>
+                        <TextBlock Text="Oznaka" HorizontalAlignment="Center" Margin="-60,20,0,0"/>
+                        <TextBox Name="OznakaPredmeta" Width="60" Height="20" Margin="60,20,0,0" VerticalAlignment="Top"/>
+                        <TextBlock Text="Naziv" HorizontalAlignment="Center" Margin="-55,60,0,0"/>
+                        <TextBox Name="NazivPredmeta" Width="60" Height="20" Margin="60, 60,0,0" VerticalAlignment="Top"/>
+                        <TextBlock Text="Smer" HorizontalAlignment="Center" Margin="-55,100,0,0"/>
+                        <ComboBox Name="SmerPredmeta" VerticalAlignment="Top" Height="20" Width="60" Margin="60,100,0,0" />
+                        <TextBlock Text="Opis" HorizontalAlignment="Center" Margin="-55,140,0,0"/>
+                        <TextBox Name="OpisPredmeta" Width="150" Height="80" Margin="150,140,0,0" VerticalAlignment="Top"/>
+                        <TextBlock Text="Duzina termina" HorizontalAlignment="Center" Margin="-110,240,0,0"/>
+                        <xctk:IntegerUpDown Name="DuzinaTerminaPredmet" Value="1" Height="20" Width="50" Margin="50, 60, 0,0"></xctk:IntegerUpDown>
+                        <TextBlock Text="Broj termina" HorizontalAlignment="Center" Margin="-97,280,0,0"/>
+                        <xctk:IntegerUpDown Name="BrojTerminaPredmet" Value="1" Height="20" Width="50" Margin="50, 140, 0,0"></xctk:IntegerUpDown>
+                        
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
+                            <Button Width="60" Height="20" Content="Sledeća &gt;" Click="nextClickPredmet" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Odustani" Click="exitClickPredmet" Name="quitButton" HorizontalAlignment="Right" Margin="0,-20,80,0">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Korak 2" Name="Korak2Predmet" HorizontalAlignment="Center">
-                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="20">
-                        <Button Width="60" Height="20" Content="&lt; Back" Click="backClickPredmet" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                        <Button Width="60" Height="20" Content="Odustani" Click="exitClickPredmet" Name="quitButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                        <Button Width="60" Height="20" Content="Završi" Click="finishClickPredmet" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                    </StackPanel>
+                    <Grid>
+                        <TextBlock Text="Velicina grupe" HorizontalAlignment="Center" Margin="-97,20,0,0"/>
+                        <xctk:IntegerUpDown Name="VelicinaGrupePredmet" Value="1" Height="20" Width="50" Margin="50, 20, 0,0" VerticalAlignment="Top"></xctk:IntegerUpDown>
+                        <TextBlock Text="Prisustvo table" HorizontalAlignment="Center" Margin="-100,60,0,0"/>
+                        <toogle:HorizontalToggleSwitch Name="PrisustvoTablePredmet" IsChecked="True" Margin="85,60,0,0" VerticalAlignment="Top" Height="20" Width="80"></toogle:HorizontalToggleSwitch>
+                        
+                        <TextBlock Text="Prisustvo projektora" HorizontalAlignment="Center" Margin="-130,100,0,0"/>
+                        <toogle:HorizontalToggleSwitch Name="PrisustvoProjektoraPredmet" IsChecked="False" Margin="85,100,0,0" VerticalAlignment="Top" Height="20" Width="80"></toogle:HorizontalToggleSwitch>
+                        
+                        <TextBlock Text="Prisustvo pametne table" HorizontalAlignment="Center" Margin="-150,140,0,0"/>
+                        <toogle:HorizontalToggleSwitch Name="PrisustvoPametneTable" IsChecked="True" Margin="85,140,0,0" VerticalAlignment="Top" Height="20" Width="80"></toogle:HorizontalToggleSwitch>
+
+
+                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="20">
+                           
+                            <Button Width="60" Height="20" Content="&lt; Back" Click="backClickPredmet" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Odustani" Click="exitClickPredmet" Name="quitButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Završi" Click="finishClickPredmet" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </DockPanel>

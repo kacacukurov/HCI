@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:toogle="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
         mc:Ignorable="d"
         Title="Dodavanje učionice" Height="500" Width="500">
 
@@ -31,41 +32,89 @@
 
     <Grid>
         <DockPanel>
+
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlUcionica">
+
                 <TabItem Header="Korak 1" Name="Korak1Ucionica" HorizontalAlignment="Center">
-                    <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
-                        <Button Width="60" Height="20" Content="Sledeća &gt;" Click="nextClick" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                        <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab1" HorizontalAlignment="Right" Margin="0,-20,80,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                    </StackPanel>
+                    <Grid>
+                        <Grid HorizontalAlignment="Center" Background="White" Height="416" VerticalAlignment="Center" Margin="50,0,44,25" Width="392">
+                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="101,30,241,0" TextAlignment="Right" Text="Oznaka:" VerticalAlignment="Top" Width="50" />
+                            <TextBox Height="23" HorizontalAlignment="Right" Margin="0,30,119,0" Name="oznakaUcionica" VerticalAlignment="Top" Width="100" />
+
+                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="42,80,240,0" TextAlignment="Right" Text="Broj radnih mesta:" VerticalAlignment="Top" Width="110" />
+                            <xctk:IntegerUpDown Height="23" HorizontalAlignment="Right" Margin="0,80,169,0" Name="brojRadnihMestaUcionica" VerticalAlignment="Top" Width="50"></xctk:IntegerUpDown>
+
+                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="122,130,240,0" TextAlignment="Right" Text="Opis:" VerticalAlignment="Top" Width="30"/>
+                            <TextBox Height="100" HorizontalAlignment="Left" Margin="173,130,-33,0" Name="opisUcionica" VerticalAlignment="Top" Width="193" />
+
+                            <TextBlock Height="20" HorizontalAlignment="Left" Margin="65,250,0,0" TextAlignment="Right" Text="Prisustvo table:" VerticalAlignment="Top" Width="87"  />
+                            <toogle:HorizontalToggleSwitch Name="prisustvoTableUcionica" IsChecked="False" Margin="173,249,139,0" VerticalAlignment="Top" Height="20" Width="80" RenderTransformOrigin="0.05,0.55"></toogle:HorizontalToggleSwitch>
+
+                            <TextBlock Height="20" HorizontalAlignment="Left" Margin="18,300,0,0" TextAlignment="Right" Text="Prisustvo pametne table:" VerticalAlignment="Top" Width="133"/>
+                            <toogle:HorizontalToggleSwitch Name="prisustvoPametneTableUcionica" IsChecked="False" Margin="173,300,139,0" VerticalAlignment="Top" Height="20" Width="80" RenderTransformOrigin="0.05,0.55"></toogle:HorizontalToggleSwitch>
+
+                            <TextBlock Height="23" HorizontalAlignment="Left" Margin="41,350,0,0" TextAlignment="Right" Text="Prisustvo projektora:" VerticalAlignment="Top" Width="110" />
+                            <toogle:HorizontalToggleSwitch Name="prisustvoProjektoraUcionica" IsChecked="False" Margin="173,349,139,0" VerticalAlignment="Top" Height="20" Width="80" RenderTransformOrigin="0.05,0.55"></toogle:HorizontalToggleSwitch>
+                        </Grid>
+
+                        <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
+                            <Button Width="60" Height="20" Content="Nastavi &gt;" Click="nextClick" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0" Background="DarkGreen" Foreground="White">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab1" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </TabItem>
+
                 <TabItem Header="Korak 2" Name="Korak2Ucionica" HorizontalAlignment="Center">
-                    <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
-                        <Button Width="60" Height="20" Content="&lt; Nazad" Click="backClick" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                        <Button Width="60" Height="20" Content="Završi" Click="finishClick" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                        <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0">
-                            <Button.InputBindings>
-                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
-                            </Button.InputBindings>
-                        </Button>
-                    </StackPanel>
+                    <Grid>
+                        <Grid HorizontalAlignment="Center" Background="White" Height="416" VerticalAlignment="Center" Margin="50,5,44,20" Width="392">
+
+                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="54,30,241,0" TextAlignment="Right" Text="Operativni sistem:" VerticalAlignment="Top" Width="97" />
+                            <StackPanel Margin="183,31,53,299">
+                                <RadioButton HorizontalAlignment="Left" Content="Linux" Name="LinusOSUcionica" Width="72" Height="30" VerticalAlignment="Top"/>
+                                <RadioButton HorizontalAlignment="Left" Content="Windows" Name="WindowsOSUcionica" Width="72" Height="30" VerticalAlignment="Top"/>
+                                <RadioButton HorizontalAlignment="Left" Content="Windows i Linux" Name="WindowsAndLinusOSUcionica" Width="107" Height="30" VerticalAlignment="Top"/>
+                            </StackPanel>
+
+                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="166,152,172,241" TextAlignment="Center" Text="Softver" Width="54" />
+                            <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="200" Width="390" Margin="0,180,0,0" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="150"/>
+                                    <DataGridTextColumn Binding="{Binding Path = Verzija, FallbackValue='-'}" Header="Verzija" Width="150"/>
+                                    <DataGridCheckBoxColumn Binding="{Binding Path = Instalirano, FallbackValue='-'}" Header="Instalirano" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                        <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
+                            <Button Width="60" Height="20" Content="&lt; Nazad" Click="backClick" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0" Background="DarkBlue" Foreground="White">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Završi" Click="finishClick" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                            <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </TabItem>
+
             </TabControl>
+
         </DockPanel>
     </Grid>
 </Window>

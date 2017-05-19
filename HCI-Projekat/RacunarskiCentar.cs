@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HCI_Projekat
 {
-    [Serializable]
     public class RacunarskiCentar
     {
         private Dictionary<string, Smer> smerovi;
@@ -32,7 +30,7 @@ namespace HCI_Projekat
             this.ucionice = ucionice;
         }
 
-        Dictionary<string, Smer> Smerovi
+        public Dictionary<string, Smer> Smerovi
         {
             get { return smerovi; }
             set { this.smerovi = value; }
@@ -44,16 +42,28 @@ namespace HCI_Projekat
             set { this.softveri = value; }
         }
 
-        Dictionary<string, Predmet> Predmeti
+        public Dictionary<string, Predmet> Predmeti
         {
             get { return predmeti; }
             set { this.predmeti = value; }
         }
 
-        public Dictionary<string, Ucionica> Ucionice
+        Dictionary<string, Ucionica> Ucionice
         {
             get { return ucionice; }
             set { this.ucionice = value; }
+        }
+
+        public void DodajSmer(Smer noviSmer)
+        {
+            this.smerovi.Add(noviSmer.Oznaka, noviSmer);
+            Console.WriteLine("Smerova: " + smerovi.Count);
+        }
+
+        public void DodajPredmet(Predmet predmet)
+        {
+            this.predmeti.Add(predmet.Oznaka, predmet);
+            Console.WriteLine("Predmeta: " + predmeti.Count);
         }
 
         public bool DodajSoftver(Softver noviSoftver)

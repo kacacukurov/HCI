@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" Name="mainWindow">
+        Title="MainWindow" Height="500" Width="800" Name="mainWindow" Closed="SerijalizacijaPodataka">
 
     <Window.Resources>
         <RoutedUICommand x:Key="novaUcionica" Text="ucionica"></RoutedUICommand>

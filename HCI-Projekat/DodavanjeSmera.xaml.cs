@@ -19,9 +19,15 @@ namespace HCI_Projekat
     /// </summary>
     public partial class DodavanjeSmera : Window
     {
-        public DodavanjeSmera()
+        private Smer smer;
+        private RacunarskiCentar racunarskiCentar;
+
+        public DodavanjeSmera(RacunarskiCentar racunarskiCentar)
         {
+            smer = new Smer();
+            this.racunarskiCentar = racunarskiCentar;
             InitializeComponent();
+            OznakaSmera.Focus();
         }
 
         private void exitClickSmer(object sender, RoutedEventArgs e)
@@ -31,8 +37,41 @@ namespace HCI_Projekat
 
         private void finishClickSmer(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Kraj");
-            this.Close();
+            if(validacijaDodavanjaSmera())
+            {
+                smer.Naziv = NazivSmera.Text;
+                smer.Oznaka = OznakaSmera.Text;
+                smer.Opis = OpisSmera.Text;
+                smer.Datum = DateTime.Parse(DatumUvodjenja.Text);
+                racunarskiCentar.DodajSmer(smer);
+                this.Close();
+            }
+            
+        }
+
+        private bool validacijaDodavanjaSmera()
+        {
+            if (racunarskiCentar.Smerovi.ContainsKey(OznakaSmera.Text))
+            {
+                MessageBox.Show("Smer sa ovom oznakom vec postoji!");
+                OznakaSmera.Text = "";
+                OznakaSmera.Focus();
+                return false;
+            }
+            else if (NazivSmera.Text == "" || OznakaSmera.Text == "" || OpisSmera.Text == "" || DatumUvodjenja.Text == "")
+            {
+                MessageBox.Show("Niste popunili sva polja!");
+                if (DatumUvodjenja.Text == "")
+                    DatumUvodjenja.Focus();
+                else if (OpisSmera.Text == "")
+                    OpisSmera.Focus();
+                else if (OznakaSmera.Text == "")
+                    OznakaSmera.Focus();
+                else if (NazivSmera.Text == "")
+                    NazivSmera.Focus();
+                return false;
+            }
+            return true;
         }
 
         private void otvoriDatum(object sender, RoutedEventArgs e)

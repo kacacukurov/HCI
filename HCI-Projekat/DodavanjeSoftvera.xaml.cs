@@ -43,7 +43,7 @@ namespace HCI_Projekat
         {
             this.Close();
         }
-
+        
         private void finishClick(object sender, RoutedEventArgs e)
         {
             noviSoftver.Oznaka = oznakaSoftver.Text;

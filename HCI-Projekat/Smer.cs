@@ -24,25 +24,25 @@ namespace HCI_Projekat
             this.opis = opis;
         }
 
-        string Oznaka
+        public string Oznaka
         {
             get { return oznaka; }
             set { this.oznaka = value; }
         }
 
-        string Naziv
+        public string Naziv
         {
             get { return naziv; }
             set { this.naziv = value; }
         }
 
-        DateTime Datum
+        public DateTime Datum
         {
             get { return datum; }
             set { this.datum = value; }
         }
 
-        string Opis
+        public string Opis
         {
             get { return opis; }
             set { this.opis = value; }

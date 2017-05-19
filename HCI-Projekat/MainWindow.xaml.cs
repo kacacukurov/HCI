@@ -44,13 +44,13 @@ namespace HCI_Projekat
 
         private void dodavanjePredmetaClick(object sender, RoutedEventArgs e)
         {
-            var predmetWindow = new DodavanjePredmeta();
+            var predmetWindow = new DodavanjePredmeta(racunarskiCentar);
             predmetWindow.ShowDialog();
         }
 
         private void dodavanjeSmeraClick(object sender, RoutedEventArgs e)
         {
-            var smerWindow = new DodavanjeSmera();
+            var smerWindow = new DodavanjeSmera(racunarskiCentar);
             smerWindow.ShowDialog();
         }
 
@@ -67,7 +67,6 @@ namespace HCI_Projekat
 
         private void exitClick(object sender, RoutedEventArgs e)
         {
-            SerijalizacijaPodataka();
             mainWindow.Close();
         }
 
@@ -96,7 +95,7 @@ namespace HCI_Projekat
             MessageBox.Show("Redo");
         }
 
-        private void SerijalizacijaPodataka()
+        private void SerijalizacijaPodataka(object sender, EventArgs e)
         {
             FileStream fs = new FileStream(imeFajla, FileMode.Create, FileAccess.Write);
             StreamWriter sw = new StreamWriter(fs);

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace HCI_Projekat
 {
-    [Serializable]
     public class Softver
     {
         private string oznaka;

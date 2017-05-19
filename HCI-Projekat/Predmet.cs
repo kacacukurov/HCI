@@ -19,14 +19,14 @@ namespace HCI_Projekat
         private bool neophodanProjektor;
         private bool neophodnaTabla;
         private bool neophodnaPametnaTabla;
-        private OSType operativniSistem;
+        private string operativniSistem;
         private Softver softver;
 
         public Predmet() { }
 
         public Predmet(string oznaka, string naziv, Smer smer, string opis, int velicinaGrupe,
             int minDuzinaTermina, int brTermina, bool neophodanProjektor, bool neophodnaTabla, bool neophodnaPametnaTabla,
-            OSType operativniSistem, Softver softver)
+            string operativniSistem, Softver softver)
         {
             this.oznaka = oznaka;
             this.naziv = naziv;
@@ -42,73 +42,73 @@ namespace HCI_Projekat
             this.softver = softver;
         }
 
-        string Oznaka
+        public string Oznaka
         {
             get { return oznaka; }
             set { this.oznaka = value; }
         }
 
-        string Naziv
+        public string Naziv
         {
             get { return naziv; }
             set { this.naziv = value; }
         }
 
-        Smer Smer
+        public Smer Smer
         {
             get { return smer; }
             set { this.smer = value; }
         }
 
-        string Opis
+        public string Opis
         {
             get { return opis; }
             set { this.opis = value; }
         }
 
-        int VelicinaGrupe
+        public int VelicinaGrupe
         {
             get { return velicinaGrupe; }
             set { this.velicinaGrupe = value; }
         }
 
-        int MinDuzinaTermina
+        public int MinDuzinaTermina
         {
             get { return minDuzinaTermina; }
             set { this.minDuzinaTermina = value; }
         }
 
-        int BrTermina
+        public int BrTermina
         {
             get { return brTermina; }
             set { this.brTermina = value; }
         }
 
-        bool NeophodanProjektor
+        public bool NeophodanProjektor
         {
             get { return neophodanProjektor; }
             set { this.neophodanProjektor = value; }
         }
 
-        bool NeophodnaTabla
+        public bool NeophodnaTabla
         {
             get { return neophodnaTabla; }
             set { this.neophodnaTabla = value; }
         }
 
-        bool NeophodnaPametnaTabla
+        public bool NeophodnaPametnaTabla
         {
             get { return neophodnaPametnaTabla; }
             set { this.neophodnaPametnaTabla = value; }
         }
 
-        OSType OperativniSistem
+        public string OperativniSistem
         {
             get { return operativniSistem; }
             set { this.operativniSistem = value; }
         }
 
-        Softver Softver
+        public Softver Softver
         {
             get { return softver; }
             set { this.softver = value; }

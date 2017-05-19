@@ -42,8 +42,12 @@
                         <TextBox Name="NazivPredmeta" Width="60" Height="20" Margin="60, 60,0,0" VerticalAlignment="Top"/>
                         
                         <TextBlock Text="Smer" HorizontalAlignment="Center" Margin="-55,100,0,0"/>
-                        <ComboBox Name="SmerPredmeta" VerticalAlignment="Top" Height="20" Width="60" Margin="60,100,0,0" />
-                        
+                        <ComboBox Name="SmerPredmeta" VerticalAlignment="Top" Height="20" Width="60" Margin="60,100,0,0" >
+                            <ComboBox.Items>
+                                
+                            </ComboBox.Items>
+                        </ComboBox>
+
                         <TextBlock Text="Opis" HorizontalAlignment="Center" Margin="-55,140,0,0"/>
                         <TextBox Name="OpisPredmeta" Width="150" Height="80" Margin="150,140,0,0" VerticalAlignment="Top"/>
                         

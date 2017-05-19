@@ -21,6 +21,7 @@
         <RoutedUICommand x:Key="paste" Text="paste"></RoutedUICommand>
         <RoutedUICommand x:Key="save" Text="save"></RoutedUICommand>
         <RoutedUICommand x:Key="exit" Text="exit"></RoutedUICommand>
+        <RoutedUICommand x:Key="backToTabs" Text="tabs"></RoutedUICommand>
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -37,6 +38,7 @@
         <CommandBinding Command="{StaticResource paste}" Executed="pasteClick"></CommandBinding>
         <CommandBinding Command="{StaticResource save}" Executed="saveClick"></CommandBinding>
         <CommandBinding Command="{StaticResource exit}" Executed="exitClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource backToTabs}" Executed="tabsFocus"></CommandBinding>
     </Window.CommandBindings>
     
     <Window.InputBindings>
@@ -53,6 +55,7 @@
         <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
         <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
         <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
+        <KeyBinding Key="Tab" Modifiers="Ctrl" Command="{StaticResource backToTabs}"></KeyBinding>
     </Window.InputBindings>
 
     <Grid>
@@ -155,6 +158,12 @@
                                 <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
+
+                        <Separator></Separator>
+
+                        <MenuItem Header="Korak napred" InputGestureText="Ctrl+N" IsEnabled="False"></MenuItem>
+                        <MenuItem Header="Korak nazad" InputGestureText="Ctrl+B" IsEnabled="False"></MenuItem>
+                        
                     </MenuItem>
                     
                     <MenuItem Header="Help" HorizontalAlignment="Left"></MenuItem>

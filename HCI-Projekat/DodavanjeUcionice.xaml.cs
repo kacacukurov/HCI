@@ -36,12 +36,24 @@ namespace HCI_Projekat
             oznakaUcionica.Focus();
         }
 
-        private void nextClick(object sender, RoutedEventArgs e)
+        public void nextStep(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+            nextClick(sender, e);
+        }
+
+        public void backStep(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+            backClick(sender, e);
+        }
+
+        public void nextClick(object sender, RoutedEventArgs e)
         {
             Korak2Ucionica.Focus();
         }
 
-        private void backClick(object sender, RoutedEventArgs e)
+        public void backClick(object sender, RoutedEventArgs e)
         {
             Korak1Ucionica.Focus();
         }

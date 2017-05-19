@@ -7,13 +7,15 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:toogle="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
         mc:Ignorable="d"
-        Title="Dodavanje učionice" Height="500" Width="500">
+        Title="Dodavanje učionice" Height="500" Width="500" Name="DodavanjeUcioniceWindow">
 
     <Window.Resources>
         <RoutedUICommand x:Key="sledeciKorak" Text="next"></RoutedUICommand>
         <RoutedUICommand x:Key="prethodniKorak" Text="back"></RoutedUICommand>
         <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
         <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
+        <RoutedUICommand x:Key="sledeciDeo" Text="next"></RoutedUICommand>
+        <RoutedUICommand x:Key="prethodniDeo" Text="back"></RoutedUICommand>
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -21,6 +23,8 @@
         <CommandBinding Command="{StaticResource prethodniKorak}" Executed="backClick"></CommandBinding>
         <CommandBinding Command="{StaticResource odustani}" Executed="cancelClick"></CommandBinding>
         <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource sledeciDeo}" Executed="nextStep"></CommandBinding>
+        <CommandBinding Command="{StaticResource prethodniDeo}" Executed="backStep"></CommandBinding>
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -28,6 +32,8 @@
         <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
         <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{StaticResource sledeciDeo}"></KeyBinding>
+        <KeyBinding Key="B" Modifiers="Ctrl" Command="{StaticResource prethodniDeo}"></KeyBinding>
     </Window.InputBindings>
 
     <Grid>

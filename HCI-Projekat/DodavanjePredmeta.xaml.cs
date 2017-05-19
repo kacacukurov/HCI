@@ -53,16 +53,26 @@ namespace HCI_Projekat
                 this.SoftverPredmeta.Text = this.SoftverPredmeta.Items.GetItemAt(0).ToString();
             }
             OznakaPredmeta.Focus();
-
-            
         }
 
-        private void nextClickPredmet(object sender, RoutedEventArgs e)
+        public void nextStep(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+            nextClickPredmet(sender, e);
+        }
+
+        public void backStep(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+            backClickPredmet(sender, e);
+        }
+
+        public void nextClickPredmet(object sender, RoutedEventArgs e)
         {
             Korak2Predmet.Focus();
         }
 
-        private void backClickPredmet(object sender, RoutedEventArgs e)
+        public void backClickPredmet(object sender, RoutedEventArgs e)
         {
             Korak1Predmet.Focus();
         }

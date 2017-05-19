@@ -119,13 +119,29 @@ namespace HCI_Projekat
             MessageBox.Show("Redo");
         }
 
+        private void tabsFocus(object sender, RoutedEventArgs e)
+        {
+            // trenutno smo u tabu za ucionice
+            if (tabControl.SelectedIndex == 1)
+                UcionicaTab.Focus();
+            // trenutno smo u tabu za predmete
+            else if (tabControl.SelectedIndex == 2)
+                PredmetTab.Focus();
+            // trenutno smo u tabu za smerove
+            else if (tabControl.SelectedIndex == 3)
+                SmerTab.Focus();
+            // trenutno smo u tabu za softvere
+            else if (tabControl.SelectedIndex == 4)
+                SoftverTab.Focus();
+        }
+
         private void obrisiElement(object sender, RoutedEventArgs e)
         {
             // trenutno smo u tabu za ucionice
-            if (tabelaUcionica.SelectedIndex == 1)
+            if (tabControl.SelectedIndex == 1)
                 obrisiUcionicuClick(sender, e);
             // trenutno smo u tabu za predmete
-            if (tabControl.SelectedIndex == 2)
+            else if (tabControl.SelectedIndex == 2)
                 obrisiPredmetClick(sender, e);
             // trenutno smo u tabu za smerove
             else if (tabControl.SelectedIndex == 3)
@@ -138,10 +154,10 @@ namespace HCI_Projekat
         private void izmeniElement(object sender, RoutedEventArgs e)
         {
             // trenutno smo u tabu za ucionice
-            if (tabelaUcionica.SelectedIndex == 1)
+            if (tabControl.SelectedIndex == 1)
                 izmeniUcionicuClick(sender, e);
             // trenutno smo u tabu za predmete
-            if (tabControl.SelectedIndex == 2)
+            else if (tabControl.SelectedIndex == 2)
                 izmeniPredmetClick(sender, e);
             // trenutno smo u tabu za smerove
             else if (tabControl.SelectedIndex == 3)

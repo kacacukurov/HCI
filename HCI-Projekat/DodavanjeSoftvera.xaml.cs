@@ -33,12 +33,24 @@ namespace HCI_Projekat
             oznakaSoftver.Focus();
         }
 
-        private void nextClick(object sender, RoutedEventArgs e)
+        public void nextStep(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+            nextClick(sender, e);
+        }
+
+        public void backStep(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+            backClick(sender, e);
+        }
+
+        public void nextClick(object sender, RoutedEventArgs e)
         {
             Korak2Softver.Focus();
         }
 
-        private void backClick(object sender, RoutedEventArgs e)
+        public void backClick(object sender, RoutedEventArgs e)
         {
             Korak1Softver.Focus();
         }

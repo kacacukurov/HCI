@@ -145,10 +145,15 @@ namespace HCI_Projekat
         {
             if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text))
             {
-                MessageBox.Show("Predmet sa ovom oznakom vec postoji!");
-                OznakaPredmeta.Text = "";
-                OznakaPredmeta.Focus();
-                return false;
+                if (racunarskiCentar.Predmeti[OznakaPredmeta.Text].Obrisan)
+                    racunarskiCentar.Predmeti.Remove(OznakaPredmeta.Text);
+                else
+                {
+                    MessageBox.Show("Predmet sa ovom oznakom već postoji!");
+                    OznakaPredmeta.Text = "";
+                    OznakaPredmeta.Focus();
+                    return false;
+                }
             }else if(OznakaPredmeta.Text == "" || NazivPredmeta.Text == "" || SmerPredmeta.Text == "" || OpisPredmeta.Text == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
@@ -160,6 +165,21 @@ namespace HCI_Projekat
                     SmerPredmeta.Focus();
                 else if (OpisPredmeta.Text == "")
                     OpisPredmeta.Focus();
+                return false;
+            }
+            bool postojiSoftver = false;
+            for (int i = 0; i < softverTabela.Items.Count; i++)
+            {
+                DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
+                CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
+                if ((bool)box.IsChecked)
+                {
+                    postojiSoftver = true;
+                }
+            }
+            if (!postojiSoftver)
+            {
+                MessageBox.Show("Niste oznacili potreban softver!");
                 return false;
             }
             return true;

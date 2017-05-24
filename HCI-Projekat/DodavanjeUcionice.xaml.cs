@@ -100,33 +100,87 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
-            novaUcionica.Oznaka = oznakaUcionica.Text;
-            novaUcionica.Opis = opisUcionica.Text;
-            novaUcionica.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
-            novaUcionica.PrisustvoTable = prisustvoTableUcionica.IsChecked;
-            novaUcionica.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
-            novaUcionica.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
-            if ((bool)LinuxOSUcionica.IsChecked)
-                novaUcionica.OperativniSistem = "Linux";
-            else if ((bool)WindowsOSUcionica.IsChecked)
-                novaUcionica.OperativniSistem = "Windows";
-            else
-                novaUcionica.OperativniSistem = "Linux i Windows";
+            if (validacijaNoveUcionice())
+            {
+                novaUcionica.Oznaka = oznakaUcionica.Text;
+                novaUcionica.Opis = opisUcionica.Text;
+                novaUcionica.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
+                novaUcionica.PrisustvoTable = prisustvoTableUcionica.IsChecked;
+                novaUcionica.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
+                novaUcionica.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
+                if ((bool)LinuxOSUcionica.IsChecked)
+                    novaUcionica.OperativniSistem = "Linux";
+                else if ((bool)WindowsOSUcionica.IsChecked)
+                    novaUcionica.OperativniSistem = "Windows";
+                else
+                    novaUcionica.OperativniSistem = "Linux i Windows";
 
-            for(int i=0; i<softverTabela.Items.Count; i++)
+                for (int i = 0; i < softverTabela.Items.Count; i++)
+                {
+                    DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
+                    CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
+                    if ((bool)box.IsChecked)
+                    {
+                        TextBlock content = softverTabela.Columns[1].GetCellContent(row) as TextBlock;
+                        novaUcionica.InstaliraniSoftveri.Add(content.Text);
+                    }
+                }
+
+                tabelaUcionica.Add(novaUcionica);
+                racunarskiCentar.DodajUcionicu(novaUcionica);
+                this.Close();
+            }
+        }
+
+        private bool validacijaNoveUcionice()
+        {
+            if (racunarskiCentar.Ucionice.ContainsKey(oznakaUcionica.Text))
+            {
+                if (racunarskiCentar.Ucionice[oznakaUcionica.Text].Obrisan)
+                    racunarskiCentar.Ucionice.Remove(oznakaUcionica.Text);
+                else
+                {
+                    MessageBox.Show("Učionica sa ovom oznakom već postoji!");
+                    oznakaUcionica.Text = "";
+                    oznakaUcionica.Focus();
+                    return false;
+                }
+            }
+            else if (oznakaUcionica.Text == "" || opisUcionica.Text == "" || brojRadnihMestaUcionica.Text == "")
+            {
+                MessageBox.Show("Niste popunili sva polja!");
+                if (oznakaUcionica.Text == "")
+                    oznakaUcionica.Focus();
+                else if (opisUcionica.Text == "")
+                    opisUcionica.Focus();
+                else if (brojRadnihMestaUcionica.Text == "")
+                    brojRadnihMestaUcionica.Focus();
+                return false;
+            }
+            int brMesta;
+            if (!int.TryParse(brojRadnihMestaUcionica.Text, out brMesta))
+            {
+                MessageBox.Show("Broj radnih mesta nije dobro unesen, unesite broj!");
+                brojRadnihMestaUcionica.Text = "";
+                brojRadnihMestaUcionica.Focus();
+                return false;
+            }
+            bool postojiSoftver = false;
+            for (int i = 0; i < softverTabela.Items.Count; i++)
             {
                 DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
                 CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                if((bool)box.IsChecked)
+                if ((bool)box.IsChecked)
                 {
-                    TextBlock content = softverTabela.Columns[1].GetCellContent(row) as TextBlock;
-                    novaUcionica.InstaliraniSoftveri.Add(content.Text);
+                    postojiSoftver = true;
                 }
             }
-
-            tabelaUcionica.Add(novaUcionica);
-            racunarskiCentar.DodajUcionicu(novaUcionica);
-            this.Close();
+            if (!postojiSoftver)
+            {
+                MessageBox.Show("Niste označili potreban softver!");
+                return false;
+            }
+            return true;
         }
     }
 }

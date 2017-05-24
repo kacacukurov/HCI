@@ -146,19 +146,23 @@ namespace HCI_Projekat
 
         private void obrisiElement(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(tabControl.SelectedIndex.ToString());
-            // trenutno smo u tabu za ucionice
-            if (tabControl.SelectedIndex == 1)
-                obrisiUcionicuClick(sender, e);
-            // trenutno smo u tabu za predmete
-            else if (tabControl.SelectedIndex == 2)
-                obrisiPredmetClick(sender, e);
-            // trenutno smo u tabu za smerove
-            else if (tabControl.SelectedIndex == 3)
-                obrisiSmerClick(sender, e);
-            // trenutno smo u tabu za softvere
-            else if (tabControl.SelectedIndex == 4)
-                obrisiSoftverClick(sender, e);
+            var brisanjeProzor = new PotvrdaBrisanja();
+            brisanjeProzor.ShowDialog();
+            if (brisanjeProzor.daKlik)
+            {
+                // trenutno smo u tabu za ucionice
+                if (tabControl.SelectedIndex == 1)
+                    obrisiUcionicuClick(sender, e);
+                // trenutno smo u tabu za predmete
+                else if (tabControl.SelectedIndex == 2)
+                    obrisiPredmetClick(sender, e);
+                // trenutno smo u tabu za smerove
+                else if (tabControl.SelectedIndex == 3)
+                    obrisiSmerClick(sender, e);
+                // trenutno smo u tabu za softvere
+                else if (tabControl.SelectedIndex == 4)
+                    obrisiSoftverClick(sender, e);
+            }
         }
 
         private void izmeniElement(object sender, RoutedEventArgs e)
@@ -232,13 +236,45 @@ namespace HCI_Projekat
                 DataGridRow selektovaniRed = (DataGridRow)tabelaSoftvera.ItemContainerGenerator.ContainerFromIndex(tabelaSoftvera.SelectedIndex);
                 TextBlock content = tabelaSoftvera.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                 string oznakaSoftvera = content.Text;
-
+                //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
+                bool koristiSeUPredmetu = false;
+                foreach(Predmet p in racunarskiCentar.Predmeti.Values)
+                {
+                    if (!p.Obrisan)
+                    {
+                        foreach (string s in p.Softveri)
+                        {
+                            if (s == oznakaSoftvera)
+                                koristiSeUPredmetu = true;
+                        }
+                    }
+                }
+                if (koristiSeUPredmetu)
+                {
+                    MessageBox.Show("Ne možete obrisati softver, koristi se u nekom predmetu!");
+                    return;
+                }
+                //provera da li se nalazi u nekoj ucionici, ako se nalazi, sprecava se brisanje
+                bool koristiSeUucionici = false;
+                foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
+                {
+                    if (!u.Obrisan)
+                    {
+                        foreach (string s in u.InstaliraniSoftveri)
+                        {
+                            if (s == oznakaSoftvera)
+                                koristiSeUucionici = true;
+                        }
+                    }
+                }
+                if (koristiSeUucionici)
+                {
+                    MessageBox.Show("Ne možete obrisati softver, koristi se u nekoj učionici!");
+                    return;
+                }
                 softveriKolekcija.Remove(racunarskiCentar.Softveri[oznakaSoftvera]);
                 
                 racunarskiCentar.Softveri[oznakaSoftvera].Obrisan = true;
-
-                //u predmetima ukloniti softver iz liste softvera ako ga sadrzi
-                //u ucionicama ukloniti softver iz liste softvera ako ga sadrzi
             }
             else
                 return;
@@ -249,9 +285,8 @@ namespace HCI_Projekat
             if (tabelaUcionica.SelectedIndex != -1)
             {
                 DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(tabelaUcionica.SelectedIndex);
-                TextBlock content = tabelaSmerova.Columns[0].GetCellContent(tabelaUcionica) as TextBlock;
+                TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
                 string oznakaUcionice = content.Text;
-                MessageBox.Show(oznakaUcionice);
 
                 ucioniceKolekcija.Remove(racunarskiCentar.Ucionice[oznakaUcionice]);
                 
@@ -267,7 +302,21 @@ namespace HCI_Projekat
                 DataGridRow selektovaniRed = (DataGridRow)tabelaSmerova.ItemContainerGenerator.ContainerFromIndex(tabelaSmerova.SelectedIndex);
                 TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                 string oznakaSmera = content.Text;
-
+                //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
+                bool koristiSeUPredmetu = false;
+                foreach (Predmet p in racunarskiCentar.Predmeti.Values)
+                {
+                    if (!p.Obrisan)
+                    {
+                        if (p.Smer.Oznaka == oznakaSmera)
+                            koristiSeUPredmetu = true;
+                    }
+                }
+                if (koristiSeUPredmetu)
+                {
+                    MessageBox.Show("Ne možete obrisati smer, sadrži neke predmete!");
+                    return;
+                }
                 smeroviKolekcija.Remove(racunarskiCentar.Smerovi[oznakaSmera]);
                 
                 racunarskiCentar.Smerovi[oznakaSmera].Obrisan = true;

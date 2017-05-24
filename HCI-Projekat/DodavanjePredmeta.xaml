@@ -184,10 +184,10 @@
                         <TextBox Name="OpisPredmeta" Width="150" Height="80" Margin="150,140,0,0" VerticalAlignment="Top"/>
                         
                         <TextBlock Text="Duzina termina" HorizontalAlignment="Center" Margin="-110,240,0,0"/>
-                        <xctk:IntegerUpDown Name="DuzinaTerminaPredmet" Value="1" Height="20" Width="50" Margin="50, 60, 0,0"></xctk:IntegerUpDown>
+                        <xctk:IntegerUpDown Name="DuzinaTerminaPredmet" Value="1" Height="20" Width="50" Margin="50, 100, 0,0"></xctk:IntegerUpDown>
                         
                         <TextBlock Text="Broj termina" HorizontalAlignment="Center" Margin="-97,280,0,0"/>
-                        <xctk:IntegerUpDown Name="BrojTerminaPredmet" Value="1" Height="20" Width="50" Margin="50, 140, 0,0"></xctk:IntegerUpDown>
+                        <xctk:IntegerUpDown Name="BrojTerminaPredmet" Value="1" Height="20" Width="50" Margin="50, 180, 0,0"></xctk:IntegerUpDown>
                         
                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
                             <Button Width="60" Height="20" Content="Nastavi &gt;" Click="nextClick" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0" Background="DarkGreen" Foreground="White">
@@ -225,8 +225,8 @@
                         </StackPanel>
 
 
-                        <TextBlock Text="Softver" HorizontalAlignment="Center" Margin="-65,260,0,0"/>
-                        <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="100" Width="380" Margin="0,230,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                        <TextBlock Text="Softver" HorizontalAlignment="Center" Margin="-65,255,0,0"/>
+                        <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="90" Width="380" Margin="0,240,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100"/>
                                 <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50"/>

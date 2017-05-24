@@ -83,10 +83,15 @@ namespace HCI_Projekat
         {
             if (racunarskiCentar.Smerovi.ContainsKey(OznakaSmera.Text))
             {
-                MessageBox.Show("Smer sa ovom oznakom vec postoji!");
-                OznakaSmera.Text = "";
-                OznakaSmera.Focus();
-                return false;
+                if (racunarskiCentar.Smerovi[OznakaSmera.Text].Obrisan)
+                    racunarskiCentar.Smerovi.Remove(OznakaSmera.Text);
+                else
+                {
+                    MessageBox.Show("Smer sa ovom oznakom vec postoji!");
+                    OznakaSmera.Text = "";
+                    OznakaSmera.Focus();
+                    return false;
+                }
             }
             else if (NazivSmera.Text == "" || OznakaSmera.Text == "" || OpisSmera.Text == "" || DatumUvodjenja.Text == "")
             {

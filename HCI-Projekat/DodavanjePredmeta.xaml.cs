@@ -44,36 +44,67 @@ namespace HCI_Projekat
             softverTabela.ItemsSource = softveri;
             softverTabela.IsSynchronizedWithCurrentItem = true;
             OznakaPredmeta.Focus();
+            BackStepMenuItem.IsEnabled = false;
+        }
+
+        private void cutClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Cut");
+        }
+
+        private void copyClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Copy");
+        }
+
+        private void pasteClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Paste");
+        }
+
+        private void undoClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Undo");
+        }
+
+        private void redoClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Redo");
         }
 
         public void nextStep(object sender, RoutedEventArgs e)
         {
+            
             Keyboard.ClearFocus();
-            nextClickPredmet(sender, e);
+            nextClick(sender, e);
         }
 
         public void backStep(object sender, RoutedEventArgs e)
         {
             Keyboard.ClearFocus();
-            backClickPredmet(sender, e);
+            backClick(sender, e);
         }
 
-        public void nextClickPredmet(object sender, RoutedEventArgs e)
+        public void nextClick(object sender, RoutedEventArgs e)
         {
+            NextStepMenuItem.IsEnabled = false;
+            BackStepMenuItem.IsEnabled = true;
             Korak2Predmet.Focus();
         }
 
-        public void backClickPredmet(object sender, RoutedEventArgs e)
+        public void backClick(object sender, RoutedEventArgs e)
         {
+            BackStepMenuItem.IsEnabled = false;
+            NextStepMenuItem.IsEnabled = true;
             Korak1Predmet.Focus();
         }
 
-        private void exitClickPredmet(object sender, RoutedEventArgs e)
+        private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void finishClickPredmet(object sender, RoutedEventArgs e)
+        private void finishClick(object sender, RoutedEventArgs e)
         {
             if (validacijaNovogPredmeta())
             {

@@ -39,6 +39,32 @@ namespace HCI_Projekat
             softverTabela.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica = ucionice;
             oznakaUcionica.Focus();
+            BackStepMenuItem.IsEnabled = false;
+        }
+
+        private void cutClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Cut");
+        }
+
+        private void copyClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Copy");
+        }
+
+        private void pasteClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Paste");
+        }
+
+        private void undoClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Undo");
+        }
+
+        private void redoClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Redo");
         }
 
         public void nextStep(object sender, RoutedEventArgs e)
@@ -55,11 +81,15 @@ namespace HCI_Projekat
 
         public void nextClick(object sender, RoutedEventArgs e)
         {
+            NextStepMenuItem.IsEnabled = false;
+            BackStepMenuItem.IsEnabled = true;
             Korak2Ucionica.Focus();
         }
 
         public void backClick(object sender, RoutedEventArgs e)
         {
+            BackStepMenuItem.IsEnabled = false;
+            NextStepMenuItem.IsEnabled = true;
             Korak1Ucionica.Focus();
         }
 

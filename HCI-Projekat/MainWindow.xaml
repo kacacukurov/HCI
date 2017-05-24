@@ -16,9 +16,6 @@
         <RoutedUICommand x:Key="obrisi" Text="brisanje"></RoutedUICommand>
         <RoutedUICommand x:Key="undo" Text="undo"></RoutedUICommand>
         <RoutedUICommand x:Key="redo" Text="redo"></RoutedUICommand>
-        <RoutedUICommand x:Key="cut" Text="cut"></RoutedUICommand>
-        <RoutedUICommand x:Key="copy" Text="copy"></RoutedUICommand>
-        <RoutedUICommand x:Key="paste" Text="paste"></RoutedUICommand>
         <RoutedUICommand x:Key="save" Text="save"></RoutedUICommand>
         <RoutedUICommand x:Key="exit" Text="exit"></RoutedUICommand>
         <RoutedUICommand x:Key="backToTabs" Text="tabs"></RoutedUICommand>
@@ -33,9 +30,6 @@
         <CommandBinding Command="{StaticResource obrisi}" Executed="obrisiElement"></CommandBinding>
         <CommandBinding Command="{StaticResource undo}" Executed="undoClick"></CommandBinding>
         <CommandBinding Command="{StaticResource redo}" Executed="redoClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource cut}" Executed="cutClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource copy}" Executed="copyClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource paste}" Executed="pasteClick"></CommandBinding>
         <CommandBinding Command="{StaticResource save}" Executed="saveClick"></CommandBinding>
         <CommandBinding Command="{StaticResource exit}" Executed="exitClick"></CommandBinding>
         <CommandBinding Command="{StaticResource backToTabs}" Executed="tabsFocus"></CommandBinding>
@@ -48,9 +42,6 @@
         <KeyBinding Key="T" Modifiers="Ctrl" Command="{StaticResource noviSoftver}"></KeyBinding>
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
         <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
-        <KeyBinding Key="X" Modifiers="Ctrl" Command="{StaticResource cut}"></KeyBinding>
-        <KeyBinding Key="C" Modifiers="Ctrl" Command="{StaticResource copy}"></KeyBinding>
-        <KeyBinding Key="V" Modifiers="Ctrl" Command="{StaticResource paste}"></KeyBinding>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
         <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
         <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
@@ -70,26 +61,26 @@
                 
                 <Menu.Items>
                    
-                    <MenuItem Header="File" HorizontalAlignment="Left">
-                        <MenuItem Click="dodavanjeUcioniceClick" Header="Nova učionica" InputGestureText="Ctrl+U">
+                    <MenuItem Header="_File" HorizontalAlignment="Left">
+                        <MenuItem Click="dodavanjeUcioniceClick" Header="_Nova učionica" InputGestureText="Ctrl+U">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="U" Modifiers="Ctrl" Command="{StaticResource novaUcionica}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
-                        <MenuItem Click="dodavanjeSmeraClick" Header="Novi smer" InputGestureText="Ctrl+M">
+                        <MenuItem Click="dodavanjeSmeraClick" Header="_Novi smer" InputGestureText="Ctrl+M">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="M" Modifiers="Ctrl" Command="{StaticResource noviSmer}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
-                        <MenuItem Click="dodavanjePredmetaClick" Header="Novi predmet" InputGestureText="Ctrl+P">
+                        <MenuItem Click="dodavanjePredmetaClick" Header="_Novi predmet" InputGestureText="Ctrl+P">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="P" Modifiers="Ctrl" Command="{StaticResource noviPredmet}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
-                        <MenuItem Click="dodavanjeSoftveraClick" Header="Novi softver" InputGestureText="Ctrl+T">
+                        <MenuItem Click="dodavanjeSoftveraClick" Header="_Novi softver" InputGestureText="Ctrl+T">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="T" Modifiers="Ctrl" Command="{StaticResource noviSoftver}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -97,7 +88,7 @@
                         
                         <Separator></Separator>
                         
-                        <MenuItem Click="saveClick" Header="Sačuvaj" InputGestureText="Ctrl+S">
+                        <MenuItem Click="saveClick" Header="_Sačuvaj" InputGestureText="Ctrl+S">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -105,68 +96,43 @@
                         
                         <Separator></Separator>
                         
-                        <MenuItem Click="exitClick" Header="Ugasi" InputGestureText="Ctrl+Q">
+                        <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                     </MenuItem>
                     
-                    <MenuItem Header="Edit" HorizontalAlignment="Left">
-                        <MenuItem Click="undoClick" Header="Undo" InputGestureText="Ctrl+Z">
+                    <MenuItem Header="_Edit" HorizontalAlignment="Left">
+                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
-                        <MenuItem Click="redoClick" Header="Redo" InputGestureText="Ctrl+Y">
+                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
                         <Separator></Separator>
-                        
-                        <MenuItem Click="cutClick" Header="Cut" InputGestureText="Ctrl+X">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="X" Modifiers="Ctrl" Command="{StaticResource cut}"></KeyBinding>
-                            </MenuItem.InputBindings>
-                        </MenuItem>
-                        
-                        <MenuItem Click="copyClick" Header="Copy" InputGestureText="Ctrl+C">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="C" Modifiers="Ctrl" Command="{StaticResource copy}"></KeyBinding>
-                            </MenuItem.InputBindings>
-                        </MenuItem>
-                        
-                        <MenuItem Click="pasteClick" Header="Paste" InputGestureText="Ctrl+V">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="V" Modifiers="Ctrl" Command="{StaticResource paste}"></KeyBinding>
-                            </MenuItem.InputBindings>
-                        </MenuItem>
 
-                        <Separator></Separator>
-
-                        <MenuItem Click="izmeniElement" Header="Izmeni element tabele" InputGestureText="Ctrl+I">
+                        <MenuItem Click="izmeniElement" Header="_Izmeni element tabele" InputGestureText="Ctrl+I">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
-                        <MenuItem Click="obrisiElement" Header="Obriši element tabele" InputGestureText="Ctrl+delete">
+                        <MenuItem Click="obrisiElement" Header="_Obriši element tabele" InputGestureText="Ctrl+delete">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
-                        <Separator></Separator>
-
-                        <MenuItem Header="Korak napred" InputGestureText="Ctrl+N" IsEnabled="False"></MenuItem>
-                        <MenuItem Header="Korak nazad" InputGestureText="Ctrl+B" IsEnabled="False"></MenuItem>
-                        
                     </MenuItem>
                     
-                    <MenuItem Header="Help" HorizontalAlignment="Left"></MenuItem>
+                    <MenuItem Header="_Help" HorizontalAlignment="Left"></MenuItem>
                 </Menu.Items>
             </Menu>
 
@@ -191,25 +157,7 @@
                             <Image Source="picture/redo.png" Stretch="UniformToFill" ToolTip="Redo"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    
-                    <MenuItem HorizontalAlignment="Left" Name="Cut" Width="27" Click="cutClick">
-                        <MenuItem.Icon>
-                            <Image Source="picture/cut.png" Stretch="UniformToFill" ToolTip="Cut"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    
-                    <MenuItem HorizontalAlignment="Left" Name="Copy" Width="27" Click="copyClick">
-                        <MenuItem.Icon>
-                            <Image Source="picture/copy.png" Stretch="UniformToFill" ToolTip="Copy"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    
-                    <MenuItem HorizontalAlignment="Left" Name="Paste" Width="27" Click="pasteClick">
-                        <MenuItem.Icon>
-                            <Image Source="picture/paste.png" Stretch="UniformToFill" ToolTip="Paste"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    
+                   
                 </Menu.Items>
             </Menu>
 

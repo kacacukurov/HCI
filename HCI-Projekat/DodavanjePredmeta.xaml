@@ -16,15 +16,25 @@
         <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
         <RoutedUICommand x:Key="sledeciDeo" Text="next"></RoutedUICommand>
         <RoutedUICommand x:Key="prethodniDeo" Text="back"></RoutedUICommand>
+        <RoutedUICommand x:Key="undo" Text="undo"></RoutedUICommand>
+        <RoutedUICommand x:Key="redo" Text="redo"></RoutedUICommand>
+        <RoutedUICommand x:Key="cut" Text="cut"></RoutedUICommand>
+        <RoutedUICommand x:Key="copy" Text="copy"></RoutedUICommand>
+        <RoutedUICommand x:Key="paste" Text="paste"></RoutedUICommand>
     </Window.Resources>
 
     <Window.CommandBindings>
-        <CommandBinding Command="{StaticResource sledeciKorak}" Executed="nextClickPredmet"></CommandBinding>
-        <CommandBinding Command="{StaticResource prethodniKorak}" Executed="backClickPredmet"></CommandBinding>
-        <CommandBinding Command="{StaticResource odustani}" Executed="exitClickPredmet"></CommandBinding>
-        <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClickPredmet"></CommandBinding>
+        <CommandBinding Command="{StaticResource sledeciKorak}" Executed="nextClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prethodniKorak}" Executed="backClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource odustani}" Executed="cancelClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClick"></CommandBinding>
         <CommandBinding Command="{StaticResource sledeciDeo}" Executed="nextStep"></CommandBinding>
         <CommandBinding Command="{StaticResource prethodniDeo}" Executed="backStep"></CommandBinding>
+        <CommandBinding Command="{StaticResource undo}" Executed="undoClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource redo}" Executed="redoClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource cut}" Executed="cutClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource copy}" Executed="copyClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource paste}" Executed="pasteClick"></CommandBinding>
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -34,10 +44,126 @@
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{StaticResource sledeciDeo}"></KeyBinding>
         <KeyBinding Key="B" Modifiers="Ctrl" Command="{StaticResource prethodniDeo}"></KeyBinding>
+        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
+        <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{StaticResource cut}"></KeyBinding>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{StaticResource copy}"></KeyBinding>
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="{StaticResource paste}"></KeyBinding>
     </Window.InputBindings>
 
     <Grid>
         <DockPanel>
+            <Menu DockPanel.Dock="Top" Name="FirstMenu" Margin="1">
+
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+
+                <Menu.Items>
+
+                    <MenuItem Header="_File" HorizontalAlignment="Left">
+                        <MenuItem Click="finishClick" Header="_Sačuvaj" InputGestureText="Ctrl+S">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="cancelClick" Header="_Ugasi" InputGestureText="Ctrl+Q">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="_Edit" HorizontalAlignment="Left">
+                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <Separator></Separator>
+
+                        <MenuItem Click="cutClick" Header="_Cut" InputGestureText="Ctrl+X">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="X" Modifiers="Ctrl" Command="{StaticResource cut}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="copyClick" Header="_Copy" InputGestureText="Ctrl+C">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="C" Modifiers="Ctrl" Command="{StaticResource copy}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="pasteClick" Header="_Paste" InputGestureText="Ctrl+V">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="V" Modifiers="Ctrl" Command="{StaticResource paste}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <Separator></Separator>
+
+                        <MenuItem Header="_Sledeći korak" InputGestureText="Ctrl+N" Click="nextStep" Name="NextStepMenuItem"></MenuItem>
+                        <MenuItem Header="_Prethodni korak" InputGestureText="Ctrl+B" Click="backStep" Name="BackStepMenuItem"></MenuItem>
+
+                    </MenuItem>
+
+                    <MenuItem Header="_Help" HorizontalAlignment="Left"></MenuItem>
+                </Menu.Items>
+            </Menu>
+
+            <Menu DockPanel.Dock="Top" Name="SecondMenu">
+
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+
+                <Menu.Items>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Undo" Width="27" Click="undoClick">
+                        <MenuItem.Icon>
+                            <Image Source="picture/undo.png" Stretch="UniformToFill" ToolTip="Undo"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Redo" Width="27" Click="redoClick">
+                        <MenuItem.Icon>
+                            <Image Source="picture/redo.png" Stretch="UniformToFill" ToolTip="Redo"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Cut" Width="27" Click="cutClick">
+                        <MenuItem.Icon>
+                            <Image Source="picture/cut.png" Stretch="UniformToFill" ToolTip="Cut"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Copy" Width="27" Click="copyClick">
+                        <MenuItem.Icon>
+                            <Image Source="picture/copy.png" Stretch="UniformToFill" ToolTip="Copy"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Paste" Width="27" Click="pasteClick">
+                        <MenuItem.Icon>
+                            <Image Source="picture/paste.png" Stretch="UniformToFill" ToolTip="Paste"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                </Menu.Items>
+            </Menu>
+
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlPredmet">
                 <TabItem Header="Korak 1" Name="Korak1Predmet" HorizontalAlignment="Center">
                     <Grid>
@@ -64,12 +190,12 @@
                         <xctk:IntegerUpDown Name="BrojTerminaPredmet" Value="1" Height="20" Width="50" Margin="50, 140, 0,0"></xctk:IntegerUpDown>
                         
                         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20">
-                            <Button Width="60" Height="20" Content="Nastavi &gt;" Click="nextClickPredmet" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0" Background="DarkGreen" Foreground="White">
+                            <Button Width="60" Height="20" Content="Nastavi &gt;" Click="nextClick" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0" Background="DarkGreen" Foreground="White">
                                 <Button.InputBindings>
                                     <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
                                 </Button.InputBindings>
                             </Button>
-                            <Button Width="60" Height="20" Content="Odustani" Click="exitClickPredmet" Name="quitButton" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
+                            <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="quitButton" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
                                 <Button.InputBindings>
                                     <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
                                 </Button.InputBindings>
@@ -111,17 +237,17 @@
 
                         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="20">
 
-                            <Button Width="60" Height="20" Content="&lt; Nazad" Click="backClickPredmet" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0" Background="DarkBlue" Foreground="White">
+                            <Button Width="60" Height="20" Content="&lt; Nazad" Click="backClick" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0" Background="DarkBlue" Foreground="White">
                                 <Button.InputBindings>
                                     <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
                                 </Button.InputBindings>
                             </Button>
-                            <Button Width="60" Height="20" Content="Odustani" Click="exitClickPredmet" Name="quitButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
+                            <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="quitButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
                                 <Button.InputBindings>
                                     <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
                                 </Button.InputBindings>
                             </Button>
-                            <Button Width="60" Height="20" Content="Završi" Click="finishClickPredmet" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                            <Button Width="60" Height="20" Content="Završi" Click="finishClick" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
                                 <Button.InputBindings>
                                     <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
                                 </Button.InputBindings>

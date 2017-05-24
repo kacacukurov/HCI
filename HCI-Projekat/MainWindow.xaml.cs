@@ -118,21 +118,6 @@ namespace HCI_Projekat
             mainWindow.Close();
         }
 
-        private void cutClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Cut");
-        }
-
-        private void copyClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Copy");
-        }
-
-        private void pasteClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Paste");
-        }
-
         private void undoClick(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Undo");
@@ -161,6 +146,7 @@ namespace HCI_Projekat
 
         private void obrisiElement(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show(tabControl.SelectedIndex.ToString());
             // trenutno smo u tabu za ucionice
             if (tabControl.SelectedIndex == 1)
                 obrisiUcionicuClick(sender, e);
@@ -265,6 +251,7 @@ namespace HCI_Projekat
                 DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(tabelaUcionica.SelectedIndex);
                 TextBlock content = tabelaSmerova.Columns[0].GetCellContent(tabelaUcionica) as TextBlock;
                 string oznakaUcionice = content.Text;
+                MessageBox.Show(oznakaUcionice);
 
                 ucioniceKolekcija.Remove(racunarskiCentar.Ucionice[oznakaUcionice]);
                 

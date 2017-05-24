@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="MainWindow" Name="mainWindow" WindowState="Maximized" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
+        Title="MainWindow" Name="mainWindow" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
 
     <Window.Resources>
         <RoutedUICommand x:Key="novaUcionica" Text="ucionica"></RoutedUICommand>
@@ -226,7 +226,7 @@
                                 <DataGridTextColumn Binding="{Binding Path = PrisustvoProjektora, FallbackValue='-'}" Header="Projektor" Width="110"/>
                                 <DataGridTextColumn Binding="{Binding Path = PrisustvoTable, FallbackValue='-'}" Header="Tabla" Width="110"/>
                                 <DataGridTextColumn Binding="{Binding Path = PrisustvoPametneTable, FallbackValue='-'}" Header="Pametna tabla" Width="110"/>
-                                <DataGridTextColumn Binding="{Binding Path = Operativnisistem, FallbackValue='-'}" Header="Operativni sistem" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
 

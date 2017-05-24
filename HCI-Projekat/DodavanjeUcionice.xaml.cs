@@ -29,7 +29,12 @@ namespace HCI_Projekat
             InitializeComponent();
             novaUcionica = new Ucionica();
             this.racunarskiCentar = racunarskiCentar;
-            List<Softver> softveri = racunarskiCentar.Softveri.Values.ToList();
+            List<Softver> softveri = new List<Softver>();
+            foreach(Softver s in racunarskiCentar.Softveri.Values)
+            {
+                if (!s.Obrisan)
+                    softveri.Add(s);
+            }
             softverTabela.ItemsSource = softveri;
             softverTabela.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica = ucionice;

@@ -13,6 +13,7 @@ namespace HCI_Projekat
         private string naziv;
         private DateTime datum;
         private string opis;
+        private bool obrisan;
 
         public Smer() { }
 
@@ -22,6 +23,7 @@ namespace HCI_Projekat
             this.naziv = naziv;
             this.datum = datum;
             this.opis = opis;
+            this.obrisan = false;
         }
 
         public string Oznaka
@@ -46,6 +48,12 @@ namespace HCI_Projekat
         {
             get { return opis; }
             set { this.opis = value; }
+        }
+
+        public bool Obrisan
+        {
+            get { return obrisan; }
+            set { this.obrisan = value; }
         }
     }
 }

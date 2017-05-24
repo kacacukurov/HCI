@@ -20,13 +20,16 @@ namespace HCI_Projekat
         private bool neophodnaTabla;
         private bool neophodnaPametnaTabla;
         private string operativniSistem;
-        private string softver;
+        private List<string> softveri;
+        private bool obrisan;
 
-        public Predmet() { }
+        public Predmet() {
+            this.softveri = new List<string>();
+        }
 
         public Predmet(string oznaka, string naziv, Smer smer, string opis, int velicinaGrupe,
             int minDuzinaTermina, int brTermina, bool neophodanProjektor, bool neophodnaTabla, bool neophodnaPametnaTabla,
-            string operativniSistem, string softver)
+            string operativniSistem, List<string> softveri)
         {
             this.oznaka = oznaka;
             this.naziv = naziv;
@@ -39,7 +42,8 @@ namespace HCI_Projekat
             this.neophodnaTabla = neophodnaTabla;
             this.neophodnaPametnaTabla = neophodnaPametnaTabla;
             this.operativniSistem = operativniSistem;
-            this.softver = softver;
+            this.softveri = softveri;
+            this.obrisan = false;
         }
 
         public string Oznaka
@@ -108,10 +112,16 @@ namespace HCI_Projekat
             set { this.operativniSistem = value; }
         }
 
-        public string Softver
+        public List<string> Softveri
         {
-            get { return softver; }
-            set { this.softver = value; }
+            get { return softveri; }
+            set { this.softveri = value; }
+        }
+
+        public bool Obrisan
+        {
+            get { return obrisan; }
+            set { this.obrisan = value; }
         }
     }
 }

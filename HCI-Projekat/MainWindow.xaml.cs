@@ -39,22 +39,46 @@ namespace HCI_Projekat
             racunarskiCentar = new RacunarskiCentar();
             DeserijalizacijaPodataka();
 
-            predmetiKolekcija = new ObservableCollection<Predmet>(racunarskiCentar.Predmeti.Values);
+            //  predmetiKolekcija = new ObservableCollection<Predmet>(racunarskiCentar.Predmeti.Values);
+            predmetiKolekcija = new ObservableCollection<Predmet>();
+            foreach (Predmet p in racunarskiCentar.Predmeti.Values)
+            {
+                if (!p.Obrisan)
+                    predmetiKolekcija.Add(p);
+            }
             tabelaPredmeta.ItemsSource = predmetiKolekcija;
             tabelaPredmeta.IsSynchronizedWithCurrentItem = true;
             tabelaPredmeta.IsReadOnly = true;
 
-            softveriKolekcija = new ObservableCollection<Softver>(racunarskiCentar.Softveri.Values);
+            //softveriKolekcija = new ObservableCollection<Softver>(racunarskiCentar.Softveri.Values);
+            softveriKolekcija = new ObservableCollection<Softver>();
+            foreach(Softver s in racunarskiCentar.Softveri.Values)
+            {
+                if (!s.Obrisan)
+                    softveriKolekcija.Add(s);
+            }
             tabelaSoftvera.ItemsSource = softveriKolekcija;
             tabelaSoftvera.IsSynchronizedWithCurrentItem = true;
             tabelaSoftvera.IsReadOnly = true;
 
-            smeroviKolekcija = new ObservableCollection<Smer>(racunarskiCentar.Smerovi.Values);
+            //smeroviKolekcija = new ObservableCollection<Smer>(racunarskiCentar.Smerovi.Values);
+            smeroviKolekcija = new ObservableCollection<Smer>();
+            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            {
+                if (!s.Obrisan)
+                    smeroviKolekcija.Add(s);
+            }
             tabelaSmerova.ItemsSource = smeroviKolekcija;
             tabelaSmerova.IsSynchronizedWithCurrentItem = true;
             tabelaSoftvera.IsReadOnly = true;
 
-            ucioniceKolekcija = new ObservableCollection<Ucionica>(racunarskiCentar.Ucionice.Values);
+            //ucioniceKolekcija = new ObservableCollection<Ucionica>(racunarskiCentar.Ucionice.Values);
+            ucioniceKolekcija = new ObservableCollection<Ucionica>();
+            foreach(Ucionica u in racunarskiCentar.Ucionice.Values)
+            {
+                if (!u.Obrisan)
+                    ucioniceKolekcija.Add(u);
+            }
             tabelaUcionica.ItemsSource = ucioniceKolekcija;
             tabelaUcionica.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica.IsReadOnly = true;
@@ -208,8 +232,8 @@ namespace HCI_Projekat
                 string oznakaPredmeta = content.Text;
 
                 predmetiKolekcija.Remove(racunarskiCentar.Predmeti[oznakaPredmeta]);
-                //promeniti sa fizickog na logicko brisanje
-                racunarskiCentar.Predmeti.Remove(oznakaPredmeta);
+                
+                racunarskiCentar.Predmeti[oznakaPredmeta].Obrisan = true;
             }
             else
                 return;
@@ -224,8 +248,8 @@ namespace HCI_Projekat
                 string oznakaSoftvera = content.Text;
 
                 softveriKolekcija.Remove(racunarskiCentar.Softveri[oznakaSoftvera]);
-                // promeniti sa fizickog na logicko brisanje
-                racunarskiCentar.Softveri.Remove(oznakaSoftvera);
+                
+                racunarskiCentar.Softveri[oznakaSoftvera].Obrisan = true;
 
                 //u predmetima ukloniti softver iz liste softvera ako ga sadrzi
                 //u ucionicama ukloniti softver iz liste softvera ako ga sadrzi
@@ -243,8 +267,8 @@ namespace HCI_Projekat
                 string oznakaUcionice = content.Text;
 
                 ucioniceKolekcija.Remove(racunarskiCentar.Ucionice[oznakaUcionice]);
-                //promeniti sa fizickog na logicko brisanje
-                racunarskiCentar.Ucionice.Remove(oznakaUcionice);
+                
+                racunarskiCentar.Ucionice[oznakaUcionice].Obrisan = true;
             }
             else
                 return;
@@ -258,8 +282,8 @@ namespace HCI_Projekat
                 string oznakaSmera = content.Text;
 
                 smeroviKolekcija.Remove(racunarskiCentar.Smerovi[oznakaSmera]);
-                //promeniti sa fizickog na logicko brisanje
-                racunarskiCentar.Smerovi.Remove(oznakaSmera);
+                
+                racunarskiCentar.Smerovi[oznakaSmera].Obrisan = true;
             }
             else
                 return;

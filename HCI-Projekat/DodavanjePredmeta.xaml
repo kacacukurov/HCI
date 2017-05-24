@@ -100,7 +100,14 @@
 
 
                         <TextBlock Text="Softver" HorizontalAlignment="Center" Margin="-65,260,0,0"/>
-                        <ComboBox Name="SoftverPredmeta" VerticalAlignment="Top" Height="20" Width="100" Margin="110,260,0,0" />
+                        <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="100" Width="380" Margin="0,230,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100"/>
+                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50"/>
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="150"/>
+                                <DataGridCheckBoxColumn Binding="{Binding Path = Instalirano, FallbackValue='-'}" Header="Potreban" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
                         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="20">
 

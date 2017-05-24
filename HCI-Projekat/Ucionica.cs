@@ -17,6 +17,7 @@ namespace HCI_Projekat
         private bool prisustvoPametneTable;
         private string operativniSistem;
         private List<string> instaliraniSoftveri;
+        private bool obrisan;
 
         public Ucionica()
         {
@@ -34,6 +35,7 @@ namespace HCI_Projekat
             this.prisustvoPametneTable = prisustvoPametneTable;
             this.operativniSistem = operativniSistem;
             this.instaliraniSoftveri = instaliraniSoftveri;
+            this.obrisan = false;
         }
 
         public string Oznaka
@@ -82,6 +84,12 @@ namespace HCI_Projekat
         {
             get { return instaliraniSoftveri; }
             set { this.instaliraniSoftveri = value; }
+        }
+
+        public bool Obrisan
+        {
+            get { return obrisan; }
+            set { this.obrisan = value; }
         }
     }
 }

@@ -17,6 +17,7 @@ namespace HCI_Projekat
         private int godIzdavanja;
         private double cena;
         private string opis;
+        private bool obrisan;
 
         public Softver() { }
 
@@ -31,6 +32,7 @@ namespace HCI_Projekat
             this.godIzdavanja = godIzdavanja;
             this.cena = cena;
             this.opis = opis;
+            this.obrisan = false;
         }
 
         public string Oznaka
@@ -79,6 +81,12 @@ namespace HCI_Projekat
         {
             get { return opis; }
             set { this.opis = value; }
+        }
+
+        public bool Obrisan
+        {
+            get { return obrisan; }
+            set { this.obrisan = value; }
         }
     }
 }

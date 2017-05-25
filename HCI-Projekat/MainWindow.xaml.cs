@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Collections.ObjectModel;
@@ -126,6 +116,117 @@ namespace HCI_Projekat
         private void redoClick(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Redo");
+        }
+
+        private void detaljanPrikazPodataka(object sender, EventArgs e)
+        {
+            // trenutno smo u tabu za ucionice
+            if (tabControl.SelectedIndex == 1)
+               detaljanPrikazUcionice();
+            // trenutno smo u tabu za predmete
+            else if (tabControl.SelectedIndex == 2)
+                detaljanPrikazPredmeta();
+            // trenutno smo u tabu za smerove
+            else if (tabControl.SelectedIndex == 3)
+                detaljanPrikazSmera();
+            // trenutno smo u tabu za softvere
+            else if (tabControl.SelectedIndex == 4)
+                detaljanPrikazSoftvera();
+        }
+
+        private void detaljanPrikazUcionice()
+        {
+            if(tabelaUcionica.SelectedIndex != -1)
+            {
+                DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(tabelaUcionica.SelectedIndex);
+                TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
+                string oznakaUcionice = content.Text;
+
+                Ucionica ucionica = racunarskiCentar.Ucionice[oznakaUcionice];
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Oznaka: " + ucionica.Oznaka);
+                sb.Append("\nOpis: " + ucionica.Opis);
+                sb.Append("\nBroj radnih mesta: " + ucionica.BrojRadnihMesta);
+                sb.Append("\nOperativni sistem: " + ucionica.OperativniSistem);
+                sb.Append("\nTabla: " + (ucionica.PrisustvoTable ? "postoji" : "ne postoji"));
+                sb.Append("\nPametna tabla: " + (ucionica.PrisustvoPametneTable ? "postoji" : "ne postoji"));
+                sb.Append("\nProjektor: " + (ucionica.PrisustvoProjektora ? "postoji" : "ne postoji"));
+                sb.Append("\nInstalirani softveri: ");
+                foreach(string softver in ucionica.InstaliraniSoftveri)
+                {
+                    sb.Append("\n\t" + softver);
+                }
+                UcionicaDetaljanPrikazBox.Text = sb.ToString();
+            }
+        }
+
+        private void detaljanPrikazPredmeta()
+        {
+            if (tabelaPredmeta.SelectedIndex != -1)
+            {
+                DataGridRow selektovaniRed = (DataGridRow)tabelaPredmeta.ItemContainerGenerator.ContainerFromIndex(tabelaPredmeta.SelectedIndex);
+                TextBlock content = tabelaPredmeta.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
+                string oznakaPredmeta = content.Text;
+
+                Predmet predmet = racunarskiCentar.Predmeti[oznakaPredmeta];
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Oznaka: " + predmet.Oznaka);
+                sb.Append("\nNaziv: " + predmet.Naziv);
+                sb.Append("\nOpis: " + predmet.Opis);
+                sb.Append("\nBroj termina: " + predmet.BrTermina);
+                sb.Append("\nMinimalna dužina termina: " + predmet.MinDuzinaTermina);
+                sb.Append("\nOperativni sistem: " + predmet.OperativniSistem);
+                sb.Append("\nSmer: " + predmet.Smer.Oznaka);
+                sb.Append("\nProjektor: " + (predmet.NeophodanProjektor ? "neophodan" : "nije neophodan"));
+                sb.Append("\nTabla: " + (predmet.NeophodnaTabla ? "neophodna" : "nije neophodna"));
+                sb.Append("\nPametna tabla: " + (predmet.NeophodnaPametnaTabla ? "neophodna" : "nije neophodna"));
+                sb.Append("\nSoftveri:");
+                foreach(string softver in predmet.Softveri)
+                {
+                    sb.Append("\n\t" + softver);
+                }
+                PredmetDetaljanPrikazBox.Text = sb.ToString();
+            }
+        }
+
+        private void detaljanPrikazSmera()
+        {
+            if (tabelaSmerova.SelectedIndex != -1)
+            {
+                DataGridRow selektovaniRed = (DataGridRow)tabelaSmerova.ItemContainerGenerator.ContainerFromIndex(tabelaSmerova.SelectedIndex);
+                TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
+                string oznakaSmera = content.Text;
+
+                Smer smer = racunarskiCentar.Smerovi[oznakaSmera];
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Oznaka: " + smer.Oznaka);
+                sb.Append("\nNaziv: " + smer.Naziv);
+                sb.Append("\nDatum uvođenja: " + smer.Datum);
+                sb.Append("\nOpis: " + smer.Opis);
+                SmerDetaljanPrikazBox.Text = sb.ToString();
+            }
+        }
+
+        private void detaljanPrikazSoftvera()
+        {
+            if (tabelaSoftvera.SelectedIndex != -1)
+            {
+                DataGridRow selektovaniRed = (DataGridRow)tabelaSoftvera.ItemContainerGenerator.ContainerFromIndex(tabelaSoftvera.SelectedIndex);
+                TextBlock content = tabelaSoftvera.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
+                string oznakaSoftver = content.Text;
+
+                Softver softver = racunarskiCentar.Softveri[oznakaSoftver];
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Oznaka: " + softver.Oznaka);
+                sb.Append("\nNaziv: " + softver.Naziv);
+                sb.Append("\nOpis: " + softver.Opis);
+                sb.Append("\nGodina izdavanja: " + softver.GodIzdavanja);
+                sb.Append("\nProizvođač: " + softver.Proizvodjac);
+                sb.Append("\nSajt: " + softver.Sajt);
+                sb.Append("\nCena: " + softver.Cena);
+                sb.Append("\nOperativni sistem: " + softver.OperativniSistem);
+                SoftverDetaljanPrikazBox.Text = sb.ToString();
+            }
         }
 
         private void tabsFocus(object sender, RoutedEventArgs e)

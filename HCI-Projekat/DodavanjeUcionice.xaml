@@ -216,9 +216,9 @@
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="166,152,172,241" TextAlignment="Center" Text="Softver" Width="54" />
                             <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="200" Width="380" Margin="0,180,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100"/>
-                                    <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50"/>
-                                    <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="150"/>
+                                    <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True"/>
+                                    <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="150" IsReadOnly="True"/>
                                     <DataGridCheckBoxColumn Binding="{Binding Path = Instalirano, FallbackValue='-'}" Header="Potreban" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>

@@ -231,7 +231,7 @@
                 
                 <TabItem Header="Smer" Name="SmerTab">
                     <Grid>
-                        <DataGrid Name="tabelaSmerova" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <DataGrid Name="tabelaSmerova" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False"  IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Runtime.Serialization;
@@ -50,7 +49,7 @@ namespace HCI_Projekat
             tabelaSoftvera.ItemsSource = softveriKolekcija;
             tabelaSoftvera.IsSynchronizedWithCurrentItem = true;
             tabelaSoftvera.IsReadOnly = true;
-
+            
             //smeroviKolekcija = new ObservableCollection<Smer>(racunarskiCentar.Smerovi.Values);
             smeroviKolekcija = new ObservableCollection<Smer>();
             foreach(Smer s in racunarskiCentar.Smerovi.Values)
@@ -76,25 +75,25 @@ namespace HCI_Projekat
 
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)
         {
-            var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija);
+            var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false);
             ucionicaWindow.ShowDialog();
         }
 
         private void dodavanjePredmetaClick(object sender, RoutedEventArgs e)
         {
-            var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija);
+            var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false);
             predmetWindow.ShowDialog();
         }
 
         private void dodavanjeSmeraClick(object sender, RoutedEventArgs e)
         {
-            var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija);
+            var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, false);
             smerWindow.ShowDialog();
         }
 
         private void dodavanjeSoftveraClick(object sender, RoutedEventArgs e)
         {
-            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija);
+            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false);
             softverWindow.ShowDialog();
         }
 
@@ -285,7 +284,47 @@ namespace HCI_Projekat
         private void izmeniPredmetClick(object sender, RoutedEventArgs e)
         {
             if (tabelaPredmeta.SelectedIndex != -1)
-                MessageBox.Show(tabelaPredmeta.SelectedIndex.ToString());
+            {
+                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, true);
+                Predmet pre = (Predmet)tabelaPredmeta.SelectedItem;
+                predmetWindow.NazivPredmeta.Text = pre.Naziv;
+                predmetWindow.NazivPredmeta.Focus();
+                predmetWindow.OznakaPredmeta.Text = pre.Oznaka;
+                predmetWindow.OznakaPredmeta.IsEnabled = false;
+                predmetWindow.OpisPredmeta.Text = pre.Opis;
+                predmetWindow.VelicinaGrupePredmet.Text = pre.VelicinaGrupe.ToString();
+                predmetWindow.DuzinaTerminaPredmet.Text = pre.MinDuzinaTermina.ToString();
+                predmetWindow.BrojTerminaPredmet.Text = pre.BrTermina.ToString();
+                predmetWindow.PrisustvoProjektoraPredmet.IsChecked = pre.NeophodanProjektor;
+                predmetWindow.PrisustvoPametneTable.IsChecked = pre.NeophodnaPametnaTabla;
+                predmetWindow.PrisustvoTablePredmet.IsChecked = pre.NeophodnaTabla;
+
+                if (pre.OperativniSistem.Equals("Windows"))
+                    predmetWindow.Windows.IsChecked = true;
+                else if (pre.OperativniSistem.Equals("Linux"))
+                    predmetWindow.Linux.IsChecked = true;
+                else if (pre.OperativniSistem.Equals("Svejedno"))
+                    predmetWindow.Svejedno.IsChecked = true;
+
+                for (int i = 0; i < predmetWindow.softverTabela.Items.Count; i++)
+                {
+                     //DataGridRow red = (DataGridRow)predmetWindow.softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
+                    //MessageBox.Show(predmetWindow.softverTabela.ItemContainerGenerator.ContainerFromIndex(0).ToString());
+                    //DataGridRow red = (DataGridRow)predmetWindow.softverTabela.Items[i];
+                   // DataGridRow row = (DataGridRow)predmetWindow.softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
+                  //    CheckBox box = predmetWindow.softverTabela.Columns[3].GetCellContent(row) as CheckBox;
+                  //    Softver soft = (Softver)predmetWindow.softverTabela.Items[i];
+                /*      if (row.Softveri.IndexOf(soft.Oznaka) != -1)        //iteriram kroz tabelu i proveravam da li se nalazi u listi softvera
+                          box.IsChecked = true;*/
+                }
+
+                /*
+                 uradi proveru i za smerove
+                 */
+                predmetWindow.indeks = tabelaPredmeta.SelectedIndex;
+                predmetWindow.ShowDialog();
+                tabelaPredmeta.Items.Refresh();
+            }
             else
                 return;
         }
@@ -293,7 +332,28 @@ namespace HCI_Projekat
         private void izmeniSoftverClick(object sender, RoutedEventArgs e)
         {
             if (tabelaSoftvera.SelectedIndex != -1)
-                MessageBox.Show(tabelaSoftvera.SelectedIndex.ToString());
+            {
+                var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, true);
+                Softver red = (Softver)tabelaSoftvera.SelectedItem;
+                softverWindow.nazivSoftver.Text = red.Naziv;
+                softverWindow.nazivSoftver.Focus();
+                softverWindow.proizvodjacSoftver.Text = red.Proizvodjac;
+                softverWindow.sajtSoftver.Text = red.Sajt;
+                softverWindow.godinaSoftver.Text = red.GodIzdavanja.ToString();
+                softverWindow.cenaSoftver.Text = red.Cena.ToString();
+                softverWindow.opisSoftver.Text = red.Opis;
+                softverWindow.oznakaSoftver.Text = red.Oznaka;
+                softverWindow.oznakaSoftver.IsEnabled = false;
+                if (red.OperativniSistem.Equals("Windows"))
+                    softverWindow.WindowsOSSoftver.IsChecked = true;
+                else if (red.OperativniSistem.Equals("Linux"))
+                    softverWindow.LinusOSSoftver.IsChecked = true;
+                else if (red.OperativniSistem.Equals("Windows i Linux"))
+                    softverWindow.WindowsAndLinusOSSoftver.IsChecked = true;
+                softverWindow.indeks = tabelaSoftvera.SelectedIndex;
+                softverWindow.ShowDialog();
+                tabelaSoftvera.Items.Refresh();
+            }
             else
                 return;
         }
@@ -301,7 +361,31 @@ namespace HCI_Projekat
         private void izmeniUcionicuClick(object sender, RoutedEventArgs e)
         {
             if (tabelaUcionica.SelectedIndex != -1)
-                MessageBox.Show(tabelaUcionica.SelectedIndex.ToString());
+            {
+                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, true);
+                Ucionica red = (Ucionica)tabelaUcionica.SelectedItem;
+                ucionicaWindow.oznakaUcionica.Text = red.Oznaka;
+                ucionicaWindow.oznakaUcionica.IsEnabled = false;
+                ucionicaWindow.brojRadnihMestaUcionica.Text = red.BrojRadnihMesta.ToString();
+                ucionicaWindow.brojRadnihMestaUcionica.Focus();
+                ucionicaWindow.opisUcionica.Text = red.Opis;
+                ucionicaWindow.prisustvoPametneTableUcionica.IsChecked = red.PrisustvoPametneTable;
+                ucionicaWindow.prisustvoProjektoraUcionica.IsChecked = red.PrisustvoProjektora;
+                ucionicaWindow.prisustvoTableUcionica.IsChecked = red.PrisustvoTable;
+
+                if (red.OperativniSistem.Equals("Windows"))
+                    ucionicaWindow.WindowsOSUcionica.IsChecked = true;
+                else if (red.OperativniSistem.Equals("Linux"))
+                    ucionicaWindow.LinuxOSUcionica.IsChecked = true;
+                else if (red.OperativniSistem.Equals("Windows i Linux"))
+                    ucionicaWindow.WindowsAndLinusOSUcionica.IsChecked = true;
+                /*
+                uraditi for za tabelu, cekirati dodate 
+                */
+                ucionicaWindow.indeks = tabelaUcionica.SelectedIndex;
+                ucionicaWindow.ShowDialog();
+                tabelaUcionica.Items.Refresh();
+            }
             else
                 return;
         }
@@ -309,7 +393,19 @@ namespace HCI_Projekat
         private void izmeniSmerClick(object sender, RoutedEventArgs e)
         {
             if (tabelaSmerova.SelectedIndex != -1)
-                MessageBox.Show(tabelaSmerova.SelectedIndex.ToString());
+            {
+                var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, true);
+                Smer row = (Smer)tabelaSmerova.SelectedItem;
+                smerWindow.NazivSmera.Text = row.Naziv;
+                smerWindow.NazivSmera.Focus();
+                smerWindow.OznakaSmera.Text = row.Oznaka;
+                smerWindow.OznakaSmera.IsEnabled = false;
+                smerWindow.OpisSmera.Text = row.Opis;
+                smerWindow.DatumUvodjenja.Text = row.Datum.ToString();
+                smerWindow.indeks = tabelaSmerova.SelectedIndex;
+                smerWindow.ShowDialog();
+                tabelaSmerova.Items.Refresh();
+            }
             else
                 return;
         }
@@ -409,8 +505,11 @@ namespace HCI_Projekat
                 {
                     if (!p.Obrisan)
                     {
-                        if (p.Smer.Oznaka == oznakaSmera)
-                            koristiSeUPredmetu = true;
+                        foreach (string s in p.Smerovi)
+                        {
+                            if (s == oznakaSmera)
+                                koristiSeUPredmetu = true;
+                        }
                     }
                 }
                 if (koristiSeUPredmetu)

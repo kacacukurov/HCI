@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace HCI_Projekat
 {
@@ -23,12 +14,15 @@ namespace HCI_Projekat
         private Ucionica novaUcionica;
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Ucionica> tabelaUcionica;
+        private bool izmena;
+        public int indeks;
 
-        public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice)
+        public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena)
         {
             InitializeComponent();
             novaUcionica = new Ucionica();
             this.racunarskiCentar = racunarskiCentar;
+            this.izmena = izmena;
             List<Softver> softveri = new List<Softver>();
             foreach(Softver s in racunarskiCentar.Softveri.Values)
             {
@@ -38,7 +32,8 @@ namespace HCI_Projekat
             softverTabela.ItemsSource = softveri;
             softverTabela.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica = ucionice;
-            oznakaUcionica.Focus();
+            if(!izmena)
+                oznakaUcionica.Focus();
             BackStepMenuItem.IsEnabled = false;
         }
 
@@ -100,6 +95,11 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
+            if (izmena)
+            {
+                izmenaUcionice();
+                return;
+            }
             if (validacijaNoveUcionice())
             {
                 novaUcionica.Oznaka = oznakaUcionica.Text;
@@ -113,7 +113,7 @@ namespace HCI_Projekat
                 else if ((bool)WindowsOSUcionica.IsChecked)
                     novaUcionica.OperativniSistem = "Windows";
                 else
-                    novaUcionica.OperativniSistem = "Linux i Windows";
+                    novaUcionica.OperativniSistem = "Windows i Linux";
 
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
@@ -146,7 +146,14 @@ namespace HCI_Projekat
                     return false;
                 }
             }
-            else if (oznakaUcionica.Text == "" || opisUcionica.Text == "" || brojRadnihMestaUcionica.Text == "")
+            if (!validacijaPodataka())
+                return false;
+            return true;
+        }
+
+        private bool validacijaPodataka()
+        {
+            if (oznakaUcionica.Text == "" || opisUcionica.Text == "" || brojRadnihMestaUcionica.Text == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
                 if (oznakaUcionica.Text == "")
@@ -181,6 +188,40 @@ namespace HCI_Projekat
                 return false;
             }
             return true;
+        }
+
+        private void izmenaUcionice()
+        {
+            if (validacijaPodataka())
+            {
+                racunarskiCentar.Ucionice[oznakaUcionica.Text].Oznaka = oznakaUcionica.Text;
+                racunarskiCentar.Ucionice[oznakaUcionica.Text].Opis = opisUcionica.Text;
+                racunarskiCentar.Ucionice[oznakaUcionica.Text].PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
+                racunarskiCentar.Ucionice[oznakaUcionica.Text].PrisustvoTable = prisustvoTableUcionica.IsChecked;
+                racunarskiCentar.Ucionice[oznakaUcionica.Text].PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
+                racunarskiCentar.Ucionice[oznakaUcionica.Text].BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
+                if ((bool)LinuxOSUcionica.IsChecked)
+                    racunarskiCentar.Ucionice[oznakaUcionica.Text].OperativniSistem = "Linux";
+                else if ((bool)WindowsOSUcionica.IsChecked)
+                    racunarskiCentar.Ucionice[oznakaUcionica.Text].OperativniSistem = "Windows";
+                else
+                    racunarskiCentar.Ucionice[oznakaUcionica.Text].OperativniSistem = "Windows i Linux";
+
+                racunarskiCentar.Ucionice[oznakaUcionica.Text].InstaliraniSoftveri.Clear();
+                for (int i = 0; i < softverTabela.Items.Count; i++)
+                {
+                    DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
+                    CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
+                    if ((bool)box.IsChecked)
+                    {
+                        TextBlock content = softverTabela.Columns[1].GetCellContent(row) as TextBlock;
+                        racunarskiCentar.Ucionice[oznakaUcionica.Text].InstaliraniSoftveri.Add(content.Text);
+                    }
+                }
+                
+                tabelaUcionica[indeks] = racunarskiCentar.Ucionice[oznakaUcionica.Text];
+                this.Close();
+            }
         }
     }
 }

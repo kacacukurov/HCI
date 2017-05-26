@@ -23,14 +23,18 @@ namespace HCI_Projekat
         private Smer smer;
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Smer> tabelaSmerova;
+        private bool izmena;
+        public int indeks;
 
-        public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi)
+        public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena)
         {
             smer = new Smer();
             this.racunarskiCentar = racunarskiCentar;
+            this.izmena = izmena;
             tabelaSmerova = smerovi;
             InitializeComponent();
-            OznakaSmera.Focus();
+            if(!izmena)
+                OznakaSmera.Focus();
         }
 
         private void cutClick(object sender, RoutedEventArgs e)
@@ -65,6 +69,11 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
+            if (izmena)
+            {
+                izmeniSmer();
+                return;
+            }
             if(validacijaDodavanjaSmera())
             {
                 smer.Naziv = NazivSmera.Text;
@@ -76,7 +85,6 @@ namespace HCI_Projekat
                 racunarskiCentar.DodajSmer(smer);
                 this.Close();
             }
-            
         }
 
         private bool validacijaDodavanjaSmera()
@@ -93,7 +101,29 @@ namespace HCI_Projekat
                     return false;
                 }
             }
-            else if (NazivSmera.Text == "" || OznakaSmera.Text == "" || OpisSmera.Text == "" || DatumUvodjenja.Text == "")
+            else if (!validacijaPraznihPolja())
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void izmeniSmer()
+        {
+            if (validacijaPraznihPolja())
+            {
+                racunarskiCentar.Smerovi[OznakaSmera.Text].Naziv = NazivSmera.Text;
+                racunarskiCentar.Smerovi[OznakaSmera.Text].Opis = OpisSmera.Text;
+                racunarskiCentar.Smerovi[OznakaSmera.Text].Datum = DateTime.Parse(DatumUvodjenja.Text);
+
+                tabelaSmerova[indeks] = racunarskiCentar.Smerovi[OznakaSmera.Text];
+                this.Close();
+            }
+        }
+
+        private bool validacijaPraznihPolja()
+        {
+            if (NazivSmera.Text == "" || OznakaSmera.Text == "" || OpisSmera.Text == "" || DatumUvodjenja.Text == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
                 if (OznakaSmera.Text == "")

@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace HCI_Projekat
 {
@@ -23,14 +12,18 @@ namespace HCI_Projekat
         private Softver noviSoftver;
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Softver> tabelaSoftvera;
+        private bool izmena;
+        public int indeks;
 
-        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri)
+        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena)
         {
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
+            this.izmena = izmena;
             tabelaSoftvera = softveri;
             noviSoftver = new Softver();
-            oznakaSoftver.Focus();
+            if(!izmena)
+                oznakaSoftver.Focus();
             BackStepMenuItem.IsEnabled = false;
         }
 
@@ -92,6 +85,11 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
+            if (izmena)
+            {
+                izmeniSoftver();
+                return;
+            }
             if (validacijaNovogSoftvera())
             {
                 noviSoftver.Oznaka = oznakaSoftver.Text;
@@ -104,7 +102,7 @@ namespace HCI_Projekat
                 else if ((bool)LinusOSSoftver.IsChecked)
                     noviSoftver.OperativniSistem = "Linux";
                 else
-                    noviSoftver.OperativniSistem = "Linux i Windows";
+                    noviSoftver.OperativniSistem = "Windows i Linux";
                 noviSoftver.Proizvodjac = proizvodjacSoftver.Text;
                 noviSoftver.Sajt = sajtSoftver.Text;
 
@@ -128,6 +126,13 @@ namespace HCI_Projekat
                     return false;
                 }
             }
+            if (!validacijaPodataka())
+                return false;
+            return true;
+        }
+
+        private bool validacijaPodataka()
+        {
             if (oznakaSoftver.Text == "" || nazivSoftver.Text == "" || opisSoftver.Text == "" || godinaSoftver.Text == "" ||
                 cenaSoftver.Text == "" || proizvodjacSoftver.Text == "" || sajtSoftver.Text == "")
             {
@@ -165,6 +170,28 @@ namespace HCI_Projekat
                 return false;
             }
             return true;
+        }
+
+        private void izmeniSoftver()
+        {
+            if (validacijaPodataka())
+            {
+                racunarskiCentar.Softveri[oznakaSoftver.Text].Naziv = nazivSoftver.Text;
+                racunarskiCentar.Softveri[oznakaSoftver.Text].Opis = opisSoftver.Text;
+                racunarskiCentar.Softveri[oznakaSoftver.Text].GodIzdavanja = int.Parse(godinaSoftver.Text);
+                racunarskiCentar.Softveri[oznakaSoftver.Text].Cena = double.Parse(cenaSoftver.Text);
+                if ((bool)WindowsOSSoftver.IsChecked)
+                    racunarskiCentar.Softveri[oznakaSoftver.Text].OperativniSistem = "Windows";
+                else if ((bool)LinusOSSoftver.IsChecked)
+                    racunarskiCentar.Softveri[oznakaSoftver.Text].OperativniSistem = "Linux";
+                else
+                    racunarskiCentar.Softveri[oznakaSoftver.Text].OperativniSistem = "Windows i Linux";
+                racunarskiCentar.Softveri[oznakaSoftver.Text].Proizvodjac = proizvodjacSoftver.Text;
+                racunarskiCentar.Softveri[oznakaSoftver.Text].Sajt = sajtSoftver.Text;
+
+                tabelaSoftvera[indeks] = racunarskiCentar.Softveri[oznakaSoftver.Text];
+                this.Close();
+            }
         }
     }
 }

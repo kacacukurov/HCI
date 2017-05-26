@@ -172,7 +172,7 @@
                             <TextBox Height="23" HorizontalAlignment="Right" Margin="0,30,119,0" Name="oznakaUcionica" VerticalAlignment="Top" Width="100" />
 
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="42,80,240,0" TextAlignment="Right" Text="Broj radnih mesta:" VerticalAlignment="Top" Width="110" />
-                            <xctk:IntegerUpDown Height="23" HorizontalAlignment="Right" Margin="0,80,169,0" Name="brojRadnihMestaUcionica" VerticalAlignment="Top" Width="50"></xctk:IntegerUpDown>
+                            <xctk:IntegerUpDown Height="23" Value="1" HorizontalAlignment="Right" Margin="0,80,169,0" Name="brojRadnihMestaUcionica" VerticalAlignment="Top" Width="50" Minimum="1"></xctk:IntegerUpDown>
 
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="122,130,240,0" TextAlignment="Right" Text="Opis:" VerticalAlignment="Top" Width="30"/>
                             <TextBox Height="100" HorizontalAlignment="Left" Margin="173,130,-33,0" Name="opisUcionica" VerticalAlignment="Top" Width="193" />
@@ -214,7 +214,7 @@
                             </StackPanel>
 
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="166,152,172,241" TextAlignment="Center" Text="Softver" Width="54" />
-                            <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="200" Width="380" Margin="0,180,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                            <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="150" Width="380" Margin="0,180,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True"/>
                                     <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True"/>

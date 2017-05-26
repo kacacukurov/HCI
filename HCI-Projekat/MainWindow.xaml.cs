@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Collections.ObjectModel;
+using System.Text;
 
 namespace HCI_Projekat
 {
@@ -175,7 +176,11 @@ namespace HCI_Projekat
                 sb.Append("\nBroj termina: " + predmet.BrTermina);
                 sb.Append("\nMinimalna dužina termina: " + predmet.MinDuzinaTermina);
                 sb.Append("\nOperativni sistem: " + predmet.OperativniSistem);
-                sb.Append("\nSmer: " + predmet.Smer.Oznaka);
+                sb.Append("\nSmerovi:");
+                foreach (string smer in predmet.Smerovi)
+                {
+                    sb.Append("\n\t" + smer);
+                }
                 sb.Append("\nProjektor: " + (predmet.NeophodanProjektor ? "neophodan" : "nije neophodan"));
                 sb.Append("\nTabla: " + (predmet.NeophodnaTabla ? "neophodna" : "nije neophodna"));
                 sb.Append("\nPametna tabla: " + (predmet.NeophodnaPametnaTabla ? "neophodna" : "nije neophodna"));

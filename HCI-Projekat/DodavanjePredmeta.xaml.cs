@@ -263,7 +263,7 @@ namespace HCI_Projekat
                     if ((bool)box.IsChecked)
                     {
                         TextBlock content = smeroviTabela.Columns[1].GetCellContent(row) as TextBlock;
-                        predmet.Smerovi.Add(content.Text);
+                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smerovi.Add(content.Text);
                     }
                 }
                 tabelaPredmeta[indeks] = racunarskiCentar.Predmeti[OznakaPredmeta.Text];

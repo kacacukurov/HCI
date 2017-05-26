@@ -27,7 +27,10 @@ namespace HCI_Projekat
             foreach(Softver s in racunarskiCentar.Softveri.Values)
             {
                 if (!s.Obrisan)
+                {
+                    s.Instaliran = false;
                     softveri.Add(s);
+                }
             }
             softverTabela.ItemsSource = softveri;
             softverTabela.IsSynchronizedWithCurrentItem = true;
@@ -95,6 +98,7 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
+            finishButton.Focus();
             if (izmena)
             {
                 izmenaUcionice();
@@ -117,12 +121,11 @@ namespace HCI_Projekat
 
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
-                    DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                    CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                    if ((bool)box.IsChecked)
+                    Softver softver = (Softver)softverTabela.Items[i];
+                    if (softver.Instaliran)
                     {
-                        TextBlock content = softverTabela.Columns[1].GetCellContent(row) as TextBlock;
-                        novaUcionica.InstaliraniSoftveri.Add(content.Text);
+                        novaUcionica.InstaliraniSoftveri.Add(softver.Oznaka);
+                        softver.Instaliran = false;
                     }
                 }
 
@@ -175,12 +178,9 @@ namespace HCI_Projekat
             bool postojiSoftver = false;
             for (int i = 0; i < softverTabela.Items.Count; i++)
             {
-                DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                if ((bool)box.IsChecked)
-                {
+                Softver softver = (Softver)softverTabela.Items[i];
+                if (softver.Instaliran)
                     postojiSoftver = true;
-                }
             }
             if (!postojiSoftver)
             {
@@ -210,15 +210,14 @@ namespace HCI_Projekat
                 racunarskiCentar.Ucionice[oznakaUcionica.Text].InstaliraniSoftveri.Clear();
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
-                    DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                    CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                    if ((bool)box.IsChecked)
+                    Softver softver = (Softver)softverTabela.Items[i];
+                    if (softver.Instaliran)
                     {
-                        TextBlock content = softverTabela.Columns[1].GetCellContent(row) as TextBlock;
-                        racunarskiCentar.Ucionice[oznakaUcionica.Text].InstaliraniSoftveri.Add(content.Text);
+                        racunarskiCentar.Ucionice[oznakaUcionica.Text].InstaliraniSoftveri.Add(softver.Oznaka);
+                        softver.Instaliran = false;
                     }
                 }
-                
+
                 tabelaUcionica[indeks] = racunarskiCentar.Ucionice[oznakaUcionica.Text];
                 this.Close();
             }

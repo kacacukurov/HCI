@@ -21,6 +21,9 @@
         <RoutedUICommand x:Key="cut" Text="cut"></RoutedUICommand>
         <RoutedUICommand x:Key="copy" Text="copy"></RoutedUICommand>
         <RoutedUICommand x:Key="paste" Text="paste"></RoutedUICommand>
+        <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Focusable" Value="False"/>
+        </Style>
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -174,12 +177,12 @@
                         <TextBox Name="NazivPredmeta" Width="60" Height="20" Margin="60, 60,0,0" VerticalAlignment="Top"/>
                         
                         <TextBlock Text="Smer" HorizontalAlignment="Center" Margin="-55,100,0,0"/>
-                        <DataGrid Name="smeroviTabela" HorizontalAlignment="Center" Height="90" Width="380" Margin="0,-60,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                        <DataGrid  Name="smeroviTabela" HorizontalAlignment="Center" Height="90" Width="380" Margin="0,-60,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True"/>
-                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True"/>
-                                <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum" Width="150" IsReadOnly="True"/>
-                                <DataGridCheckBoxColumn Binding="{Binding Path = Instalirano, FallbackValue='-'}" Header="Potreban" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum" Width="150" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                <DataGridCheckBoxColumn Binding="{Binding Path = UPredmetu, FallbackValue='-'}" Header="Potreban" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
@@ -230,12 +233,12 @@
 
 
                         <TextBlock Text="Softver" HorizontalAlignment="Center" Margin="-65,255,0,0"/>
-                        <DataGrid Name="softverTabela" HorizontalAlignment="Center" Height="90" Width="380" Margin="0,240,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                        <DataGrid VirtualizingStackPanel.IsVirtualizing="True" Name="softverTabela" HorizontalAlignment="Center" Height="90" Width="380" Margin="0,240,0,0" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True"/>
-                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True"/>
-                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="150" IsReadOnly="True"/>
-                                <DataGridCheckBoxColumn Binding="{Binding Path = Instalirano, FallbackValue='-'}" Header="Potreban" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="150" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                <DataGridCheckBoxColumn Binding="{Binding Path = Instaliran, FallbackValue='-'}" Header="Potreban" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
 

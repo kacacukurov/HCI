@@ -18,8 +18,12 @@ namespace HCI_Projekat
         private double cena;
         private string opis;
         private bool obrisan;
+        private bool instaliran;
 
-        public Softver() { }
+        public Softver()
+        {
+            this.instaliran = false;
+        }
 
         public Softver(string oznaka, string naziv, string operativniSistem, string proizvodjac,
             string sajt, int godIzdavanja, double cena, string opis)
@@ -33,6 +37,7 @@ namespace HCI_Projekat
             this.cena = cena;
             this.opis = opis;
             this.obrisan = false;
+            this.instaliran = false;
         }
 
         public string Oznaka
@@ -87,6 +92,12 @@ namespace HCI_Projekat
         {
             get { return obrisan; }
             set { this.obrisan = value; }
+        }
+
+        public bool Instaliran
+        {
+            get { return instaliran; }
+            set { this.instaliran = value; }
         }
     }
 }

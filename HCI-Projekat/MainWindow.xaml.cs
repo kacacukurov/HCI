@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows.Data;
 
 namespace HCI_Projekat
 {
@@ -311,21 +312,24 @@ namespace HCI_Projekat
                 else if (pre.OperativniSistem.Equals("Svejedno"))
                     predmetWindow.Svejedno.IsChecked = true;
 
-                for (int i = 0; i < predmetWindow.softverTabela.Items.Count; i++)
+                
+                for (int i = 0; i < predmetWindow.smeroviTabela.Items.Count; i++) // iterairam kroz tabelu prozora
                 {
-                     //DataGridRow red = (DataGridRow)predmetWindow.softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                    //MessageBox.Show(predmetWindow.softverTabela.ItemContainerGenerator.ContainerFromIndex(0).ToString());
-                    //DataGridRow red = (DataGridRow)predmetWindow.softverTabela.Items[i];
-                   // DataGridRow row = (DataGridRow)predmetWindow.softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                  //    CheckBox box = predmetWindow.softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                  //    Softver soft = (Softver)predmetWindow.softverTabela.Items[i];
-                /*      if (row.Softveri.IndexOf(soft.Oznaka) != -1)        //iteriram kroz tabelu i proveravam da li se nalazi u listi softvera
-                          box.IsChecked = true;*/
+                    Smer smer = (Smer)predmetWindow.smeroviTabela.Items[i]; //uzmem softver iz tekuceg reda
+                    if (pre.Smerovi.IndexOf(smer.Oznaka) != -1)        //ako postoji u listi, cekiram ga
+                        smer.UPredmetu = true;
+                    else
+                        smer.UPredmetu = false;
                 }
 
-                /*
-                 uradi proveru i za smerove
-                 */
+                for(int i = 0; i < predmetWindow.softverTabela.Items.Count; i++) // isto i za softvere
+                {
+                    Softver softver = (Softver)predmetWindow.softverTabela.Items[i];
+                    if (pre.Softveri.IndexOf(softver.Oznaka) != -1)
+                        softver.Instaliran = true;
+                    else
+                        softver.Instaliran = false;
+                }
                 predmetWindow.indeks = tabelaPredmeta.SelectedIndex;
                 predmetWindow.ShowDialog();
                 tabelaPredmeta.Items.Refresh();
@@ -384,9 +388,16 @@ namespace HCI_Projekat
                     ucionicaWindow.LinuxOSUcionica.IsChecked = true;
                 else if (red.OperativniSistem.Equals("Windows i Linux"))
                     ucionicaWindow.WindowsAndLinusOSUcionica.IsChecked = true;
-                /*
-                uraditi for za tabelu, cekirati dodate 
-                */
+
+                for (int i = 0; i < ucionicaWindow.softverTabela.Items.Count; i++) // isto i za softvere
+                {
+                    Softver softver = (Softver)ucionicaWindow.softverTabela.Items[i];
+                    if (red.InstaliraniSoftveri.IndexOf(softver.Oznaka) != -1)
+                        softver.Instaliran = true;
+                    else
+                        softver.Instaliran = false;
+                }
+
                 ucionicaWindow.indeks = tabelaUcionica.SelectedIndex;
                 ucionicaWindow.ShowDialog();
                 tabelaUcionica.Items.Refresh();

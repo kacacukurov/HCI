@@ -30,7 +30,10 @@ namespace HCI_Projekat
             foreach(Smer s in racunarskiCentar.Smerovi.Values)
             {
                 if (!s.Obrisan)
+                {
+                    s.UPredmetu = false;
                     smerovi.Add(s);
+                }
             }
             smeroviTabela.ItemsSource = smerovi;
             smeroviTabela.IsSynchronizedWithCurrentItem = true;
@@ -39,7 +42,10 @@ namespace HCI_Projekat
             foreach (Softver s in racunarskiCentar.Softveri.Values)
             {
                 if (!s.Obrisan)
+                {
+                    s.Instaliran = false;
                     softveri.Add(s);
+                }
             }
             softverTabela.ItemsSource = softveri;
             softverTabela.IsSynchronizedWithCurrentItem = true;
@@ -107,6 +113,8 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
+            quitButton.Focus();
+            finishButton.Focus();
             if (izmena) { 
                 izmenaPredmeta();
                 return;
@@ -128,24 +136,23 @@ namespace HCI_Projekat
                     predmet.OperativniSistem = Linux.Content.ToString();
                 if ((bool)Svejedno.IsChecked)
                     predmet.OperativniSistem = Svejedno.Content.ToString();
-                for (int i = 0; i < softverTabela.Items.Count; i++)
-                {
-                    DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                    CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                    if ((bool)box.IsChecked)
+                
+                 for (int i = 0; i < softverTabela.Items.Count; i++)
+                 {
+                    Softver softver = (Softver)softverTabela.Items[i];
+                    if (softver.Instaliran)
                     {
-                        TextBlock content = softverTabela.Columns[1].GetCellContent(row) as TextBlock;
-                        predmet.Softveri.Add(content.Text);
+                        predmet.Softveri.Add(softver.Oznaka);
+                        softver.Instaliran = false;
                     }
                 }
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
                 {
-                    DataGridRow row = (DataGridRow)smeroviTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                    CheckBox box = smeroviTabela.Columns[3].GetCellContent(row) as CheckBox;
-                    if ((bool)box.IsChecked)
+                    Smer smer = (Smer)smeroviTabela.Items[i];
+                    if (smer.UPredmetu)
                     {
-                        TextBlock content = smeroviTabela.Columns[1].GetCellContent(row) as TextBlock;
-                        predmet.Smerovi.Add(content.Text);
+                        predmet.Smerovi.Add(smer.Oznaka);
+                        smer.UPredmetu = false;
                     }
                 }
                 tabelaPredmeta.Add(predmet);
@@ -196,12 +203,9 @@ namespace HCI_Projekat
             bool postojiSoftver = false;
             for (int i = 0; i < softverTabela.Items.Count; i++)
             {
-                DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                if ((bool)box.IsChecked)
-                {
+                Softver softver = (Softver)softverTabela.Items[i];
+                if (softver.Instaliran)
                     postojiSoftver = true;
-                }
             }
             if (!postojiSoftver)
             {
@@ -211,12 +215,9 @@ namespace HCI_Projekat
             bool postojiSmer = false;
             for (int i = 0; i < smeroviTabela.Items.Count; i++)
             {
-                DataGridRow row = (DataGridRow)smeroviTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                CheckBox box = smeroviTabela.Columns[3].GetCellContent(row) as CheckBox;
-                if ((bool)box.IsChecked)
-                {
+                Smer smer = (Smer)smeroviTabela.Items[i];
+                if (smer.UPredmetu)
                     postojiSmer = true;
-                }
             }
             if (!postojiSmer)
             {
@@ -244,26 +245,25 @@ namespace HCI_Projekat
                     racunarskiCentar.Predmeti[OznakaPredmeta.Text].OperativniSistem = Linux.Content.ToString();
                 if ((bool)Svejedno.IsChecked)
                     racunarskiCentar.Predmeti[OznakaPredmeta.Text].OperativniSistem = Svejedno.Content.ToString();
+
                 racunarskiCentar.Predmeti[OznakaPredmeta.Text].Softveri.Clear();
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
-                    DataGridRow row = (DataGridRow)softverTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                    CheckBox box = softverTabela.Columns[3].GetCellContent(row) as CheckBox;
-                    if ((bool)box.IsChecked)
+                    Softver softver = (Softver)softverTabela.Items[i];
+                    if (softver.Instaliran)
                     {
-                        TextBlock content = softverTabela.Columns[1].GetCellContent(row) as TextBlock;
-                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Softveri.Add(content.Text);
+                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Softveri.Add(softver.Oznaka);
+                        softver.Instaliran = false;
                     }
                 }
                 racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smerovi.Clear();
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
                 {
-                    DataGridRow row = (DataGridRow)smeroviTabela.ItemContainerGenerator.ContainerFromIndex(i);
-                    CheckBox box = smeroviTabela.Columns[3].GetCellContent(row) as CheckBox;
-                    if ((bool)box.IsChecked)
+                    Smer smer = (Smer)smeroviTabela.Items[i];
+                    if (smer.UPredmetu)
                     {
-                        TextBlock content = smeroviTabela.Columns[1].GetCellContent(row) as TextBlock;
-                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smerovi.Add(content.Text);
+                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smerovi.Add(smer.Oznaka);
+                        smer.UPredmetu = false;
                     }
                 }
                 tabelaPredmeta[indeks] = racunarskiCentar.Predmeti[OznakaPredmeta.Text];

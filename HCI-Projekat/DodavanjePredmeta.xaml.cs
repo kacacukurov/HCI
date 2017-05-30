@@ -291,5 +291,10 @@ namespace HCI_Projekat
                 this.Close();
             }
         }
+
+        private void smeroviTabela_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

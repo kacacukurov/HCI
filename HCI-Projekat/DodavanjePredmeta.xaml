@@ -299,7 +299,7 @@
                                     </Viewbox>
                                 </Grid>
                                 <Grid Grid.Row="2">
-                                    <DataGrid  Name="smeroviTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                                    <DataGrid Name="smeroviTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" SelectionChanged="smeroviTabela_SelectionChanged">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
                                             <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
@@ -677,7 +677,7 @@
                                     </Viewbox>
                                 </Grid>
                                 <Grid Grid.Row="2">
-                                    <DataGrid VirtualizingStackPanel.IsVirtualizing="True" Name="softverTabela" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                                    <DataGrid VirtualizingStackPanel.IsVirtualizing="True" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" Name="softverTabela" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
                                             <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>

@@ -163,9 +163,206 @@
             </Menu>
 
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlUcionica">
-
                 <TabItem Header="Korak 1" Name="Korak1Softver" HorizontalAlignment="Center">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="9*" />
+                            <RowDefinition Height="0.80*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="27*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16*"/>
+                                    <ColumnDefinition Width="27*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Oznaka:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Name="oznakaSoftver" Grid.Column="1" Grid.Row="1"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Naziv:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Name="nazivSoftver"/>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="6*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Operativni sistem:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="12*"/>
+                                        <RowDefinition Height="6*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <StackPanel>
+                                            <RadioButton Name="LinusOSSoftver" IsChecked="True" Content="Linux"/>
+                                            <RadioButton Name="WindowsOSSoftver" Content="Windows"/>
+                                            <RadioButton Name="WindowsAndLinusOSSoftver" Content="Linux i Windows"/>
+                                        </StackPanel>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="3*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Proizvođač:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Name="proizvodjacSoftver"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="cancelButtonTab1" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Odustani</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="nextClick" Name="nextButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Nastavi &gt;</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <!--<Grid>
                         <Grid HorizontalAlignment="Center" Background="White" Height="416" VerticalAlignment="Center" Margin="50,0,44,25" Width="392">
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="102,55,240,0" TextAlignment="Right" Text="Oznaka:" VerticalAlignment="Top" Width="50" />
                             <TextBox Height="23" HorizontalAlignment="Right" Margin="0,55,119,0" Name="oznakaSoftver" VerticalAlignment="Top" Width="100" />
@@ -196,11 +393,226 @@
                                 </Button.InputBindings>
                             </Button>
                         </StackPanel>
-                    </Grid>
+                    </Grid>-->
                 </TabItem>
 
                 <TabItem Header="Korak 2" Name="Korak2Softver" HorizontalAlignment="Center">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="9*" />
+                            <RowDefinition Height="0.80*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="27*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16*"/>
+                                    <ColumnDefinition Width="27*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Sajt:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Column="1" Grid.Row="1" Name="sajtSoftver"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Godina izdavanja:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Name="godinaSoftver"/>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Cena:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Name="cenaSoftver"/>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Opis:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="7*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Name="opisSoftver"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="backClick" Name="backButton" Background="DarkBlue" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> &lt; Nazad</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="cancelButtonTab2" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Odustani</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="finishClick" Name="finishButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Završi</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <!--<Grid>
                         <Grid HorizontalAlignment="Center" Background="White" Height="416" VerticalAlignment="Center" Margin="50,0,44,25" Width="392">
                             <TextBlock Height="23" HorizontalAlignment="Center" Margin="81,45,261,0" TextAlignment="Right" Text="Sajt:" VerticalAlignment="Top" Width="50" />
                             <TextBox Height="23" HorizontalAlignment="Right" Margin="0,45,138,0" Name="sajtSoftver" VerticalAlignment="Top" Width="100" />
@@ -232,7 +644,7 @@
                                 </Button.InputBindings>
                             </Button>
                         </StackPanel>
-                    </Grid>
+                    </Grid>-->
                 </TabItem>
 
             </TabControl>

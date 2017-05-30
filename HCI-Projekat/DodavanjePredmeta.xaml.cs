@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -136,25 +137,45 @@ namespace HCI_Projekat
                     predmet.OperativniSistem = Linux.Content.ToString();
                 if ((bool)Svejedno.IsChecked)
                     predmet.OperativniSistem = Svejedno.Content.ToString();
-                
-                 for (int i = 0; i < softverTabela.Items.Count; i++)
-                 {
+
+                StringBuilder sb = new StringBuilder();
+                int brojSoftvera = 0;
+                for (int i = 0; i < softverTabela.Items.Count; i++)
+                {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
-                    {
+                    {    
                         predmet.Softveri.Add(softver.Oznaka);
+                        if (brojSoftvera != 0)
+                            sb.Append("\n\n");
+                        sb.Append("Oznaka softvera: " + softver.Oznaka);
+                        sb.Append("\nNaziv softvera: " + softver.Naziv);
+                        sb.Append("\nOpis softvera: " + softver.Opis);
+                        brojSoftvera++;
                         softver.Instaliran = false;
                     }
                 }
+                predmet.SoftveriLista = sb.ToString();
+
+                sb.Clear();
+                int brojSmerova = 0;
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
                 {
                     Smer smer = (Smer)smeroviTabela.Items[i];
                     if (smer.UPredmetu)
                     {
                         predmet.Smerovi.Add(smer.Oznaka);
+                        if (brojSmerova != 0)
+                            sb.Append("\n\n");
+                        sb.Append("Oznaka smera: " + smer.Oznaka);
+                        sb.Append("\nNaziv smera: " + smer.Naziv);
+                        sb.Append("\nOpis smera: " + smer.Opis);
+                        brojSmerova++;
                         smer.UPredmetu = false;
                     }
                 }
+                predmet.SmeroviLista = sb.ToString();
+
                 tabelaPredmeta.Add(predmet);
                 racunarskiCentar.DodajPredmet(predmet);
                 this.Close();

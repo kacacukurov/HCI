@@ -166,7 +166,7 @@
                 
                 <TabItem Header="Učionica" Name="UcionicaTab">
                     <Grid>
-                        <DataGrid Name="tabelaUcionica" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <DataGrid Name="tabelaUcionica" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = BrojRadnihMesta, FallbackValue='-'}" Header="Broj radnih mesta" Width="Auto"/>
@@ -176,15 +176,48 @@
                                 <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
                             </DataGrid.Columns>
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridRow">
-                                    <EventSetter Event="MouseEnter" Handler="detaljanPrikazPodataka"/>
-                                </Style>
-                            </DataGrid.Resources>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <DockPanel Background="GhostWhite">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Text="Oznaka: " FontWeight="Bold" />
+                                            <TextBlock Text="{Binding Oznaka}" Grid.Column="1" />
+                                            <TextBlock Text="Broj radnih mesta: " FontWeight="Bold" Grid.Row="1" />
+                                            <TextBlock Text="{Binding BrojRadnihMesta}" Grid.Column="1" Grid.Row="1" />
+                                            <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="2"/>
+                                            <TextBlock Text="{Binding PrisustvoProjektora}" Grid.Column="1" Grid.Row="2" />
+                                            <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="3" />
+                                            <TextBlock Text="{Binding PrisustvoTable}" Grid.Column="1" Grid.Row="3" />
+                                            <TextBlock Text="Pametna tabla: " FontWeight="Bold" Grid.Row="4"/>
+                                            <TextBlock Text="{Binding PrisustvoPametneTable}" Grid.Column="1" Grid.Row="4"/>
+                                            <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="5" />
+                                            <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="5" />
+                                            <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="6" />
+                                            <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="6" />
+                                            <TextBlock Text="Instalirani softveri: " FontWeight="Bold" Grid.Row="7" />
+                                            <TextBlock Text="{Binding softveriLista}" Grid.Column="1" Grid.Row="7" />
+                                        </Grid>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
 
                         <DockPanel VerticalAlignment="Bottom">
-                            <TextBox DockPanel.Dock="Top" Name="UcionicaDetaljanPrikazBox"></TextBox>
                             <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Height="20">
                                 <Button Width="60" Height="20" Content="Izmeni" Click="izmeniUcionicuClick" HorizontalAlignment="Right" Margin="0,0,170,0" Background="DarkBlue" Foreground="White"></Button>
                                 <Button Width="60" Height="20" Content="Obriši" Click="obrisiUcionicuClick" HorizontalAlignment="Right" Margin="0,-20,100,0" Background="DarkRed" Foreground="White"></Button>
@@ -197,7 +230,11 @@
                 
                 <TabItem Header="Predmet" Name="PredmetTab">
                     <Grid>
-                        <DataGrid Name="tabelaPredmeta" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <!--
+                        Ukinuto kretanje kroz tabelu tabom - IsTabStop = True
+                        Mogucnost selektovanja veceg broja redova (ukloniti ako ne treba)
+                        -->
+                        <DataGrid IsTabStop="True" Name="tabelaPredmeta" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
@@ -209,11 +246,64 @@
                                 <DataGridTextColumn Binding="{Binding Path = NeophodnaPametnaTabla, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="*"/>
                             </DataGrid.Columns>
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridRow">
-                                    <EventSetter Event="MouseEnter" Handler="detaljanPrikazPodataka"/>
+                            
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid MaxHeight="150">
+                                        <ScrollViewer IsTabStop="False">
+                                            <DockPanel Background="GhostWhite" KeyDown="skrolovanjeDetaljanPrikazPredmet">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Text="Naziv: " FontWeight="Bold" />
+                                                    <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
+                                                    <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
+                                                    <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
+                                                    <TextBlock Text="Veličina grupe: " FontWeight="Bold" Grid.Row="2"/>
+                                                    <TextBlock Text="{Binding VelicinaGrupe}" Grid.Column="1" Grid.Row="2" />
+                                                    <TextBlock Text="Minimalna dužina termina: " FontWeight="Bold" Grid.Row="3" />
+                                                    <TextBlock Text="{Binding MinDuzinaTermina}" Grid.Column="1" Grid.Row="3" />
+                                                    <TextBlock Text="Broj termina: " FontWeight="Bold" Grid.Row="4"/>
+                                                    <TextBlock Text="{Binding BrTermina}" Grid.Column="1" Grid.Row="4"/>
+                                                    <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="5" />
+                                                    <TextBlock Text="{Binding NeophodanProjektor}" Grid.Column="1" Grid.Row="5" />
+                                                    <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="6" />
+                                                    <TextBlock Text="{Binding NeophodnaTabla}" Grid.Column="1" Grid.Row="6" />
+                                                    <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="7" />
+                                                    <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="7" />
+                                                    <TextBlock Text="Neophodni softveri: " FontWeight="Bold" Grid.Row="8" />
+                                                    <TextBlock Text="{Binding SoftveriLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="8" />
+                                                    <TextBlock Text="Smerovi: " FontWeight="Bold" Grid.Row="9" />
+                                                    <TextBlock Text="{Binding SmeroviLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="9" />
+                                                </Grid>
+                                            </DockPanel>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                            
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                                 </Style>
-                            </DataGrid.Resources>
+                            </DataGrid.CellStyle>
                         </DataGrid>
 
                         <DockPanel VerticalAlignment="Bottom">
@@ -230,18 +320,40 @@
                 
                 <TabItem Header="Smer" Name="SmerTab">
                     <Grid>
-                        <DataGrid Name="tabelaSmerova" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False"  IsReadOnly="True">
+                        <DataGrid Name="tabelaSmerova" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False"  IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum uvođenja" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
                             </DataGrid.Columns>
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridRow">
-                                    <EventSetter Event="MouseEnter" Handler="detaljanPrikazPodataka"/>
-                                </Style>
-                            </DataGrid.Resources>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <DockPanel Background="GhostWhite">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Text="Naziv: " FontWeight="Bold" />
+                                            <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
+                                            <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
+                                            <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
+                                            <TextBlock Text="Datum: " FontWeight="Bold" Grid.Row="2"/>
+                                            <TextBlock Text="{Binding Datum}" Grid.Column="1" Grid.Row="2" />
+                                            <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="3" />
+                                            <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="3" />
+                                        </Grid>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
 
                         <DockPanel VerticalAlignment="Bottom">
@@ -258,7 +370,7 @@
 
                 <TabItem Header="Softver" Name="SoftverTab">
                     <Grid>
-                        <DataGrid Name="tabelaSoftvera" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <DataGrid Name="tabelaSoftvera" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
@@ -266,14 +378,48 @@
                                 <DataGridTextColumn Binding="{Binding Path = Proizvodjac, FallbackValue='-'}" Header="Proizvođač" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = GodIzdavanja, FallbackValue='-'}" Header="Godina izdavanja" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Cena, FallbackValue='-'}" Header="Cena" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = Sajt , FallbackValue='-'}" Header="Sajt" Width="Auto"/>
+                                <DataGridHyperlinkColumn Binding="{Binding Path = Sajt , FallbackValue='-'}" Header="Sajt" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
                             </DataGrid.Columns>
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridRow">
-                                    <EventSetter Event="GotFocus" Handler="detaljanPrikazPodataka"/>
-                                </Style>
-                            </DataGrid.Resources>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <DockPanel Background="GhostWhite">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Text="Naziv: " FontWeight="Bold" />
+                                            <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
+                                            <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
+                                            <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
+                                            <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="2"/>
+                                            <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="2" />
+                                            <TextBlock Text="Proizvođač: " FontWeight="Bold" Grid.Row="3" />
+                                            <TextBlock Text="{Binding Proizvodjac}" Grid.Column="1" Grid.Row="3" />
+                                            <TextBlock Text="Godina izdavanja: " FontWeight="Bold" Grid.Row="4"/>
+                                            <TextBlock Text="{Binding GodIzdavanja}" Grid.Column="1" Grid.Row="4"/>
+                                            <TextBlock Text="Cena: " FontWeight="Bold" Grid.Row="5" />
+                                            <TextBlock Text="{Binding Cena}" Grid.Column="1" Grid.Row="5" />
+                                            <TextBlock Text="Sajt: " FontWeight="Bold" Grid.Row="6" />
+                                            <TextBlock Text="{Binding Sajt}" Grid.Column="1" Grid.Row="6" />
+                                            <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="7" />
+                                            <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="7" />
+                                        </Grid>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
 
                         <DockPanel VerticalAlignment="Bottom">

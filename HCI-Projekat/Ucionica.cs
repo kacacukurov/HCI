@@ -18,6 +18,7 @@ namespace HCI_Projekat
         private string operativniSistem;
         private List<string> instaliraniSoftveri;
         private bool obrisan;
+        private string softveriLista;
 
         public Ucionica()
         {
@@ -90,6 +91,12 @@ namespace HCI_Projekat
         {
             get { return obrisan; }
             set { this.obrisan = value; }
+        }
+
+        public string SoftveriLista
+        {
+            get { return softveriLista; }
+            set { this.softveriLista = value; }
         }
     }
 }

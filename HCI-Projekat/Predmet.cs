@@ -22,6 +22,8 @@ namespace HCI_Projekat
         private string operativniSistem;
         private List<string> softveri;  
         private bool obrisan;
+        private string softveriLista;
+        private string smeroviLista;
 
         public Predmet() {
             this.softveri = new List<string>();
@@ -123,6 +125,18 @@ namespace HCI_Projekat
         {
             get { return obrisan; }
             set { this.obrisan = value; }
+        }
+
+        public string SoftveriLista
+        {
+            get { return softveriLista; }
+            set { this.softveriLista = value; }
+        }
+
+        public string SmeroviLista
+        {
+            get { return smeroviLista; }
+            set { this.smeroviLista = value; }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -119,15 +120,18 @@ namespace HCI_Projekat
                 else
                     novaUcionica.OperativniSistem = "Windows i Linux";
 
+                StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {
                         novaUcionica.InstaliraniSoftveri.Add(softver.Oznaka);
+                        sb.Append("\n" + softver.Oznaka);
                         softver.Instaliran = false;
                     }
                 }
+                novaUcionica.SoftveriLista = sb.ToString();
 
                 tabelaUcionica.Add(novaUcionica);
                 racunarskiCentar.DodajUcionicu(novaUcionica);

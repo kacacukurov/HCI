@@ -173,7 +173,6 @@ C:\Users\kacac\Desktop\HCI\HCI-Projekat\bin\Debug\ro\Xceed.Wpf.AvalonDock.resour
 C:\Users\kacac\Desktop\HCI\HCI-Projekat\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\kacac\Desktop\HCI\HCI-Projekat\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\kacac\Desktop\HCI\HCI-Projekat\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
-C:\Users\kacac\Desktop\HCI\HCI-Projekat\obj\Debug\HCI-Projekat.csprojResolveAssemblyReference.cache
 C:\Users\kacac\Desktop\HCI\HCI-Projekat\obj\Debug\DodavanjePredmeta.g.cs
 C:\Users\kacac\Desktop\HCI\HCI-Projekat\obj\Debug\DodavanjeSmera.g.cs
 C:\Users\kacac\Desktop\HCI\HCI-Projekat\obj\Debug\DodavanjeSoftvera.g.cs

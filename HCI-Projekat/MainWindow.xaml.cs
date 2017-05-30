@@ -5,9 +5,10 @@ using System.Windows.Controls;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows.Data;
 using System.Windows.Input;
+using CefSharp;
+using CefSharp.Wpf;
+using System.Linq;
 
 namespace HCI_Projekat
 {
@@ -22,6 +23,7 @@ namespace HCI_Projekat
         ObservableCollection<Smer> smeroviKolekcija;
         ObservableCollection<Ucionica> ucioniceKolekcija;
         private static string imeFajla = "racunarskiCentar.xml";
+        public ChromiumWebBrowser chromeBrowser;
 
         public MainWindow()
         {
@@ -78,6 +80,29 @@ namespace HCI_Projekat
             tabelaUcionica.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica.IsReadOnly = true;
             tabelaUcionica.UnselectAll();
+
+            InitializeChromium();
+
+            chromeBrowser.RegisterJsObject("cefCustomObject", new CefCustomObject(chromeBrowser, this));
+        }
+
+        private void InitializeChromium()
+        {
+            var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            System.Collections.Generic.List<string> tokens = path.Split('\\').ToList();
+            tokens.RemoveAt(tokens.Count - 1);
+            path = String.Join("\\", tokens.ToArray());
+            String page = string.Format(@"{0}\html\html\kalendar.html", path);
+
+            CefSettings settings = new CefSettings();
+
+            Cef.Initialize(settings);
+
+            chromeBrowser = new ChromiumWebBrowser();
+            chromeBrowser.Address = page;
+            
+            BrowserGrid.Children.Add(chromeBrowser);
+
         }
 
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)

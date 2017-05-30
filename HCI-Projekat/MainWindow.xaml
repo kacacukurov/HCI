@@ -162,7 +162,10 @@
             </Menu>
 
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl">
-                <TabItem Header="Kalendar" Name="KalendarTab"></TabItem>
+                <TabItem Header="Kalendar" Name="KalendarTab">
+                    <Grid Name="BrowserGrid">
+                    </Grid>
+                </TabItem>
                 
                 <TabItem Header="Učionica" Name="UcionicaTab">
                     <Grid>

@@ -7,7 +7,7 @@
         xmlns:toogle="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="Dodavanje predmeta" Height="500" Width="500" Name="DodavanjePredmetaWindow">
+        Title="Dodavanje predmeta" Height="600" Width="600" MinHeight="600" MinWidth="600" WindowStartupLocation="CenterScreen" Name="DodavanjePredmetaWindow">
 
     <Window.Resources>
         <RoutedUICommand x:Key="sledeciKorak" Text="next"></RoutedUICommand>
@@ -170,6 +170,302 @@
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlPredmet">
                 <TabItem Header="Korak 1" Name="Korak1Predmet" HorizontalAlignment="Center">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.2*" />
+                            <RowDefinition Height="9*" />
+                            <RowDefinition Height="0.7*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="27*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Column="1" Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="12*"/>
+                                    <ColumnDefinition Width="27*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Oznaka:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Name="OznakaPredmeta" Grid.Column="1" Grid.Row="1"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Naziv:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Name="NazivPredmeta"/>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.7*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Opis:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="7*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Name="OpisPredmeta"/>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Column="1" Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="0.1*"/>
+                                    <RowDefinition Height="15*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
+                                        <TextBlock>Smer</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2">
+                                    <DataGrid  Name="smeroviTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                            <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                            <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum" Width="Auto" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                            <DataGridCheckBoxColumn Binding="{Binding Path = UPredmetu, FallbackValue='-'}" Header="Potreban" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="2" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2.5*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Veličina grupe:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2.5*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <xctk:IntegerUpDown Name="VelicinaGrupePredmet" Value="1" Minimum="1" Maximum="50"></xctk:IntegerUpDown>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2.5*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Dužina termina:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2.5*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <xctk:IntegerUpDown Name="DuzinaTerminaPredmet" Value="1" Minimum="1" Maximum="10"></xctk:IntegerUpDown>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2.5*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Broj termina:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2.5*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <xctk:IntegerUpDown Name="BrojTerminaPredmet" Value="1" Minimum="1" Maximum="10"></xctk:IntegerUpDown>
+                                    </Viewbox>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="quitButton" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Odustani</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="nextClick" Name="nextButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Nastavi &gt;</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <!--<Grid>
                         <TextBlock Text="Oznaka" HorizontalAlignment="Center" Margin="-60,20,0,0"/>
                         <TextBox Name="OznakaPredmeta" Width="60" Height="20" Margin="60,20,0,0" VerticalAlignment="Top"/>
                         
@@ -208,10 +504,267 @@
                                 </Button.InputBindings>
                             </Button>
                         </StackPanel>
-                    </Grid>
+                    </Grid>-->
                 </TabItem>
                 <TabItem Header="Korak 2" Name="Korak2Predmet" HorizontalAlignment="Center">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.2*" />
+                            <RowDefinition Height="9*" />
+                            <RowDefinition Height="0.7*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="27*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Column="1" Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Prisustvo table:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <toogle:HorizontalToggleSwitch Name="PrisustvoTablePredmet" IsChecked="False"></toogle:HorizontalToggleSwitch>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Prisustvo projektora:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <toogle:HorizontalToggleSwitch Name="PrisustvoProjektoraPredmet" IsChecked="False"></toogle:HorizontalToggleSwitch>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Prisustvo pametne table:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <toogle:HorizontalToggleSwitch Name="PrisustvoPametneTable" IsChecked="False"></toogle:HorizontalToggleSwitch>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="5*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Operativni sistem:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="3.5*"/>
+                                        <RowDefinition Height="12*"/>
+                                        <RowDefinition Height="5*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
+                                        <StackPanel>
+                                            <RadioButton x:Name="Linux" Content="Linux"/>
+                                            <RadioButton x:Name="Windows" Content="Windows"/>
+                                            <RadioButton x:Name="Svejedno" Content="Linux i Windows" IsChecked="True"/>
+                                        </StackPanel>
+                                    </Viewbox>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Column="1" Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1.8*"/>
+                                    <RowDefinition Height="0.3*"/>
+                                    <RowDefinition Height="15*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
+                                        <TextBlock>Softver</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2">
+                                    <DataGrid VirtualizingStackPanel.IsVirtualizing="True" Name="softverTabela" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="100" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                            <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="50" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                            <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="150" IsReadOnly="True" CellStyle="{StaticResource CellStyle}"/>
+                                            <DataGridCheckBoxColumn Binding="{Binding Path = Instaliran, FallbackValue='-'}" Header="Potreban" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="backClick" Name="backButton" Background="DarkBlue" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> &lt; Nazad</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="quitButtonTab2" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Odustani</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="finishClick" Name="finishButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Završi</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <!--<Grid>
                         <TextBlock Text="Velicina grupe" HorizontalAlignment="Center" Margin="-97,20,0,0"/>
                         <xctk:IntegerUpDown Name="VelicinaGrupePredmet" Value="1" Height="20" Width="50" Margin="50, 20, 0,0" VerticalAlignment="Top" Minimum="1"></xctk:IntegerUpDown>
                         
@@ -260,8 +813,7 @@
                                 </Button.InputBindings>
                             </Button>
                         </StackPanel>
-                       
-                    </Grid>
+                    </Grid>-->
                 </TabItem>
             </TabControl>
         </DockPanel>

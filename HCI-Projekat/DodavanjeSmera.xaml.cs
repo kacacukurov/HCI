@@ -79,7 +79,8 @@ namespace HCI_Projekat
                 smer.Naziv = NazivSmera.Text;
                 smer.Oznaka = OznakaSmera.Text;
                 smer.Opis = OpisSmera.Text;
-                smer.Datum = DateTime.Parse(DatumUvodjenja.Text);
+                string datum = DateTime.Parse(DatumUvodjenja.Text).ToString("dd/MM/yyyy");
+                smer.Datum = DateTime.Parse(datum);
 
                 tabelaSmerova.Add(smer);
                 racunarskiCentar.DodajSmer(smer);

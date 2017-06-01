@@ -179,23 +179,67 @@ namespace HCI_Projekat
             }
         }
 
+        private void pretragaFokus(object sender, EventArgs e)
+        {
+            // trenutno smo u tabu za ucionice
+            if (tabControl.SelectedIndex == 1)
+            {
+
+            }
+            // trenutno smo u tabu za predmete
+            else if (tabControl.SelectedIndex == 2)
+            {
+
+            }
+            // trenutno smo u tabu za smerove
+            else if (tabControl.SelectedIndex == 3)
+            {
+                SmerPretragaUnos.Focus();
+            }
+            // trenutno smo u tabu za softvere
+            else if (tabControl.SelectedIndex == 4)
+            {
+
+            }
+        }
+
+        private void otvoriKriterijumFilter(object sender, EventArgs e)
+        {
+            // trenutno smo u tabu za ucionice
+            if (tabControl.SelectedIndex == 1)
+            {
+                
+            }
+            // trenutno smo u tabu za predmete
+            else if (tabControl.SelectedIndex == 2)
+            {
+                
+            }
+            // trenutno smo u tabu za smerove
+            else if (tabControl.SelectedIndex == 3)
+            {
+                SmerFilterKriterijum.IsDropDownOpen = true;
+                SmerFilterKriterijum.Focus();
+            }
+            // trenutno smo u tabu za softvere
+            else if (tabControl.SelectedIndex == 4)
+            {
+                
+            }
+        }
+
+        private void pretraziSmer(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            MessageBox.Show(t.Text);
+        }
+
         private void filtrirajSmer(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
-            if (t.Name == "NazivFilterSmer")
-                filtrirajSmerPoParametru(sender, e, "naziv");
-            else if(t.Name == "OznakaFilterSmer")
-                filtrirajSmerPoParametru(sender, e, "oznaka");
-            else if(t.Name == "DatumFilterSmer")
-                filtrirajSmerPoParametru(sender, e, "datum");
-            else if(t.Name == "OpisFilterSmer")
-                filtrirajSmerPoParametru(sender, e, "opis");
-        }
-
-        private void filtrirajSmerPoParametru(object sender, TextChangedEventArgs e, string parametar)
-        {
-            TextBox t = (TextBox)sender;
             string filter = t.Text;
+            string parametar = SmerFilterKriterijum.Text;
+
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
             if (filter == "")
                 cv.Filter = null;
@@ -204,11 +248,11 @@ namespace HCI_Projekat
                 cv.Filter = o =>
                 {
                     Smer s = o as Smer;
-                    if(parametar == "naziv")
+                    if(parametar == "Naziv")
                         return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
-                    else if(parametar == "oznaka")
+                    else if(parametar == "Oznaka")
                         return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
-                    else if(parametar == "datum")
+                    else if(parametar == "Datum uvođenja")
                         return (s.Datum.Equals(filter));
                     else
                         return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));

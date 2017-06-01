@@ -167,8 +167,8 @@
                 </Menu.Items>
             </Menu>
 
-            <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl">
-                <TabItem Header="Kalendar" Name="KalendarTab">
+            <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl" SelectionChanged="tabChanged">
+                <TabItem Header="Kalendar" Name="KalendarTab" >
                     <Grid Name="BrowserGrid">
                     </Grid>
                 </TabItem>

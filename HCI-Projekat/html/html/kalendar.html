@@ -7,6 +7,10 @@
     <script type="text/javascript" src="../js/kalendar.js"></script>
     <script src="../js/moment.min.js"></script>
     <script src="../js/jquery.min.js"></script>
+    <script src="../js/jquery.raty.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/jquery-ui.min.js"></script>
     <script src="../js/fullcalendar.min.js"></script>
     <script src="../js/scheduler.min.js"></script>
 
@@ -18,10 +22,68 @@
 
 
     <title>Proba</title>
+
+    <style>
+
+        #wrap {
+            width: 1100px;
+            margin: 0 auto;
+        }
+
+        #external-events {
+            float: right;
+            width: 150px;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            background: #eee;
+            text-align: left;
+            margin-top: 3%;
+            margin-right: 2%;
+        }
+        #calendarTrash {
+            height: 150px;
+        }
+
+        #external-events h4 {
+            font-size: 16px;
+            margin-top: 0;
+            padding-top: 1em;
+        }
+
+        #external-events .fc-event {
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        #calendar {
+            margin-left: 10px;
+            float: left;
+        }
+        #predmeti{
+            float: left;
+        }
+    </style>
 </head>
+
 <body>
-    <div id="calendar" style="height:80%; width:80%"></div>
-    <button id="kaca" class="btn btn-info" onclick="cefCustomObject.showDevTools();">Open Dev Tools</button>
+    <div id='external-events'>
+        <h4>Nova stavka kalendara</h4>
+        <div class='fc-event' id="poljeKalendara"></div>
+        <div>Predmet: <select id="predmeti" onchange="predmetPromenjen()"></select></div>
+        <br/>
+        Duzina trajanja termina: <div id="duzina"></div><br/>
+        Broj nerasporedjenih termina: <div id="termini"></div><br/>
+        <div id="calendarTrash" class="calendar-trash">
+            <h4>Prevucite ovde za brisanje</h4>
+        </div>
+    </div>
+
+    
+
+        <div id="calendar" style="height:80%; width:85%"></div>
+
+    <div style='clear:both'></div>
+        <button id="kaca" class="btn btn-info" onclick="cefCustomObject.showDevTools();">Open Dev Tools</button>
 
 </body>
 </html>

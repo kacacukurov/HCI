@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
+        xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         mc:Ignorable="d"
         Title="Potvrda brisanja" ResizeMode="NoResize" Height="150" Width="300">
     <Grid>
@@ -13,4 +14,5 @@
         <Button Width="60" Height="20" Content="Da" Click="finishClick" Name="yesDeleteButton" HorizontalAlignment="Right" Margin="0,80,10,0" Background="DarkGreen" Foreground="White">
         </Button>
     </Grid>
+    
 </Window>

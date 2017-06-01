@@ -128,6 +128,7 @@ namespace HCI_Projekat
                 predmet.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text);
                 predmet.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text);
                 predmet.BrTermina = int.Parse(BrojTerminaPredmet.Text);
+                predmet.PreostaliTermini = predmet.BrTermina;
                 predmet.NeophodanProjektor = PrisustvoProjektoraPredmet.IsChecked;
                 predmet.NeophodnaTabla = PrisustvoTablePredmet.IsChecked;
                 predmet.NeophodnaPametnaTabla = PrisustvoPametneTable.IsChecked;

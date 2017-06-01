@@ -13,6 +13,7 @@ namespace HCI_Projekat
         private Dictionary<string, Softver> softveri;
         private Dictionary<string, Ucionica> ucionice;
         private Dictionary<string, Predmet> predmeti;
+        private Dictionary<string, KalendarPolje> poljaKalendara;
 
         public RacunarskiCentar()
         {
@@ -20,15 +21,17 @@ namespace HCI_Projekat
             this.softveri = new Dictionary<string, Softver>();
             this.ucionice = new Dictionary<string, Ucionica>();
             this.predmeti = new Dictionary<string, Predmet>();
+            this.poljaKalendara = new Dictionary<string, KalendarPolje>();
         }
 
         public RacunarskiCentar(Dictionary<string, Smer> smerovi, Dictionary<string, Softver> softveri,
-            Dictionary<string, Ucionica> ucionice, Dictionary<string, Predmet> predmeti)
+            Dictionary<string, Ucionica> ucionice, Dictionary<string, Predmet> predmeti, Dictionary<string, KalendarPolje> polja)
         {
             this.smerovi = smerovi;
             this.softveri = softveri;
             this.predmeti = predmeti;
             this.ucionice = ucionice;
+            this.poljaKalendara = polja;
         }
 
         public Dictionary<string, Smer> Smerovi
@@ -55,6 +58,12 @@ namespace HCI_Projekat
             set { this.ucionice = value; }
         }
 
+        public Dictionary<string, KalendarPolje> PoljaKalendara
+        {
+            get { return poljaKalendara; }
+            set { this.poljaKalendara = value; }
+        }
+        
         public void DodajSmer(Smer noviSmer)
         {
             this.smerovi.Add(noviSmer.Oznaka, noviSmer);

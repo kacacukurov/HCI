@@ -24,6 +24,7 @@ namespace HCI_Projekat
         private bool obrisan;
         private string softveriLista;
         private string smeroviLista;
+        private int preostaliTermini;
 
         public Predmet() {
             this.softveri = new List<string>();
@@ -45,6 +46,7 @@ namespace HCI_Projekat
             this.neophodnaPametnaTabla = neophodnaPametnaTabla;
             this.operativniSistem = operativniSistem;
             this.softveri = softveri;
+            this.preostaliTermini = brTermina;
             this.obrisan = false;
         }
 
@@ -136,6 +138,12 @@ namespace HCI_Projekat
         {
             get { return smeroviLista; }
             set { this.smeroviLista = value; }
+        }
+
+        public int PreostaliTermini
+        {
+            get { return preostaliTermini; }
+            set { this.preostaliTermini = value; }
         }
     }
 }

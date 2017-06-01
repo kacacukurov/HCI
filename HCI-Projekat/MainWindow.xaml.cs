@@ -27,6 +27,7 @@ namespace HCI_Projekat
         ObservableCollection<Ucionica> ucioniceKolekcija;
         private static string imeFajla = "racunarskiCentar.xml";
         public ChromiumWebBrowser chromeBrowser;
+        CefCustomObject cef;
 
         public MainWindow()
         {
@@ -85,8 +86,8 @@ namespace HCI_Projekat
             detaljanPrikazUcionica.Visibility = Visibility.Hidden;
 
             InitializeChromium();
-
-            chromeBrowser.RegisterJsObject("cefCustomObject", new CefCustomObject(chromeBrowser, this));
+            cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar);
+            chromeBrowser.RegisterJsObject("cefCustomObject", cef);
         }
 
         private void InitializeChromium()
@@ -708,6 +709,10 @@ namespace HCI_Projekat
             sw.Close();
             fs.Close();
             Console.WriteLine("Serijalizacija uspesno izvrsena!\n");
+            foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                Console.WriteLine(polje.Id + "|" + polje.Pocetak + "|" + polje.Kraj + "|" + polje.Dan + "|" + polje.NazivPolja);
+            }
         }
 
         private void DeserijalizacijaPodataka()
@@ -729,6 +734,14 @@ namespace HCI_Projekat
                 sr.Close();
                 fs.Close();
                 Console.WriteLine("Deserijalizacija uspesno izvrsena!\n");
+            }
+        }
+        
+        private void tabChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (tabControl.SelectedIndex == 0)
+            {
+                cef.posaljiPodatke();
             }
         }
     }

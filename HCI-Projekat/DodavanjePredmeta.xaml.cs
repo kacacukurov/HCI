@@ -164,14 +164,14 @@ namespace HCI_Projekat
                     Smer smer = (Smer)smeroviTabela.Items[i];
                     if (smer.UPredmetu)
                     {
-                        predmet.Smerovi.Add(smer.Oznaka);
+                        predmet.Smer = smer.Oznaka;
                         if (brojSmerova != 0)
                             sb.Append("\n\n");
                         sb.Append("Oznaka smera: " + smer.Oznaka);
                         sb.Append("\nNaziv smera: " + smer.Naziv);
                         sb.Append("\nOpis smera: " + smer.Opis);
-                        brojSmerova++;
                         smer.UPredmetu = false;
+                        break;
                     }
                 }
                 predmet.SmeroviLista = sb.ToString();
@@ -277,14 +277,15 @@ namespace HCI_Projekat
                         softver.Instaliran = false;
                     }
                 }
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smerovi.Clear();
+
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
                 {
                     Smer smer = (Smer)smeroviTabela.Items[i];
                     if (smer.UPredmetu)
                     {
-                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smerovi.Add(smer.Oznaka);
+                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smer = smer.Oznaka;
                         smer.UPredmetu = false;
+                        break;
                     }
                 }
                 tabelaPredmeta[indeks] = racunarskiCentar.Predmeti[OznakaPredmeta.Text];

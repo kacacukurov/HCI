@@ -11,7 +11,7 @@ namespace HCI_Projekat
     {
         private string oznaka;
         private string naziv;
-        private List<string> smerovi; 
+        private string smer; 
         private string opis;
         private int velicinaGrupe;
         private int minDuzinaTermina;
@@ -27,16 +27,15 @@ namespace HCI_Projekat
 
         public Predmet() {
             this.softveri = new List<string>();
-            this.smerovi = new List<string>();
         }
 
-        public Predmet(string oznaka, string naziv, List<string> smerovi, string opis, int velicinaGrupe,
+        public Predmet(string oznaka, string naziv, string smer, string opis, int velicinaGrupe,
             int minDuzinaTermina, int brTermina, bool neophodanProjektor, bool neophodnaTabla, bool neophodnaPametnaTabla,
             string operativniSistem, List<string> softveri)
         {
             this.oznaka = oznaka;
             this.naziv = naziv;
-            this.smerovi = smerovi;
+            this.smer = smer;
             this.opis = opis;
             this.velicinaGrupe = velicinaGrupe;
             this.minDuzinaTermina = minDuzinaTermina;
@@ -61,10 +60,10 @@ namespace HCI_Projekat
             set { this.naziv = value; }
         }
 
-        public List<string> Smerovi
+        public string Smer
         {
-            get { return smerovi; }
-            set { this.smerovi = value; }
+            get { return smer; }
+            set { this.smer = value; }
         }
 
         public string Opis

@@ -112,6 +112,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CefCustomObject.cs" />
+    <Compile Include="IzmenaPredmeta.xaml.cs">
+      <DependentUpon>IzmenaPredmeta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IzmenaSmerova.xaml.cs">
+      <DependentUpon>IzmenaSmerova.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IzmenaSoftvera.xaml.cs">
+      <DependentUpon>IzmenaSoftvera.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IzmenaUcionica.xaml.cs">
+      <DependentUpon>IzmenaUcionica.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PotvrdaBrisanja.xaml.cs">
       <DependentUpon>PotvrdaBrisanja.xaml</DependentUpon>
     </Compile>
@@ -135,6 +147,22 @@
     <Page Include="DodavanjeUcionice.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="IzmenaPredmeta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IzmenaSmerova.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IzmenaSoftvera.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IzmenaUcionica.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="MainWindow" Name="mainWindow" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
+        Title="MainWindow" Name="mainWindow" MinWidth="630" MinHeight="600" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
 
     <Window.Resources>
         <RoutedUICommand x:Key="novaUcionica" Text="ucionica"></RoutedUICommand>
@@ -169,7 +169,13 @@
                 
                 <TabItem Header="Učionica" Name="UcionicaTab">
                     <Grid>
-                        <DataGrid Name="tabelaUcionica" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.1*"/>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="0.7*"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="1" Name="tabelaUcionica" LostFocus="tabelaUcionicaIzgubilaFokus" GotFocus="tabelaUcionicaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = BrojRadnihMesta, FallbackValue='-'}" Header="Broj radnih mesta" Width="Auto"/>
@@ -179,65 +185,128 @@
                                 <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
                             </DataGrid.Columns>
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <DockPanel Background="GhostWhite">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <TextBlock Text="Oznaka: " FontWeight="Bold" />
-                                            <TextBlock Text="{Binding Oznaka}" Grid.Column="1" />
-                                            <TextBlock Text="Broj radnih mesta: " FontWeight="Bold" Grid.Row="1" />
-                                            <TextBlock Text="{Binding BrojRadnihMesta}" Grid.Column="1" Grid.Row="1" />
-                                            <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="2"/>
-                                            <TextBlock Text="{Binding PrisustvoProjektora}" Grid.Column="1" Grid.Row="2" />
-                                            <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="3" />
-                                            <TextBlock Text="{Binding PrisustvoTable}" Grid.Column="1" Grid.Row="3" />
-                                            <TextBlock Text="Pametna tabla: " FontWeight="Bold" Grid.Row="4"/>
-                                            <TextBlock Text="{Binding PrisustvoPametneTable}" Grid.Column="1" Grid.Row="4"/>
-                                            <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="5" />
-                                            <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="5" />
-                                            <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="6" />
-                                            <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="6" />
-                                            <TextBlock Text="Instalirani softveri: " FontWeight="Bold" Grid.Row="7" />
-                                            <TextBlock Text="{Binding softveriLista}" Grid.Column="1" Grid.Row="7" />
-                                        </Grid>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
 
-                        <DockPanel VerticalAlignment="Bottom">
-                            <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Height="20">
-                                <Button Width="60" Height="20" Content="Izmeni" Click="izmeniUcionicuClick" HorizontalAlignment="Right" Margin="0,0,170,0" Background="DarkBlue" Foreground="White"></Button>
-                                <Button Width="60" Height="20" Content="Obriši" Click="obrisiUcionicuClick" HorizontalAlignment="Right" Margin="0,-20,100,0" Background="DarkRed" Foreground="White"></Button>
-                                <Button Width="80" Height="20" Content="Nova učionica" Click="dodavanjeUcioniceClick" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                            <ScrollViewer>
+                                <Grid DataContext="{Binding ElementName=tabelaUcionica,Path=SelectedItem}" Name="detaljanPrikazUcionica">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Oznaka: " FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Oznaka}" Grid.Column="1" />
+                                    <TextBlock Text="Broj radnih mesta: " FontWeight="Bold" Grid.Row="1" />
+                                    <TextBlock Text="{Binding BrojRadnihMesta}" Grid.Column="1" Grid.Row="1" />
+                                    <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="2"/>
+                                    <TextBlock Text="{Binding PrisustvoProjektora}" Grid.Column="1" Grid.Row="2" />
+                                    <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="3" />
+                                    <TextBlock Text="{Binding PrisustvoTable}" Grid.Column="1" Grid.Row="3" />
+                                    <TextBlock Text="Pametna tabla: " FontWeight="Bold" Grid.Row="4"/>
+                                    <TextBlock Text="{Binding PrisustvoPametneTable}" Grid.Column="1" Grid.Row="4"/>
+                                    <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="5" />
+                                    <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="5" />
+                                    <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="6" />
+                                    <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="6" />
+                                    <TextBlock Text="Instalirani softveri: " FontWeight="Bold" Grid.Row="7" />
+                                    <TextBlock Text="{Binding softveriLista}" Grid.Column="1" Grid.Row="7" />
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeUcioniceClick" Name="dodajUcionicuButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Dodaj</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
                                 </Button>
-                            </StackPanel>
-                        </DockPanel>
+                            </Grid>
+                            <Grid Grid.Column="7">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiUcionicuClick" Name="obrisiUcionicuButton" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Obriši</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniUcionicuClick" Name="izmeniUcionicuButton" Background="DarkBlue" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Izmeni</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </TabItem>
                 
                 <TabItem Header="Predmet" Name="PredmetTab">
                     <Grid>
-                        <!--
-                        Ukinuto kretanje kroz tabelu tabom - IsTabStop = True
-                        Mogucnost selektovanja veceg broja redova (ukloniti ako ne treba)
-                        -->
-                        <DataGrid IsTabStop="True" Name="tabelaPredmeta" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.1*"/>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="0.7*"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="1" Name="tabelaPredmeta" LostFocus="tabelaPredmetaIzgubilaFokus" GotFocus="tabelaPredmetaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
@@ -249,58 +318,7 @@
                                 <DataGridTextColumn Binding="{Binding Path = NeophodnaPametnaTabla, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="*"/>
                             </DataGrid.Columns>
-                            
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <Grid MaxHeight="150">
-                                        <ScrollViewer IsTabStop="False">
-                                            <DockPanel Background="GhostWhite" KeyDown="skrolovanjeDetaljanPrikazPredmet">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
 
-                                                    <TextBlock Text="Naziv: " FontWeight="Bold" />
-                                                    <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
-                                                    <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
-                                                    <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
-                                                    <TextBlock Text="Veličina grupe: " FontWeight="Bold" Grid.Row="2"/>
-                                                    <TextBlock Text="{Binding VelicinaGrupe}" Grid.Column="1" Grid.Row="2" />
-                                                    <TextBlock Text="Minimalna dužina termina: " FontWeight="Bold" Grid.Row="3" />
-                                                    <TextBlock Text="{Binding MinDuzinaTermina}" Grid.Column="1" Grid.Row="3" />
-                                                    <TextBlock Text="Broj termina: " FontWeight="Bold" Grid.Row="4"/>
-                                                    <TextBlock Text="{Binding BrTermina}" Grid.Column="1" Grid.Row="4"/>
-                                                    <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="5" />
-                                                    <TextBlock Text="{Binding NeophodanProjektor}" Grid.Column="1" Grid.Row="5" />
-                                                    <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="6" />
-                                                    <TextBlock Text="{Binding NeophodnaTabla}" Grid.Column="1" Grid.Row="6" />
-                                                    <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="7" />
-                                                    <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="7" />
-                                                    <TextBlock Text="Neophodni softveri: " FontWeight="Bold" Grid.Row="8" />
-                                                    <TextBlock Text="{Binding SoftveriLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="8" />
-                                                    <TextBlock Text="Smerovi: " FontWeight="Bold" Grid.Row="9" />
-                                                    <TextBlock Text="{Binding SmeroviLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="9" />
-                                                </Grid>
-                                            </DockPanel>
-                                        </ScrollViewer>
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
-                            
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Setter Property="BorderThickness" Value="0"/>
@@ -309,71 +327,283 @@
                             </DataGrid.CellStyle>
                         </DataGrid>
 
-                        <DockPanel VerticalAlignment="Bottom">
-                            <TextBox DockPanel.Dock="Top" Name="PredmetDetaljanPrikazBox"></TextBox>
-                            <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Height="20">
-                                <Button Width="60" Height="20" Content="Izmeni" Click="izmeniPredmetClick" HorizontalAlignment="Right" Margin="0,0,170,0" Background="DarkBlue" Foreground="White"></Button>
-                                <Button Width="60" Height="20" Content="Obriši" Click="obrisiPredmetClick" HorizontalAlignment="Right" Margin="0,-20,100,0" Background="DarkRed" Foreground="White"></Button>
-                                <Button Width="80" Height="20" Content="Novi predmet" Click="dodavanjePredmetaClick" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                            <ScrollViewer>
+                                <Grid DataContext="{Binding ElementName=tabelaPredmeta,Path=SelectedItem}" Name="detaljanPrikazPredmet">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Text="Naziv: " FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
+                                    <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
+                                    <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
+                                    <TextBlock Text="Veličina grupe: " FontWeight="Bold" Grid.Row="2"/>
+                                    <TextBlock Text="{Binding VelicinaGrupe}" Grid.Column="1" Grid.Row="2" />
+                                    <TextBlock Text="Minimalna dužina termina: " FontWeight="Bold" Grid.Row="3" />
+                                    <TextBlock Text="{Binding MinDuzinaTermina}" Grid.Column="1" Grid.Row="3" />
+                                    <TextBlock Text="Broj termina: " FontWeight="Bold" Grid.Row="4"/>
+                                    <TextBlock Text="{Binding BrTermina}" Grid.Column="1" Grid.Row="4"/>
+                                    <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="5" />
+                                    <TextBlock Text="{Binding NeophodanProjektor}" Grid.Column="1" Grid.Row="5" />
+                                    <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="6" />
+                                    <TextBlock Text="{Binding NeophodnaTabla}" Grid.Column="1" Grid.Row="6" />
+                                    <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="7" />
+                                    <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="7" />
+                                    <TextBlock Text="Neophodni softveri: " FontWeight="Bold" Grid.Row="8" />
+                                    <TextBlock Text="{Binding SoftveriLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="8" />
+                                    <TextBlock Text="Smerovi: " FontWeight="Bold" Grid.Row="9" />
+                                    <TextBlock Text="{Binding SmeroviLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="9" />
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjePredmetaClick" Name="dodajPredmetButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Dodaj</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
                                 </Button>
-                            </StackPanel>
-                        </DockPanel>
+                            </Grid>
+                            <Grid Grid.Column="7">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiPredmetClick" Name="obrisiPredmetButton" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Obriši</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniPredmetClick" Name="izmeniPredmetButton" Background="DarkBlue" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Izmeni</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </TabItem>
                 
                 <TabItem Header="Smer" Name="SmerTab">
                     <Grid>
-                        <DataGrid Name="tabelaSmerova" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False"  IsReadOnly="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.1*"/>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="0.7*"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="1" Name="tabelaSmerova" LostFocus="tabelaSmerovaIzgubilaFokus" GotFocus="tabelaSmerovaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum uvođenja" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto">
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Naziv " Width="Auto"/>
+                                                <TextBox Name="NazivFilterSmer" Width="100" TextChanged="filtrirajSmer"></TextBox>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto">
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Oznaka " Width="Auto"/>
+                                                <TextBox Name="OznakaFilterSmer" Width="100" TextChanged="filtrirajSmer"></TextBox>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum uvođenja" Width="Auto">
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Datum uvođenja " Width="Auto"/>
+                                                <TextBox Name="DatumFilterSmer" Width="100" TextChanged="filtrirajSmer"></TextBox>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*">
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Opis " Width="Auto"/>
+                                                <TextBox Name="OpisFilterSmer" Width="100" TextChanged="filtrirajSmer"></TextBox>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <DockPanel Background="GhostWhite">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <TextBlock Text="Naziv: " FontWeight="Bold" />
-                                            <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
-                                            <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
-                                            <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
-                                            <TextBlock Text="Datum: " FontWeight="Bold" Grid.Row="2"/>
-                                            <TextBlock Text="{Binding Datum}" Grid.Column="1" Grid.Row="2" />
-                                            <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="3" />
-                                            <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="3" />
-                                        </Grid>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
+                           
                         </DataGrid>
 
-                        <DockPanel VerticalAlignment="Bottom">
-                            <TextBox DockPanel.Dock="Top" Name="SmerDetaljanPrikazBox"></TextBox>
-                            <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Height="20">
-                                <Button Width="60" Height="20" Content="Izmeni" Click="izmeniSmerClick" HorizontalAlignment="Right" Margin="0,0,150,0" Background="DarkBlue" Foreground="White"></Button>
-                                <Button Width="60" Height="20" Content="Obriši" Click="obrisiSmerClick" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White"></Button>
-                                <Button Width="60" Height="20" Content="Novi smer" Click="dodavanjeSmeraClick" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                            <Grid DataContext="{Binding ElementName=tabelaSmerova,Path=SelectedItem}" Name="detaljanPrikazSmer">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Naziv: " FontWeight="Bold" />
+                                <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
+                                <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
+                                <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
+                                <TextBlock Text="Datum: " FontWeight="Bold" Grid.Row="2"/>
+                                <TextBlock Text="{Binding Datum}" Grid.Column="1" Grid.Row="2" />
+                                <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="3" />
+                                <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="3" />
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSmeraClick" Name="dodajSmerButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Dodaj</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
                                 </Button>
-                            </StackPanel>
-                        </DockPanel>
+                            </Grid>
+                            <Grid Grid.Column="7">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiSmerClick" Name="obrisiSmerButton" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Obriši</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSmerClick" Name="izmeniSmerButton" Background="DarkBlue" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Izmeni</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </TabItem>
 
                 <TabItem Header="Softver" Name="SoftverTab">
                     <Grid>
-                        <DataGrid Name="tabelaSoftvera" RowDetailsVisibilityMode="VisibleWhenSelected" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,20,10,40" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.1*"/>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="0.7*"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="1" Name="tabelaSoftvera" LostFocus="tabelaSoftveraIzgubilaFokus" GotFocus="tabelaSoftveraDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
@@ -384,56 +614,116 @@
                                 <DataGridHyperlinkColumn Binding="{Binding Path = Sajt , FallbackValue='-'}" Header="Sajt" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
                             </DataGrid.Columns>
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <DockPanel Background="GhostWhite">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <TextBlock Text="Naziv: " FontWeight="Bold" />
-                                            <TextBlock Text="{Binding Naziv}" Grid.Column="1" />
-                                            <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
-                                            <TextBlock Text="{Binding Oznaka}" Grid.Column="1" Grid.Row="1" />
-                                            <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="2"/>
-                                            <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="2" />
-                                            <TextBlock Text="Proizvođač: " FontWeight="Bold" Grid.Row="3" />
-                                            <TextBlock Text="{Binding Proizvodjac}" Grid.Column="1" Grid.Row="3" />
-                                            <TextBlock Text="Godina izdavanja: " FontWeight="Bold" Grid.Row="4"/>
-                                            <TextBlock Text="{Binding GodIzdavanja}" Grid.Column="1" Grid.Row="4"/>
-                                            <TextBlock Text="Cena: " FontWeight="Bold" Grid.Row="5" />
-                                            <TextBlock Text="{Binding Cena}" Grid.Column="1" Grid.Row="5" />
-                                            <TextBlock Text="Sajt: " FontWeight="Bold" Grid.Row="6" />
-                                            <TextBlock Text="{Binding Sajt}" Grid.Column="1" Grid.Row="6" />
-                                            <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="7" />
-                                            <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="7" />
-                                        </Grid>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
 
-                        <DockPanel VerticalAlignment="Bottom">
-                            <TextBox DockPanel.Dock="Top" Name="SoftverDetaljanPrikazBox"></TextBox>
-                            <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Height="20">
-                                <Button Width="60" Height="20" Content="Izmeni" Click="izmeniSoftverClick" HorizontalAlignment="Right" Margin="0,0,170,0" Background="DarkBlue" Foreground="White"></Button>
-                                <Button Width="60" Height="20" Content="Obriši" Click="obrisiSoftverClick" HorizontalAlignment="Right" Margin="0,-20,100,0" Background="DarkRed" Foreground="White"></Button>
-                                <Button Width="80" Height="20" Content="Novi softver" Click="dodavanjeSoftveraClick" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
+                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                            <ScrollViewer>
+                                <Grid DataContext="{Binding ElementName=tabelaSoftvera,Path=SelectedItem}" Name="detaljanPrikazSoftver">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Naziv: " FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Path=Naziv}" Grid.Column="1" />
+                                    <TextBlock Text="Oznaka: " FontWeight="Bold" Grid.Row="1" />
+                                    <TextBlock Text="{Binding Path=Oznaka}" Grid.Column="1" Grid.Row="1" />
+                                    <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="2"/>
+                                    <TextBlock Text="{Binding Path=OperativniSistem}" Grid.Column="1" Grid.Row="2" />
+                                    <TextBlock Text="Proizvođač: " FontWeight="Bold" Grid.Row="3" />
+                                    <TextBlock Text="{Binding Path=Proizvodjac}" Grid.Column="1" Grid.Row="3" />
+                                    <TextBlock Text="Godina izdavanja: " FontWeight="Bold" Grid.Row="4"/>
+                                    <TextBlock Text="{Binding Path=GodIzdavanja}" Grid.Column="1" Grid.Row="4"/>
+                                    <TextBlock Text="Cena: " FontWeight="Bold" Grid.Row="5" />
+                                    <TextBlock Text="{Binding Path=Cena}" Grid.Column="1" Grid.Row="5" />
+                                    <TextBlock Text="Sajt: " FontWeight="Bold" Grid.Row="6" />
+                                    <TextBlock Text="{Binding Path=Sajt}" Grid.Column="1" Grid.Row="6" />
+                                    <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="7" />
+                                    <TextBlock Text="{Binding Path=Opis}" Grid.Column="1" Grid.Row="7" />
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSoftveraClick" Name="dodajSoftverButton" Background="DarkGreen" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Dodaj</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>    
+                            </Grid>
+                            <Grid Grid.Column="7">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiSoftverClick" Name="obrisiSoftverButton" Background="DarkRed" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Obriši</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
                                 </Button>
-                            </StackPanel>
-                        </DockPanel>
+                            </Grid>
+                            <Grid Grid.Column="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSoftverClick" Name="izmeniSoftverButton" Background="DarkBlue" Foreground="White">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock>Izmeni</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </TabItem>
             </TabControl>

@@ -9,6 +9,9 @@ using System.Windows.Input;
 using CefSharp;
 using CefSharp.Wpf;
 using System.Linq;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace HCI_Projekat
 {
@@ -32,8 +35,7 @@ namespace HCI_Projekat
 
             racunarskiCentar = new RacunarskiCentar();
             DeserijalizacijaPodataka();
-
-            //  predmetiKolekcija = new ObservableCollection<Predmet>(racunarskiCentar.Predmeti.Values);
+            
             predmetiKolekcija = new ObservableCollection<Predmet>();
             foreach (Predmet p in racunarskiCentar.Predmeti.Values)
             {
@@ -44,8 +46,8 @@ namespace HCI_Projekat
             tabelaPredmeta.IsSynchronizedWithCurrentItem = true;
             tabelaPredmeta.IsReadOnly = true;
             tabelaPredmeta.UnselectAll();
+            detaljanPrikazPredmet.Visibility = Visibility.Hidden;
 
-            //softveriKolekcija = new ObservableCollection<Softver>(racunarskiCentar.Softveri.Values);
             softveriKolekcija = new ObservableCollection<Softver>();
             foreach(Softver s in racunarskiCentar.Softveri.Values)
             {
@@ -56,8 +58,8 @@ namespace HCI_Projekat
             tabelaSoftvera.IsSynchronizedWithCurrentItem = true;
             tabelaSoftvera.IsReadOnly = true;
             tabelaSoftvera.UnselectAll();
+            detaljanPrikazSoftver.Visibility = Visibility.Hidden;
             
-            //smeroviKolekcija = new ObservableCollection<Smer>(racunarskiCentar.Smerovi.Values);
             smeroviKolekcija = new ObservableCollection<Smer>();
             foreach(Smer s in racunarskiCentar.Smerovi.Values)
             {
@@ -68,8 +70,8 @@ namespace HCI_Projekat
             tabelaSmerova.IsSynchronizedWithCurrentItem = true;
             tabelaSmerova.IsReadOnly = true;
             tabelaSmerova.UnselectAll();
+            detaljanPrikazSmer.Visibility = Visibility.Hidden;
 
-            //ucioniceKolekcija = new ObservableCollection<Ucionica>(racunarskiCentar.Ucionice.Values);
             ucioniceKolekcija = new ObservableCollection<Ucionica>();
             foreach(Ucionica u in racunarskiCentar.Ucionice.Values)
             {
@@ -80,6 +82,7 @@ namespace HCI_Projekat
             tabelaUcionica.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica.IsReadOnly = true;
             tabelaUcionica.UnselectAll();
+            detaljanPrikazUcionica.Visibility = Visibility.Hidden;
 
             InitializeChromium();
 
@@ -102,7 +105,6 @@ namespace HCI_Projekat
             chromeBrowser.Address = page;
             
             BrowserGrid.Children.Add(chromeBrowser);
-
         }
 
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)
@@ -177,23 +179,81 @@ namespace HCI_Projekat
             }
         }
 
+        private void filtrirajSmer(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (t.Name == "NazivFilterSmer")
+                filtrirajSmerPoParametru(sender, e, "naziv");
+            else if(t.Name == "OznakaFilterSmer")
+                filtrirajSmerPoParametru(sender, e, "oznaka");
+            else if(t.Name == "DatumFilterSmer")
+                filtrirajSmerPoParametru(sender, e, "datum");
+            else if(t.Name == "OpisFilterSmer")
+                filtrirajSmerPoParametru(sender, e, "opis");
+        }
+
+        private void filtrirajSmerPoParametru(object sender, TextChangedEventArgs e, string parametar)
+        {
+            TextBox t = (TextBox)sender;
+            string filter = t.Text;
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
+            if (filter == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Smer s = o as Smer;
+                    if(parametar == "naziv")
+                        return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
+                    else if(parametar == "oznaka")
+                        return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
+                    else if(parametar == "datum")
+                        return (s.Datum.Equals(filter));
+                    else
+                        return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));
+                };
+            }
+        }
+
         private void obrisiElement(object sender, RoutedEventArgs e)
         {
             var brisanjeProzor = new PotvrdaBrisanja();
-            brisanjeProzor.ShowDialog();
-            if (brisanjeProzor.daKlik)
+           
+            // trenutno smo u tabu za ucionice
+            if (tabControl.SelectedIndex == 1)
             {
-                // trenutno smo u tabu za ucionice
-                if (tabControl.SelectedIndex == 1)
+                if (tabelaUcionica.SelectedItems.Count > 1)
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                brisanjeProzor.ShowDialog();
+                if(brisanjeProzor.daKlik)
                     obrisiUcionicuClick(sender, e);
-                // trenutno smo u tabu za predmete
-                else if (tabControl.SelectedIndex == 2)
+            }
+            // trenutno smo u tabu za predmete
+            else if (tabControl.SelectedIndex == 2)
+            {
+                if (tabelaPredmeta.SelectedItems.Count > 1)
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                brisanjeProzor.ShowDialog();
+                if(brisanjeProzor.daKlik)
                     obrisiPredmetClick(sender, e);
-                // trenutno smo u tabu za smerove
-                else if (tabControl.SelectedIndex == 3)
+            }
+            // trenutno smo u tabu za smerove
+            else if (tabControl.SelectedIndex == 3)
+            {
+                if (tabelaSmerova.SelectedItems.Count > 1)
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                brisanjeProzor.ShowDialog();
+                if(brisanjeProzor.daKlik)
                     obrisiSmerClick(sender, e);
-                // trenutno smo u tabu za softvere
-                else if (tabControl.SelectedIndex == 4)
+            }
+            // trenutno smo u tabu za softvere
+            else if (tabControl.SelectedIndex == 4)
+            {
+                if (tabelaSoftvera.SelectedItems.Count > 1)
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                brisanjeProzor.ShowDialog();
+                if(brisanjeProzor.daKlik)
                     obrisiSoftverClick(sender, e);
             }
         }
@@ -202,16 +262,72 @@ namespace HCI_Projekat
         {
             // trenutno smo u tabu za ucionice
             if (tabControl.SelectedIndex == 1)
-                izmeniUcionicuClick(sender, e);
+            {
+                if (tabelaUcionica.SelectedItems.Count > 1)
+                    izmeniUcioniceClick(sender, e);
+                else
+                    izmeniUcionicuClick(sender, e);
+            }
             // trenutno smo u tabu za predmete
             else if (tabControl.SelectedIndex == 2)
-                izmeniPredmetClick(sender, e);
+            {
+                if (tabelaPredmeta.SelectedItems.Count > 1)
+                    izmeniPredmeteClick(sender, e);
+                else
+                    izmeniPredmetClick(sender, e);
+            }
             // trenutno smo u tabu za smerove
             else if (tabControl.SelectedIndex == 3)
-                izmeniSmerClick(sender, e);
+            {
+                if (tabelaSmerova.SelectedItems.Count > 1)
+                    izmeniSmeroveClick(sender, e);
+                else
+                    izmeniSmerClick(sender, e);
+            }
             // trenutno smo u tabu za softvere
             else if (tabControl.SelectedIndex == 4)
-                izmeniSoftverClick(sender, e);
+            {
+                if (tabelaSoftvera.SelectedItems.Count > 1)
+                    izmeniSoftvereClick(sender, e);
+                else
+                    izmeniSoftverClick(sender, e);
+            }
+        }
+
+        private void izmeniUcioniceClick(object sender, RoutedEventArgs e)
+        {
+            var izmenaUcionica = new IzmenaUcionica();
+            if (izmenaUcionica.potvrdaIzmena)
+            {
+
+            }
+        }
+
+        private void izmeniPredmeteClick(object sender, RoutedEventArgs e)
+        {
+            var izmenaPredmeta = new IzmenaPredmeta();
+            if (izmenaPredmeta.potvrdaIzmena)
+            {
+
+            }
+        }
+
+        private void izmeniSmeroveClick(object sender, RoutedEventArgs e)
+        {
+            var izmenaSmerova = new IzmenaSmerova();
+            if(izmenaSmerova.potvrdaIzmena)
+            {
+
+            }
+        }
+
+        private void izmeniSoftvereClick(object sender, RoutedEventArgs e)
+        {
+            var izmenaSoftvera = new IzmenaSoftvera();
+            if (izmenaSoftvera.potvrdaIzmena)
+            {
+
+            }
         }
 
         private void izmeniPredmetClick(object sender, RoutedEventArgs e)
@@ -239,11 +355,10 @@ namespace HCI_Projekat
                 else if (pre.OperativniSistem.Equals("Svejedno"))
                     predmetWindow.Svejedno.IsChecked = true;
 
-                
-                for (int i = 0; i < predmetWindow.smeroviTabela.Items.Count; i++) // iterairam kroz tabelu prozora
+                for (int i = 0; i < predmetWindow.smeroviTabela.Items.Count; i++) // iteriram kroz tabelu prozora za smerove
                 {
                     Smer smer = (Smer)predmetWindow.smeroviTabela.Items[i]; //uzmem softver iz tekuceg reda
-                    if (pre.Smerovi.IndexOf(smer.Oznaka) != -1)        //ako postoji u listi, cekiram ga
+                    if (pre.Smer == smer.Oznaka)        //ako postoji u listi, cekiram ga
                         smer.UPredmetu = true;
                     else
                         smer.UPredmetu = false;
@@ -257,6 +372,7 @@ namespace HCI_Projekat
                     else
                         softver.Instaliran = false;
                 }
+
                 predmetWindow.indeks = tabelaPredmeta.SelectedIndex;
                 predmetWindow.ShowDialog();
                 tabelaPredmeta.Items.Refresh();
@@ -280,12 +396,14 @@ namespace HCI_Projekat
                 softverWindow.opisSoftver.Text = red.Opis;
                 softverWindow.oznakaSoftver.Text = red.Oznaka;
                 softverWindow.oznakaSoftver.IsEnabled = false;
+
                 if (red.OperativniSistem.Equals("Windows"))
                     softverWindow.WindowsOSSoftver.IsChecked = true;
                 else if (red.OperativniSistem.Equals("Linux"))
                     softverWindow.LinusOSSoftver.IsChecked = true;
                 else if (red.OperativniSistem.Equals("Windows i Linux"))
                     softverWindow.WindowsAndLinusOSSoftver.IsChecked = true;
+
                 softverWindow.indeks = tabelaSoftvera.SelectedIndex;
                 softverWindow.ShowDialog();
                 tabelaSoftvera.Items.Refresh();
@@ -345,6 +463,7 @@ namespace HCI_Projekat
                 smerWindow.OznakaSmera.IsEnabled = false;
                 smerWindow.OpisSmera.Text = row.Opis;
                 smerWindow.DatumUvodjenja.Text = row.Datum.ToString();
+
                 smerWindow.indeks = tabelaSmerova.SelectedIndex;
                 smerWindow.ShowDialog();
                 tabelaSmerova.Items.Refresh();
@@ -357,13 +476,20 @@ namespace HCI_Projekat
         {
             if (tabelaPredmeta.SelectedIndex != -1)
             {
-                DataGridRow selektovaniRed = (DataGridRow)tabelaPredmeta.ItemContainerGenerator.ContainerFromIndex(tabelaPredmeta.SelectedIndex);
-                TextBlock content = tabelaPredmeta.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
-                string oznakaPredmeta = content.Text;
+                List<Predmet> removedItems = new List<Predmet>();
+                foreach (object o in tabelaPredmeta.SelectedItems)
+                {
+                    int index = tabelaPredmeta.Items.IndexOf(o);
+                    DataGridRow selektovaniRed = (DataGridRow)tabelaPredmeta.ItemContainerGenerator.ContainerFromIndex(index);
+                    TextBlock content = tabelaPredmeta.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
+                    string oznakaPredmeta = content.Text;
 
-                predmetiKolekcija.Remove(racunarskiCentar.Predmeti[oznakaPredmeta]);
-                
-                racunarskiCentar.Predmeti[oznakaPredmeta].Obrisan = true;
+                    removedItems.Add(racunarskiCentar.Predmeti[oznakaPredmeta]);
+                    racunarskiCentar.Predmeti[oznakaPredmeta].Obrisan = true;
+                }
+
+                foreach (Predmet predmet in removedItems)
+                    predmetiKolekcija.Remove(predmet);
             }
             else
                 return;
@@ -371,50 +497,51 @@ namespace HCI_Projekat
 
         private void obrisiSoftverClick(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show(tabelaSoftvera.SelectedItems.Count.ToString());
             if (tabelaSoftvera.SelectedIndex != -1)
             {
-                DataGridRow selektovaniRed = (DataGridRow)tabelaSoftvera.ItemContainerGenerator.ContainerFromIndex(tabelaSoftvera.SelectedIndex);
-                TextBlock content = tabelaSoftvera.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
-                string oznakaSoftvera = content.Text;
-                //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
-                bool koristiSeUPredmetu = false;
-                foreach(Predmet p in racunarskiCentar.Predmeti.Values)
+                MessageBox.Show("usao");
+                List<Softver> removedItems = new List<Softver>();
+                foreach (object o in tabelaSoftvera.SelectedItems)
                 {
-                    if (!p.Obrisan)
+                    MessageBox.Show("usao");
+                    int index = tabelaSoftvera.Items.IndexOf(o);
+                    DataGridRow selektovaniRed = (DataGridRow)tabelaSoftvera.ItemContainerGenerator.ContainerFromIndex(index);
+                    TextBlock content = tabelaSoftvera.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
+                    string oznakaSoftvera = content.Text;
+
+                    //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
+                    bool koristiSeUPredmetu = false;
+                    foreach (Predmet p in racunarskiCentar.Predmeti.Values)
                     {
-                        foreach (string s in p.Softveri)
-                        {
-                            if (s == oznakaSoftvera)
-                                koristiSeUPredmetu = true;
-                        }
+                        if (!p.Obrisan && p.Softveri.Contains(oznakaSoftvera))
+                            koristiSeUPredmetu = true;
                     }
-                }
-                if (koristiSeUPredmetu)
-                {
-                    MessageBox.Show("Ne možete obrisati softver, koristi se u nekom predmetu!");
-                    return;
-                }
-                //provera da li se nalazi u nekoj ucionici, ako se nalazi, sprecava se brisanje
-                bool koristiSeUucionici = false;
-                foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
-                {
-                    if (!u.Obrisan)
+                    if (koristiSeUPredmetu)
                     {
-                        foreach (string s in u.InstaliraniSoftveri)
-                        {
-                            if (s == oznakaSoftvera)
-                                koristiSeUucionici = true;
-                        }
+                        MessageBox.Show("Ne možete obrisati softver" + oznakaSoftvera + ", jer je povezan sa nekim od predmeta!");
+                        continue;
                     }
+
+                    //provera da li se nalazi u nekoj ucionici, ako se nalazi, sprecava se brisanje
+                    bool koristiSeUucionici = false;
+                    foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
+                    {
+                        if (!u.Obrisan && u.InstaliraniSoftveri.Contains(oznakaSoftvera))
+                            koristiSeUucionici = true;
+                    }
+                    if (koristiSeUucionici)
+                    {
+                        MessageBox.Show("Ne možete obrisati softver" + oznakaSoftvera + ", jer je povezan sa nekom od učionica!");
+                        continue;
+                    }
+
+                    removedItems.Add(racunarskiCentar.Softveri[oznakaSoftvera]);
+                    racunarskiCentar.Softveri[oznakaSoftvera].Obrisan = true;
                 }
-                if (koristiSeUucionici)
-                {
-                    MessageBox.Show("Ne možete obrisati softver, koristi se u nekoj učionici!");
-                    return;
-                }
-                softveriKolekcija.Remove(racunarskiCentar.Softveri[oznakaSoftvera]);
-                
-                racunarskiCentar.Softveri[oznakaSoftvera].Obrisan = true;
+
+                foreach (Softver softver in removedItems)
+                    softveriKolekcija.Remove(softver);
             }
             else
                 return;
@@ -424,13 +551,20 @@ namespace HCI_Projekat
         {
             if (tabelaUcionica.SelectedIndex != -1)
             {
-                DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(tabelaUcionica.SelectedIndex);
-                TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
-                string oznakaUcionice = content.Text;
+                List<Ucionica> removedItems = new List<Ucionica>();
+                foreach (object o in tabelaUcionica.SelectedItems)
+                {
+                    int index = tabelaUcionica.Items.IndexOf(o);
+                    DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(index);
+                    TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
+                    string oznakaUcionice = content.Text;
 
-                ucioniceKolekcija.Remove(racunarskiCentar.Ucionice[oznakaUcionice]);
-                
-                racunarskiCentar.Ucionice[oznakaUcionice].Obrisan = true;
+                    removedItems.Add(racunarskiCentar.Ucionice[oznakaUcionice]);
+                    racunarskiCentar.Ucionice[oznakaUcionice].Obrisan = true;
+                }
+
+                foreach (Ucionica ucionica in removedItems)
+                    ucioniceKolekcija.Remove(ucionica);
             }
             else
                 return;
@@ -439,39 +573,74 @@ namespace HCI_Projekat
         public void obrisiSmerClick(object sender, RoutedEventArgs e)
         {
             if (tabelaSmerova.SelectedIndex != -1) {
-                DataGridRow selektovaniRed = (DataGridRow)tabelaSmerova.ItemContainerGenerator.ContainerFromIndex(tabelaSmerova.SelectedIndex);
-                TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
-                string oznakaSmera = content.Text;
-                //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
-                bool koristiSeUPredmetu = false;
-                foreach (Predmet p in racunarskiCentar.Predmeti.Values)
-                {
-                    if (!p.Obrisan)
+                List<Smer> removedItems = new List<Smer>();
+                foreach (object o in tabelaSmerova.SelectedItems) {
+                    int index = tabelaSmerova.Items.IndexOf(o);
+                    DataGridRow selektovaniRed = (DataGridRow)tabelaSmerova.ItemContainerGenerator.ContainerFromIndex(index);
+                    TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
+                    string oznakaSmera = content.Text;
+                    //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
+                    bool koristiSeUPredmetu = false;
+                    foreach (Predmet p in racunarskiCentar.Predmeti.Values)
                     {
-                        foreach (string s in p.Smerovi)
-                        {
-                            if (s == oznakaSmera)
-                                koristiSeUPredmetu = true;
-                        }
+                        if (!p.Obrisan && p.Smer.Equals(oznakaSmera))
+                            koristiSeUPredmetu = true;
                     }
+                    if (koristiSeUPredmetu)
+                    {
+                        MessageBox.Show("Ne možete obrisati smer " + oznakaSmera + ", jer je povezan sa nekim od predmeta!");
+                        continue;
+                    }
+
+                    removedItems.Add(racunarskiCentar.Smerovi[oznakaSmera]);
+                    racunarskiCentar.Smerovi[oznakaSmera].Obrisan = true;
                 }
-                if (koristiSeUPredmetu)
-                {
-                    MessageBox.Show("Ne možete obrisati smer, sadrži neke predmete!");
-                    return;
-                }
-                smeroviKolekcija.Remove(racunarskiCentar.Smerovi[oznakaSmera]);
-                
-                racunarskiCentar.Smerovi[oznakaSmera].Obrisan = true;
+
+                foreach (Smer smer in removedItems)
+                    smeroviKolekcija.Remove(smer);
             }
             else
                 return;
         }
 
-        private void skrolovanjeDetaljanPrikazPredmet(object sender, KeyEventArgs e)
+        private void tabelaSoftveraIzgubilaFokus(object sender, EventArgs e)
         {
-            if (e.Key == Key.Up || e.Key == Key.Down)
-                e.Handled = true;
+            detaljanPrikazSoftver.Visibility = Visibility.Hidden;
+        }
+
+        private void tabelaSmerovaIzgubilaFokus(object sender, EventArgs e)
+        {
+            detaljanPrikazSmer.Visibility = Visibility.Hidden;
+        }
+
+        private void tabelaPredmetaIzgubilaFokus(object sender, EventArgs e)
+        {
+            detaljanPrikazPredmet.Visibility = Visibility.Hidden;
+        }
+
+        private void tabelaUcionicaIzgubilaFokus(object sender, EventArgs e)
+        {
+            detaljanPrikazUcionica.Visibility = Visibility.Hidden;
+        }
+
+        private void tabelaSmerovaDobilaFokus(object sender, EventArgs e)
+        {
+            detaljanPrikazSmer.Visibility = Visibility.Visible;
+        }
+
+        private void tabelaSoftveraDobilaFokus(object sender, EventArgs e)
+        {
+            detaljanPrikazSoftver.Visibility = Visibility.Visible;
+        }
+
+        private void tabelaPredmetaDobilaFokus(object sender, EventArgs e)
+        {
+            detaljanPrikazPredmet.Visibility = Visibility.Visible;
+        }
+
+        private void tabelaUcionicaDobilaFokus(object sender, EventArgs e)
+        {
+            detaljanPrikazUcionica.Visibility = Visibility.Visible;
         }
 
         private void SerijalizacijaPodataka(object sender, EventArgs e)

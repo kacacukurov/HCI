@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="Potvrda brisanja" ResizeMode="NoResize" Height="150" Width="300">
     <Grid>
-        <Label HorizontalAlignment="Center" Margin="0,20,0,0">Da li ste sigurni da želite da obrišete element?</Label>
+        <TextBlock HorizontalAlignment="Center" Margin="0,20,0,0" Name="PorukaBrisanja">Da li ste sigurni da želite da obrišete element?</TextBlock>
         <Button Width="60" Height="20" Content="Ne" Click="cancelClick" Name="noDeleteButton" HorizontalAlignment="Right" Margin="0,80,80,0" Background="DarkRed" Foreground="White">
-       </Button>
+        </Button>
         <Button Width="60" Height="20" Content="Da" Click="finishClick" Name="yesDeleteButton" HorizontalAlignment="Right" Margin="0,80,10,0" Background="DarkGreen" Foreground="White">
         </Button>
     </Grid>

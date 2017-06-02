@@ -272,9 +272,9 @@
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
                                         <StackPanel>
-                                            <RadioButton Name="LinusOSSoftver" IsChecked="True" Content="Linux"/>
+                                            <RadioButton Name="LinuxOSSoftver" IsChecked="True" Content="Linux"/>
                                             <RadioButton Name="WindowsOSSoftver" Content="Windows"/>
-                                            <RadioButton Name="WindowsAndLinusOSSoftver" Content="Linux i Windows"/>
+                                            <RadioButton Name="WindowsAndLinuxOSSoftver" Content="Linux i Windows"/>
                                         </StackPanel>
                                     </Viewbox>
                                 </Grid>

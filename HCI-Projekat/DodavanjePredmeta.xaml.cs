@@ -113,7 +113,6 @@ namespace HCI_Projekat
 
         private void finishClick(object sender, RoutedEventArgs e)
         {
-            quitButton.Focus();
             finishButton.Focus();
             if (izmena) { 
                 izmenaPredmeta();
@@ -121,12 +120,12 @@ namespace HCI_Projekat
             }
             if (validacijaNovogPredmeta())
             {
-                predmet.Oznaka = OznakaPredmeta.Text;
-                predmet.Naziv = NazivPredmeta.Text;
-                predmet.Opis = OpisPredmeta.Text;
-                predmet.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text);
-                predmet.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text);
-                predmet.BrTermina = int.Parse(BrojTerminaPredmet.Text);
+                predmet.Oznaka = OznakaPredmeta.Text.Trim();
+                predmet.Naziv = NazivPredmeta.Text.Trim();
+                predmet.Opis = OpisPredmeta.Text.Trim();
+                predmet.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text.Trim());
+                predmet.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text.Trim());
+                predmet.BrTermina = int.Parse(BrojTerminaPredmet.Text.Trim());
                 predmet.PreostaliTermini = predmet.BrTermina;
 
                 predmet.NeophodanProjektor = PrisustvoProjektoraPredmet.IsChecked;
@@ -144,21 +143,25 @@ namespace HCI_Projekat
                     predmet.OperativniSistem = Svejedno.Content.ToString();
 
                 StringBuilder sb = new StringBuilder();
+                int brojSoftvera = 0;
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
-                    {    
+                    {
+                        brojSoftvera++; 
                         predmet.Softveri.Add(softver.Oznaka);
-                        sb.Append("Oznaka softvera: " + softver.Oznaka);
-                        sb.Append("\nNaziv softvera: " + softver.Naziv);
-                        sb.Append("\nOpis softvera: " + softver.Opis);
+
+                        if (brojSoftvera > 1)
+                            sb.Append("\n");
+                        sb.Append("Oznaka: " + softver.Oznaka);
+                        sb.Append("\nNaziv: " + softver.Naziv);
+                        sb.Append("\nOpis: " + softver.Opis + "\n");
                         softver.Instaliran = false;
                     }
                 }
                 predmet.SoftveriLista = sb.ToString();
 
-                sb.Clear();
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
                 {
                     Smer smer = (Smer)smeroviTabela.Items[i];
@@ -166,15 +169,12 @@ namespace HCI_Projekat
                     {
                         predmet.Smer = smer.Oznaka;
                         smer.Predmeti.Add(predmet.Oznaka);
-                        
-                        sb.Append("\n\n");
-                        sb.Append("Oznaka: " + smer.Oznaka);
-                        sb.Append("\nNaziv: " + smer.Naziv);
+
+                        predmet.SmerDetalji = "Oznaka: " + smer.Oznaka + "\nNaziv: " + smer.Naziv;
                         smer.UPredmetu = false;
                         break;
                     }
                 }
-                predmet.SmerDetalji = sb.ToString();
 
                 tabelaPredmeta.Add(predmet);
                 racunarskiCentar.DodajPredmet(predmet);
@@ -184,14 +184,15 @@ namespace HCI_Projekat
 
         private bool validacijaNovogPredmeta()
         {
-            if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text))
+            if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text.Trim()))
             {
-                if (racunarskiCentar.Predmeti[OznakaPredmeta.Text].Obrisan)
-                    racunarskiCentar.Predmeti.Remove(OznakaPredmeta.Text);
+                if (racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].Obrisan)
+                    racunarskiCentar.Predmeti.Remove(OznakaPredmeta.Text.Trim());
                 else
                 {
-                    MessageBox.Show("Predmet sa ovom oznakom već postoji!");
-                    OznakaPredmeta.Text = "";
+                    MessageBox.Show("Predmet sa unetom oznakom već postoji!");
+                    vratiNaKorak1();
+                    UpdateLayout();
                     OznakaPredmeta.Focus();
                     return false;
                 }
@@ -201,38 +202,49 @@ namespace HCI_Projekat
             return true;
         }
 
+        private void vratiNaKorak1()
+        {
+            Keyboard.ClearFocus();
+            BackStepMenuItem.IsEnabled = false;
+            NextStepMenuItem.IsEnabled = true;
+            Korak1Predmet.Focus();
+        }
+
+        private void vratiNaKorak2()
+        {
+            Keyboard.ClearFocus();
+            BackStepMenuItem.IsEnabled = true;
+            NextStepMenuItem.IsEnabled = false;
+            Korak2Predmet.Focus();
+        }
+
         private bool validacijaPodataka()
         {
-            if (OznakaPredmeta.Text == "" || NazivPredmeta.Text == "" || OpisPredmeta.Text == "" ||
-                BrojTerminaPredmet.Text == "" || VelicinaGrupePredmet.Text == "" || DuzinaTerminaPredmet.Text == "")
+            if (OznakaPredmeta.Text.Trim() == "" || NazivPredmeta.Text.Trim() == "" || OpisPredmeta.Text.Trim() == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
-                if (OznakaPredmeta.Text == "")
+                if (OznakaPredmeta.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     OznakaPredmeta.Focus();
-                else if (NazivPredmeta.Text == "")
+                }
+                else if (NazivPredmeta.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     NazivPredmeta.Focus();
-                else if (OpisPredmeta.Text == "")
+                }
+                else if (OpisPredmeta.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     OpisPredmeta.Focus();
-                else if (BrojTerminaPredmet.Text == "")
-                    BrojTerminaPredmet.Focus();
-                else if (VelicinaGrupePredmet.Text == "")
-                    VelicinaGrupePredmet.Focus();
-                else if (DuzinaTerminaPredmet.Text == "")
-                    DuzinaTerminaPredmet.Focus();
+                }
+
                 return false;
             }
-            bool postojiSoftver = false;
-            for (int i = 0; i < softverTabela.Items.Count; i++)
-            {
-                Softver softver = (Softver)softverTabela.Items[i];
-                if (softver.Instaliran)
-                    postojiSoftver = true;
-            }
-            if (!postojiSoftver)
-            {
-                MessageBox.Show("Niste oznacili potreban softver!");
-                return false;
-            }
+
             bool postojiSmer = false;
             for (int i = 0; i < smeroviTabela.Items.Count; i++)
             {
@@ -242,9 +254,68 @@ namespace HCI_Projekat
             }
             if (!postojiSmer)
             {
-                MessageBox.Show("Niste oznacili nijedan smer!");
+                MessageBox.Show("Niste označili smer na kom se održava predmet!");
+                if (tabControlPredmet.SelectedIndex != 0)
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
+                }
+                smeroviTabela.Focus();
+                DataGridCellInfo firstRowCell = new DataGridCellInfo(smeroviTabela.Items[0], smeroviTabela.Columns[2]);
+                smeroviTabela.CurrentCell = firstRowCell;
+                smeroviTabela.ScrollIntoView(smeroviTabela.Items[0]);
+                smeroviTabela.BeginEdit();
                 return false;
             }
+
+            if(BrojTerminaPredmet.Text.Trim() == "" || VelicinaGrupePredmet.Text.Trim() == "" || DuzinaTerminaPredmet.Text.Trim() == "")
+            {
+                MessageBox.Show("Niste popunili sva polja!");
+                if (VelicinaGrupePredmet.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
+                    VelicinaGrupePredmet.Focus();
+                }
+                else if (DuzinaTerminaPredmet.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
+                    DuzinaTerminaPredmet.Focus();
+                }
+                else if (BrojTerminaPredmet.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
+                    BrojTerminaPredmet.Focus();
+                }
+
+                return false;
+            }
+
+            bool postojiSoftver = false;
+            for (int i = 0; i < softverTabela.Items.Count; i++)
+            {
+                Softver softver = (Softver)softverTabela.Items[i];
+                if (softver.Instaliran)
+                    postojiSoftver = true;
+            }
+            if (!postojiSoftver)
+            {
+                MessageBox.Show("Niste označili potreban softver/softvere!");
+                if (tabControlPredmet.SelectedIndex != 1)
+                {
+                    vratiNaKorak2();
+                    UpdateLayout();
+                }
+                softverTabela.Focus();
+                DataGridCellInfo firstRowCell = new DataGridCellInfo(softverTabela.Items[0], softverTabela.Columns[3]);
+                softverTabela.CurrentCell = firstRowCell;
+                softverTabela.ScrollIntoView(softverTabela.Items[0]);
+                softverTabela.BeginEdit();
+                return false;
+            }
+
             return true;
         }
 
@@ -252,12 +323,13 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka() && validacijeIzmeneBrojaTermina())
             {
-                Predmet predmetIzmena = racunarskiCentar.Predmeti[OznakaPredmeta.Text];
-                predmetIzmena.Naziv = NazivPredmeta.Text;
-                predmetIzmena.Opis = OpisPredmeta.Text;
-                predmetIzmena.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text);
-                predmetIzmena.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text);
-                predmetIzmena.BrTermina = int.Parse(BrojTerminaPredmet.Text);
+                Predmet predmetIzmena = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+
+                predmetIzmena.Naziv = NazivPredmeta.Text.Trim();
+                predmetIzmena.Opis = OpisPredmeta.Text.Trim();
+                predmetIzmena.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text.Trim());
+                predmetIzmena.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text.Trim());
+                predmetIzmena.BrTermina = int.Parse(BrojTerminaPredmet.Text.Trim());
 
                 predmetIzmena.NeophodanProjektor = PrisustvoProjektoraPredmet.IsChecked;
                 predmetIzmena.ProjektorString = predmetIzmena.NeophodanProjektor ? "neophodan" : "nije neophodan";
@@ -274,22 +346,26 @@ namespace HCI_Projekat
                     predmetIzmena.OperativniSistem = Svejedno.Content.ToString();
 
                 StringBuilder sb = new StringBuilder();
+                int brojSoftvera = 0;
                 predmetIzmena.Softveri.Clear();
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {
+                        brojSoftvera++;
                         predmetIzmena.Softveri.Add(softver.Oznaka);
-                        sb.Append("Oznaka softvera: " + softver.Oznaka);
-                        sb.Append("\nNaziv softvera: " + softver.Naziv);
-                        sb.Append("\nOpis softvera: " + softver.Opis);
+
+                        if (brojSoftvera > 1)
+                            sb.Append("\n");
+                        sb.Append("Oznaka: " + softver.Oznaka);
+                        sb.Append("\nNaziv: " + softver.Naziv);
+                        sb.Append("\nOpis: " + softver.Opis + "\n");
                         softver.Instaliran = false;
                     }
                 }
                 predmetIzmena.SoftveriLista = sb.ToString();
 
-                sb.Clear();
                 bool stariSmerPronadjen = false;
                 bool noviPredmetPostavljen = false;
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
@@ -308,9 +384,7 @@ namespace HCI_Projekat
                             smer.Predmeti.Add(predmetIzmena.Oznaka);
                         predmetIzmena.Smer = smer.Oznaka;
 
-                        sb.Append("\n\n");
-                        sb.Append("Oznaka: " + smer.Oznaka);
-                        sb.Append("\nNaziv: " + smer.Naziv);
+                        predmetIzmena.SmerDetalji = "Oznaka: " + smer.Oznaka + "\nNaziv: " + smer.Naziv;
                         smer.UPredmetu = false;
                         noviPredmetPostavljen = true;
                     }
@@ -318,7 +392,6 @@ namespace HCI_Projekat
                     if (stariSmerPronadjen && noviPredmetPostavljen)
                         break;
                 }
-                predmetIzmena.SmerDetalji = sb.ToString();
 
                 tabelaPredmeta[indeks] = predmetIzmena;
                 this.Close();
@@ -327,9 +400,9 @@ namespace HCI_Projekat
 
         private bool validacijeIzmeneBrojaTermina()
         {
-            int stariBrojTermina = racunarskiCentar.Predmeti[OznakaPredmeta.Text].BrTermina;
-            int preostaliTermini = racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini;
-            int noviBrojTermina = int.Parse(BrojTerminaPredmet.Text);
+            int stariBrojTermina = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].BrTermina;
+            int preostaliTermini = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].PreostaliTermini;
+            int noviBrojTermina = int.Parse(BrojTerminaPredmet.Text.Trim());
             if (noviBrojTermina > stariBrojTermina)
                 racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini += noviBrojTermina - stariBrojTermina;
             else
@@ -337,11 +410,11 @@ namespace HCI_Projekat
                 int razlika = stariBrojTermina - noviBrojTermina;
                 if (razlika > racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini)
                 {
-                    MessageBox.Show("Ne možete da smanjujete broj termina, ako su oni iskorišteni!");
+                    MessageBox.Show("Ne možete da smanjujete broj termina, jer su oni iskorišteni u kalendaru!");
                     return false;
                 }
                 else
-                    racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini -= razlika;
+                    racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].PreostaliTermini -= razlika;
             }
             return true;
         }

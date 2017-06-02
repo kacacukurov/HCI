@@ -76,10 +76,10 @@ namespace HCI_Projekat
             }
             if(validacijaDodavanjaSmera())
             {
-                smer.Naziv = NazivSmera.Text;
-                smer.Oznaka = OznakaSmera.Text;
-                smer.Opis = OpisSmera.Text;
-                string datum = DateTime.Parse(DatumUvodjenja.Text).ToString("dd/MM/yyyy");
+                smer.Naziv = NazivSmera.Text.Trim();
+                smer.Oznaka = OznakaSmera.Text.Trim();
+                smer.Opis = OpisSmera.Text.Trim();
+                string datum = DateTime.Parse(DatumUvodjenja.Text.Trim()).ToString("dd/MM/yyyy");
                 smer.Datum = DateTime.Parse(datum);
 
                 tabelaSmerova.Add(smer);
@@ -90,14 +90,13 @@ namespace HCI_Projekat
 
         private bool validacijaDodavanjaSmera()
         {
-            if (racunarskiCentar.Smerovi.ContainsKey(OznakaSmera.Text))
+            if (racunarskiCentar.Smerovi.ContainsKey(OznakaSmera.Text.Trim()))
             {
-                if (racunarskiCentar.Smerovi[OznakaSmera.Text].Obrisan)
-                    racunarskiCentar.Smerovi.Remove(OznakaSmera.Text);
+                if (racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()].Obrisan)
+                    racunarskiCentar.Smerovi.Remove(OznakaSmera.Text.Trim());
                 else
                 {
-                    MessageBox.Show("Smer sa ovom oznakom vec postoji!");
-                    OznakaSmera.Text = "";
+                    MessageBox.Show("Smer sa unetom oznakom već postoji!");
                     OznakaSmera.Focus();
                     return false;
                 }
@@ -113,27 +112,40 @@ namespace HCI_Projekat
         {
             if (validacijaPraznihPolja())
             {
-                racunarskiCentar.Smerovi[OznakaSmera.Text].Naziv = NazivSmera.Text;
-                racunarskiCentar.Smerovi[OznakaSmera.Text].Opis = OpisSmera.Text;
-                racunarskiCentar.Smerovi[OznakaSmera.Text].Datum = DateTime.Parse(DatumUvodjenja.Text);
+                Smer smerIzmena = racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()];
 
-                tabelaSmerova[indeks] = racunarskiCentar.Smerovi[OznakaSmera.Text];
+                smerIzmena.Naziv = NazivSmera.Text.Trim();
+                smerIzmena.Opis = OpisSmera.Text.Trim();
+                smerIzmena.Datum = DateTime.Parse(DatumUvodjenja.Text.Trim());
+
+                if (smerIzmena.Predmeti.Count > 0)
+                {
+                    foreach (string predmet in smerIzmena.Predmeti)
+                    {
+                        racunarskiCentar.Predmeti[predmet].SmerDetalji = "Oznaka: " + smerIzmena.Oznaka + "\nNaziv: " + smerIzmena.Naziv;
+                    }
+                }
+
+                tabelaSmerova[indeks] = smerIzmena;
                 this.Close();
             }
         }
 
         private bool validacijaPraznihPolja()
         {
-            if (NazivSmera.Text == "" || OznakaSmera.Text == "" || OpisSmera.Text == "" || DatumUvodjenja.Text == "")
+            if (NazivSmera.Text.Trim() == "" || OznakaSmera.Text.Trim() == "" || OpisSmera.Text.Trim() == "" || DatumUvodjenja.Text.Trim() == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
-                if (OznakaSmera.Text == "")
+                if (OznakaSmera.Text.Trim() == "")
                     OznakaSmera.Focus();
-                else if (NazivSmera.Text == "")
+                else if (NazivSmera.Text.Trim() == "")
                     NazivSmera.Focus();
-                else if (DatumUvodjenja.Text == "")
+                else if (DatumUvodjenja.Text.Trim() == "")
+                {
                     DatumUvodjenja.Focus();
-                else if (OpisSmera.Text == "")
+                    DatumUvodjenja.IsDropDownOpen = true;
+                }
+                else if (OpisSmera.Text.Trim() == "")
                     OpisSmera.Focus();
                 return false;
             }

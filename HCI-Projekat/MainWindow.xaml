@@ -353,17 +353,17 @@
                                     <TextBlock Text="Broj radnih mesta: " FontWeight="Bold" Grid.Row="1" />
                                     <TextBlock Text="{Binding BrojRadnihMesta}" Grid.Column="1" Grid.Row="1" />
                                     <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="2"/>
-                                    <TextBlock Text="{Binding PrisustvoProjektora}" Grid.Column="1" Grid.Row="2" />
+                                    <TextBlock Text="{Binding ProjektorString}" Grid.Column="1" Grid.Row="2" />
                                     <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="3" />
-                                    <TextBlock Text="{Binding PrisustvoTable}" Grid.Column="1" Grid.Row="3" />
+                                    <TextBlock Text="{Binding TablaString}" Grid.Column="1" Grid.Row="3" />
                                     <TextBlock Text="Pametna tabla: " FontWeight="Bold" Grid.Row="4"/>
-                                    <TextBlock Text="{Binding PrisustvoPametneTable}" Grid.Column="1" Grid.Row="4"/>
+                                    <TextBlock Text="{Binding PametnaTablaString}" Grid.Column="1" Grid.Row="4"/>
                                     <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="5" />
                                     <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="5" />
                                     <TextBlock Text="Opis: " FontWeight="Bold" Grid.Row="6" />
                                     <TextBlock Text="{Binding Opis}" Grid.Column="1" Grid.Row="6" />
                                     <TextBlock Text="Instalirani softveri: " FontWeight="Bold" Grid.Row="7" />
-                                    <TextBlock Text="{Binding softveriLista}" Grid.Column="1" Grid.Row="7" />
+                                    <TextBlock Text="{Binding SoftveriLista}" Grid.Column="1" Grid.Row="7" />
                                 </Grid>
                             </ScrollViewer>
                         </Border>
@@ -565,6 +565,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     
                                     <TextBlock Text="Naziv: " FontWeight="Bold" />
@@ -578,15 +579,17 @@
                                     <TextBlock Text="Broj termina: " FontWeight="Bold" Grid.Row="4"/>
                                     <TextBlock Text="{Binding BrTermina}" Grid.Column="1" Grid.Row="4"/>
                                     <TextBlock Text="Projektor: " FontWeight="Bold" Grid.Row="5" />
-                                    <TextBlock Text="{Binding NeophodanProjektor}" Grid.Column="1" Grid.Row="5" />
+                                    <TextBlock Text="{Binding ProjektorString}" Grid.Column="1" Grid.Row="5" />
                                     <TextBlock Text="Tabla: " FontWeight="Bold" Grid.Row="6" />
-                                    <TextBlock Text="{Binding NeophodnaTabla}" Grid.Column="1" Grid.Row="6" />
-                                    <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="7" />
-                                    <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="7" />
-                                    <TextBlock Text="Neophodni softveri: " FontWeight="Bold" Grid.Row="8" />
-                                    <TextBlock Text="{Binding SoftveriLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="8" />
-                                    <TextBlock Text="Smer: " FontWeight="Bold" Grid.Row="9" />
-                                    <TextBlock Text="{Binding SmerDetalji, FallbackValue='-'}" Grid.Column="1" Grid.Row="9" />
+                                    <TextBlock Text="{Binding TablaString}" Grid.Column="1" Grid.Row="6" />
+                                    <TextBlock Text="Pametna tabla: " FontWeight="Bold" Grid.Row="7" />
+                                    <TextBlock Text="{Binding PametnaTablaString}" Grid.Column="1" Grid.Row="7" />
+                                    <TextBlock Text="Operativni sistem: " FontWeight="Bold" Grid.Row="8" />
+                                    <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="8" />
+                                    <TextBlock Text="Neophodni softveri: " FontWeight="Bold" Grid.Row="9" />
+                                    <TextBlock Text="{Binding SoftveriLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="9" />
+                                    <TextBlock Text="Smer: " FontWeight="Bold" Grid.Row="10" />
+                                    <TextBlock Text="{Binding SmerDetalji, FallbackValue='-'}" Grid.Column="1" Grid.Row="10" />
                                 </Grid>
                             </ScrollViewer>
                         </Border>

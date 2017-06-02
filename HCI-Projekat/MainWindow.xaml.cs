@@ -465,7 +465,7 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex == 1)
             {
                 if (tabelaUcionica.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrane ucionice?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiUcionicuClick(sender, e);
@@ -474,7 +474,7 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 2)
             {
                 if (tabelaPredmeta.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrana predmeta?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiPredmetClick(sender, e);
@@ -483,7 +483,7 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 3)
             {
                 if (tabelaSmerova.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrana smera?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiSmerClick(sender, e);
@@ -492,7 +492,7 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 4)
             {
                 if (tabelaSoftvera.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " elemenata?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrana softvera?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiSoftverClick(sender, e);
@@ -641,9 +641,9 @@ namespace HCI_Projekat
                 if (red.OperativniSistem.Equals("Windows"))
                     softverWindow.WindowsOSSoftver.IsChecked = true;
                 else if (red.OperativniSistem.Equals("Linux"))
-                    softverWindow.LinusOSSoftver.IsChecked = true;
+                    softverWindow.LinuxOSSoftver.IsChecked = true;
                 else if (red.OperativniSistem.Equals("Windows i Linux"))
-                    softverWindow.WindowsAndLinusOSSoftver.IsChecked = true;
+                    softverWindow.WindowsAndLinuxOSSoftver.IsChecked = true;
 
                 softverWindow.indeks = tabelaSoftvera.SelectedIndex;
                 softverWindow.ShowDialog();
@@ -673,9 +673,9 @@ namespace HCI_Projekat
                 else if (red.OperativniSistem.Equals("Linux"))
                     ucionicaWindow.LinuxOSUcionica.IsChecked = true;
                 else if (red.OperativniSistem.Equals("Windows i Linux"))
-                    ucionicaWindow.WindowsAndLinusOSUcionica.IsChecked = true;
+                    ucionicaWindow.WindowsAndLinuxOSUcionica.IsChecked = true;
 
-                for (int i = 0; i < ucionicaWindow.softverTabela.Items.Count; i++) // isto i za softvere
+                for (int i = 0; i < ucionicaWindow.softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)ucionicaWindow.softverTabela.Items[i];
                     if (red.InstaliraniSoftveri.IndexOf(softver.Oznaka) != -1)
@@ -739,14 +739,11 @@ namespace HCI_Projekat
 
         private void obrisiSoftverClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(tabelaSoftvera.SelectedItems.Count.ToString());
             if (tabelaSoftvera.SelectedIndex != -1)
             {
-                MessageBox.Show("usao");
                 List<Softver> removedItems = new List<Softver>();
                 foreach (object o in tabelaSoftvera.SelectedItems)
                 {
-                    MessageBox.Show("usao");
                     int index = tabelaSoftvera.Items.IndexOf(o);
                     DataGridRow selektovaniRed = (DataGridRow)tabelaSoftvera.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaSoftvera.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
@@ -761,7 +758,7 @@ namespace HCI_Projekat
                     }
                     if (koristiSeUPredmetu)
                     {
-                        MessageBox.Show("Ne možete obrisati softver" + oznakaSoftvera + ", jer je povezan sa nekim od predmeta!");
+                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer je povezan sa nekim od predmeta!");
                         continue;
                     }
 
@@ -774,7 +771,7 @@ namespace HCI_Projekat
                     }
                     if (koristiSeUucionici)
                     {
-                        MessageBox.Show("Ne možete obrisati softver" + oznakaSoftvera + ", jer je povezan sa nekom od učionica!");
+                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer je povezan sa nekom od učionica!");
                         continue;
                     }
 
@@ -821,14 +818,9 @@ namespace HCI_Projekat
                     DataGridRow selektovaniRed = (DataGridRow)tabelaSmerova.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaSmera = content.Text;
+
                     //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
-                    bool koristiSeUPredmetu = false;
-                    foreach (Predmet p in racunarskiCentar.Predmeti.Values)
-                    {
-                        if (!p.Obrisan && p.Smer.Equals(oznakaSmera))
-                            koristiSeUPredmetu = true;
-                    }
-                    if (koristiSeUPredmetu)
+                    if (racunarskiCentar.Smerovi[oznakaSmera].Predmeti.Count > 0)
                     {
                         MessageBox.Show("Ne možete obrisati smer " + oznakaSmera + ", jer je povezan sa nekim od predmeta!");
                         continue;

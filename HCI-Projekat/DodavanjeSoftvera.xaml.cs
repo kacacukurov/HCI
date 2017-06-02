@@ -92,19 +92,19 @@ namespace HCI_Projekat
             }
             if (validacijaNovogSoftvera())
             {
-                noviSoftver.Oznaka = oznakaSoftver.Text;
-                noviSoftver.Naziv = nazivSoftver.Text;
-                noviSoftver.Opis = opisSoftver.Text;
-                noviSoftver.GodIzdavanja = int.Parse(godinaSoftver.Text);
-                noviSoftver.Cena = double.Parse(cenaSoftver.Text);
+                noviSoftver.Oznaka = oznakaSoftver.Text.Trim();
+                noviSoftver.Naziv = nazivSoftver.Text.Trim();
+                noviSoftver.Opis = opisSoftver.Text.Trim();
+                noviSoftver.GodIzdavanja = int.Parse(godinaSoftver.Text.Trim());
+                noviSoftver.Cena = double.Parse(cenaSoftver.Text.Trim());
                 if ((bool)WindowsOSSoftver.IsChecked)
                     noviSoftver.OperativniSistem = "Windows";
-                else if ((bool)LinusOSSoftver.IsChecked)
+                else if ((bool)LinuxOSSoftver.IsChecked)
                     noviSoftver.OperativniSistem = "Linux";
                 else
                     noviSoftver.OperativniSistem = "Windows i Linux";
-                noviSoftver.Proizvodjac = proizvodjacSoftver.Text;
-                noviSoftver.Sajt = sajtSoftver.Text;
+                noviSoftver.Proizvodjac = proizvodjacSoftver.Text.Trim();
+                noviSoftver.Sajt = sajtSoftver.Text.Trim();
 
                 tabelaSoftvera.Add(noviSoftver);
                 racunarskiCentar.DodajSoftver(noviSoftver);
@@ -114,14 +114,15 @@ namespace HCI_Projekat
 
         private bool validacijaNovogSoftvera()
         {
-            if (racunarskiCentar.Softveri.ContainsKey(oznakaSoftver.Text))
+            if (racunarskiCentar.Softveri.ContainsKey(oznakaSoftver.Text.Trim()))
             {
-                if (racunarskiCentar.Softveri[oznakaSoftver.Text].Obrisan)
-                    racunarskiCentar.Softveri.Remove(oznakaSoftver.Text);
+                if (racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()].Obrisan)
+                    racunarskiCentar.Softveri.Remove(oznakaSoftver.Text.Trim());
                 else
                 {
-                    MessageBox.Show("Softver sa ovom oznakom vec postoji!");
-                    oznakaSoftver.Text = "";
+                    MessageBox.Show("Softver sa unetom oznakom vec postoji!");
+                    vratiNaKorak1();
+                    UpdateLayout();
                     oznakaSoftver.Focus();
                     return false;
                 }
@@ -131,44 +132,96 @@ namespace HCI_Projekat
             return true;
         }
 
+        private void vratiNaKorak1()
+        {
+            Keyboard.ClearFocus();
+            BackStepMenuItem.IsEnabled = false;
+            NextStepMenuItem.IsEnabled = true;
+            Korak1Softver.Focus();
+        }
+
+        private void vratiNaKorak2()
+        {
+            Keyboard.ClearFocus();
+            BackStepMenuItem.IsEnabled = true;
+            NextStepMenuItem.IsEnabled = false;
+            Korak2Softver.Focus();
+        }
+
         private bool validacijaPodataka()
         {
-            if (oznakaSoftver.Text == "" || nazivSoftver.Text == "" || opisSoftver.Text == "" || godinaSoftver.Text == "" ||
-                cenaSoftver.Text == "" || proizvodjacSoftver.Text == "" || sajtSoftver.Text == "")
+            if (oznakaSoftver.Text.Trim() == "" || nazivSoftver.Text.Trim() == "" || proizvodjacSoftver.Text.Trim() == "" || opisSoftver.Text.Trim() == "" 
+                || godinaSoftver.Text.Trim() == "" || cenaSoftver.Text.Trim() == "" || sajtSoftver.Text.Trim() == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
-                if (oznakaSoftver.Text == "")
+                if (oznakaSoftver.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     oznakaSoftver.Focus();
-                else if (nazivSoftver.Text == "")
+                }
+                else if (nazivSoftver.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     nazivSoftver.Focus();
-                else if (opisSoftver.Text == "")
-                    opisSoftver.Focus();
-                else if (godinaSoftver.Text == "")
-                    godinaSoftver.Focus();
-                else if (cenaSoftver.Text == "")
-                    cenaSoftver.Focus();
-                else if (proizvodjacSoftver.Text == "")
+                }
+                else if (proizvodjacSoftver.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     proizvodjacSoftver.Focus();
-                else if (sajtSoftver.Text == "")
+                }
+                else if (sajtSoftver.Text.Trim() == "")
+                {
+                    vratiNaKorak2();
+                    UpdateLayout();
                     sajtSoftver.Focus();
+                }
+                else if (godinaSoftver.Text.Trim() == "")
+                {
+                    vratiNaKorak2();
+                    UpdateLayout();
+                    godinaSoftver.Focus();
+                }
+                else if (cenaSoftver.Text.Trim() == "")
+                {
+                    vratiNaKorak2();
+                    UpdateLayout();
+                    cenaSoftver.Focus();
+                }
+                else if (opisSoftver.Text.Trim() == "")
+                {
+                    vratiNaKorak2();
+                    UpdateLayout();
+                    opisSoftver.Focus();
+                }
+                
                 return false;
             }
+
             int godina;
-            if (!int.TryParse(godinaSoftver.Text, out godina))
+            if (!int.TryParse(godinaSoftver.Text.Trim(), out godina))
             {
                 MessageBox.Show("Godina nije dobro unesena, unesite broj!");
                 godinaSoftver.Text = "";
+                vratiNaKorak2();
+                UpdateLayout();
                 godinaSoftver.Focus();
                 return false;
             }
+
             double cena;
-            if (!double.TryParse(cenaSoftver.Text, out cena))
+            if (!double.TryParse(cenaSoftver.Text.Trim(), out cena))
             {
                 MessageBox.Show("Cena nije dobro unesena, unesite broj!");
                 cenaSoftver.Text = "";
+                vratiNaKorak2();
+                UpdateLayout();
                 cenaSoftver.Focus();
                 return false;
             }
+
             return true;
         }
 
@@ -176,20 +229,41 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka())
             {
-                racunarskiCentar.Softveri[oznakaSoftver.Text].Naziv = nazivSoftver.Text;
-                racunarskiCentar.Softveri[oznakaSoftver.Text].Opis = opisSoftver.Text;
-                racunarskiCentar.Softveri[oznakaSoftver.Text].GodIzdavanja = int.Parse(godinaSoftver.Text);
-                racunarskiCentar.Softveri[oznakaSoftver.Text].Cena = double.Parse(cenaSoftver.Text);
-                if ((bool)WindowsOSSoftver.IsChecked)
-                    racunarskiCentar.Softveri[oznakaSoftver.Text].OperativniSistem = "Windows";
-                else if ((bool)LinusOSSoftver.IsChecked)
-                    racunarskiCentar.Softveri[oznakaSoftver.Text].OperativniSistem = "Linux";
-                else
-                    racunarskiCentar.Softveri[oznakaSoftver.Text].OperativniSistem = "Windows i Linux";
-                racunarskiCentar.Softveri[oznakaSoftver.Text].Proizvodjac = proizvodjacSoftver.Text;
-                racunarskiCentar.Softveri[oznakaSoftver.Text].Sajt = sajtSoftver.Text;
+                Softver softverIzmena = racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()];
+                bool promenilaSeOznaka = false;
+                bool promenioSeNaziv = false;
+                bool promenioSeOpis = false;
 
-                tabelaSoftvera[indeks] = racunarskiCentar.Softveri[oznakaSoftver.Text];
+                if (softverIzmena.Naziv != nazivSoftver.Text.Trim())
+                    promenioSeNaziv = true;
+                softverIzmena.Naziv = nazivSoftver.Text.Trim();
+
+                if (softverIzmena.Opis != opisSoftver.Text.Trim())
+                    promenioSeOpis = true;
+                softverIzmena.Opis = opisSoftver.Text.Trim();
+
+                softverIzmena.GodIzdavanja = int.Parse(godinaSoftver.Text.Trim());
+                softverIzmena.Cena = double.Parse(cenaSoftver.Text.Trim());
+
+                if ((bool)WindowsOSSoftver.IsChecked)
+                    softverIzmena.OperativniSistem = "Windows";
+                else if ((bool)LinuxOSSoftver.IsChecked)
+                    softverIzmena.OperativniSistem = "Linux";
+                else
+                    softverIzmena.OperativniSistem = "Windows i Linux";
+
+                softverIzmena.Proizvodjac = proizvodjacSoftver.Text.Trim();
+                softverIzmena.Sajt = sajtSoftver.Text.Trim();
+
+                // DODATI AZURIRANJE STRINGA U UCIONICI< PREDMETU UKOLIKO SE PROMENIO NAZIV, OZNAKA ILI OPIS SOFTVERA
+                /*
+                if(promenilaSeOznaka || promenioSeNaziv || promenioSeOpis)
+                {
+                    // naci povezane ucionice i predmete i azurirati im ispis
+                }
+                */
+
+                tabelaSoftvera[indeks] = softverIzmena;
                 this.Close();
             }
         }

@@ -107,8 +107,8 @@ namespace HCI_Projekat
             }
             if (validacijaNoveUcionice())
             {
-                novaUcionica.Oznaka = oznakaUcionica.Text;
-                novaUcionica.Opis = opisUcionica.Text;
+                novaUcionica.Oznaka = oznakaUcionica.Text.Trim();
+                novaUcionica.Opis = opisUcionica.Text.Trim();
 
                 novaUcionica.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
                 novaUcionica.PametnaTablaString = novaUcionica.PrisustvoPametneTable ? "prisutna" : "nije prisutna";
@@ -117,7 +117,7 @@ namespace HCI_Projekat
                 novaUcionica.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
                 novaUcionica.ProjektorString = novaUcionica.PrisustvoProjektora ? "prisutan" : "nije prisutan";
 
-                novaUcionica.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
+                novaUcionica.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text.Trim());
                 if ((bool)LinuxOSUcionica.IsChecked)
                     novaUcionica.OperativniSistem = "Linux";
                 else if ((bool)WindowsOSUcionica.IsChecked)
@@ -126,13 +126,20 @@ namespace HCI_Projekat
                     novaUcionica.OperativniSistem = "Windows i Linux";
 
                 StringBuilder sb = new StringBuilder();
+                int brojSoftvera = 0;
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {
+                        brojSoftvera++;
                         novaUcionica.InstaliraniSoftveri.Add(softver.Oznaka);
-                        sb.Append("\n" + softver.Oznaka);
+
+                        if (brojSoftvera > 1)
+                            sb.Append("\n");
+                        sb.Append("Oznaka: " + softver.Oznaka);
+                        sb.Append("\nNaziv: " + softver.Naziv);
+                        sb.Append("\nOpis: " + softver.Opis + "\n");
                         softver.Instaliran = false;
                     }
                 }
@@ -146,14 +153,15 @@ namespace HCI_Projekat
 
         private bool validacijaNoveUcionice()
         {
-            if (racunarskiCentar.Ucionice.ContainsKey(oznakaUcionica.Text))
+            if (racunarskiCentar.Ucionice.ContainsKey(oznakaUcionica.Text.Trim()))
             {
-                if (racunarskiCentar.Ucionice[oznakaUcionica.Text].Obrisan)
-                    racunarskiCentar.Ucionice.Remove(oznakaUcionica.Text);
+                if (racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()].Obrisan)
+                    racunarskiCentar.Ucionice.Remove(oznakaUcionica.Text.Trim());
                 else
                 {
-                    MessageBox.Show("Učionica sa ovom oznakom već postoji!");
-                    oznakaUcionica.Text = "";
+                    MessageBox.Show("Učionica sa unetom oznakom već postoji!");
+                    vratiNaKorak1();
+                    UpdateLayout();
                     oznakaUcionica.Focus();
                     return false;
                 }
@@ -163,27 +171,57 @@ namespace HCI_Projekat
             return true;
         }
 
+        private void vratiNaKorak1()
+        {
+            Keyboard.ClearFocus();
+            BackStepMenuItem.IsEnabled = false;
+            NextStepMenuItem.IsEnabled = true;
+            Korak1Ucionica.Focus();
+        }
+
+        private void vratiNaKorak2()
+        {
+            Keyboard.ClearFocus();
+            BackStepMenuItem.IsEnabled = true;
+            NextStepMenuItem.IsEnabled = false;
+            Korak2Ucionica.Focus();
+        }
+
         private bool validacijaPodataka()
         {
-            if (oznakaUcionica.Text == "" || opisUcionica.Text == "" || brojRadnihMestaUcionica.Text == "")
+            if (oznakaUcionica.Text.Trim() == "" || opisUcionica.Text.Trim() == "" || brojRadnihMestaUcionica.Text.Trim() == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
-                if (oznakaUcionica.Text == "")
+                if (oznakaUcionica.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     oznakaUcionica.Focus();
-                else if (opisUcionica.Text == "")
+                }
+                else if (opisUcionica.Text.Trim() == "")
+                {
+                    vratiNaKorak1();
+                    UpdateLayout();
                     opisUcionica.Focus();
-                else if (brojRadnihMestaUcionica.Text == "")
+                }
+                else if (brojRadnihMestaUcionica.Text.Trim() == "")
+                {
+                    vratiNaKorak2();
+                    UpdateLayout();
                     brojRadnihMestaUcionica.Focus();
+                }
                 return false;
             }
+
             int brMesta;
-            if (!int.TryParse(brojRadnihMestaUcionica.Text, out brMesta))
+            if (!int.TryParse(brojRadnihMestaUcionica.Text.Trim(), out brMesta))
             {
                 MessageBox.Show("Broj radnih mesta nije dobro unesen, unesite broj!");
                 brojRadnihMestaUcionica.Text = "";
                 brojRadnihMestaUcionica.Focus();
                 return false;
             }
+
             bool postojiSoftver = false;
             for (int i = 0; i < softverTabela.Items.Count; i++)
             {
@@ -193,7 +231,17 @@ namespace HCI_Projekat
             }
             if (!postojiSoftver)
             {
-                MessageBox.Show("Niste označili potreban softver!");
+                MessageBox.Show("Niste označili potreban softver/softvere!");
+                if (tabControlUcionica.SelectedIndex != 1)
+                {
+                    vratiNaKorak2();
+                    UpdateLayout();
+                }
+                softverTabela.Focus();
+                DataGridCellInfo firstRowCell = new DataGridCellInfo(softverTabela.Items[0], softverTabela.Columns[3]);
+                softverTabela.CurrentCell = firstRowCell;
+                softverTabela.ScrollIntoView(softverTabela.Items[0]);
+                softverTabela.BeginEdit();
                 return false;
             }
             return true;
@@ -203,9 +251,10 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka())
             {
-                Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcionica.Text];
-                ucionicaIzmena.Oznaka = oznakaUcionica.Text;
-                ucionicaIzmena.Opis = opisUcionica.Text;
+                Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+
+                ucionicaIzmena.Oznaka = oznakaUcionica.Text.Trim();
+                ucionicaIzmena.Opis = opisUcionica.Text.Trim();
 
                 ucionicaIzmena.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
                 ucionicaIzmena.PametnaTablaString = ucionicaIzmena.PrisustvoPametneTable ? "prisutna" : "nije prisutna";
@@ -214,7 +263,7 @@ namespace HCI_Projekat
                 ucionicaIzmena.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
                 ucionicaIzmena.ProjektorString = ucionicaIzmena.PrisustvoProjektora ? "prisutan" : "nije prisutan";
 
-                ucionicaIzmena.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
+                ucionicaIzmena.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text.Trim());
                 if ((bool)LinuxOSUcionica.IsChecked)
                     ucionicaIzmena.OperativniSistem = "Linux";
                 else if ((bool)WindowsOSUcionica.IsChecked)
@@ -223,15 +272,25 @@ namespace HCI_Projekat
                     ucionicaIzmena.OperativniSistem = "Windows i Linux";
 
                 ucionicaIzmena.InstaliraniSoftveri.Clear();
+                StringBuilder sb = new StringBuilder();
+                int brojSoftvera = 0;
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {
+                        brojSoftvera++;
                         ucionicaIzmena.InstaliraniSoftveri.Add(softver.Oznaka);
+
+                        if (brojSoftvera > 1)
+                            sb.Append("\n");
+                        sb.Append("Oznaka: " + softver.Oznaka);
+                        sb.Append("\nNaziv: " + softver.Naziv);
+                        sb.Append("\nOpis: " + softver.Opis + "\n");
                         softver.Instaliran = false;
                     }
                 }
+                ucionicaIzmena.SoftveriLista = sb.ToString();
 
                 tabelaUcionica[indeks] = ucionicaIzmena;
                 this.Close();

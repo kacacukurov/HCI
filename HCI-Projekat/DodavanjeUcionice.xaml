@@ -531,7 +531,7 @@
                                         <StackPanel>
                                             <RadioButton x:Name="LinuxOSUcionica" Content="Linux"/>
                                             <RadioButton x:Name="WindowsOSUcionica" Content="Windows"/>
-                                            <RadioButton x:Name="WindowsAndLinusOSUcionica" Content="Linux i Windows" IsChecked="True"/>
+                                            <RadioButton x:Name="WindowsAndLinuxOSUcionica" Content="Linux i Windows" IsChecked="True"/>
                                         </StackPanel>
                                     </Viewbox>
                                 </Grid>

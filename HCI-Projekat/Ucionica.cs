@@ -17,8 +17,12 @@ namespace HCI_Projekat
         private bool prisustvoPametneTable;
         private string operativniSistem;
         private List<string> instaliraniSoftveri;
+
         private bool obrisan;
         private string softveriLista;
+        private string projektorString;
+        private string tablaString;
+        private string pametnaTablaString;
 
         public Ucionica()
         {
@@ -97,6 +101,24 @@ namespace HCI_Projekat
         {
             get { return softveriLista; }
             set { this.softveriLista = value; }
+        }
+
+        public string ProjektorString
+        {
+            get { return projektorString; }
+            set { this.projektorString = value; }
+        }
+
+        public string TablaString
+        {
+            get { return tablaString; }
+            set { this.tablaString = value; }
+        }
+
+        public string PametnaTablaString
+        {
+            get { return pametnaTablaString; }
+            set { this.pametnaTablaString = value; }
         }
     }
 }

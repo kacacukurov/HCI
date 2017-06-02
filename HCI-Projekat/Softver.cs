@@ -17,6 +17,7 @@ namespace HCI_Projekat
         private int godIzdavanja;
         private double cena;
         private string opis;
+
         private bool obrisan;
         private bool instaliran;
 

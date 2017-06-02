@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
@@ -12,6 +13,11 @@
         <RoutedUICommand x:Key="noviPredmet" Text="predmet"></RoutedUICommand>
         <RoutedUICommand x:Key="noviSmer" Text="smer"></RoutedUICommand>
         <RoutedUICommand x:Key="noviSoftver" Text="softver"></RoutedUICommand>
+        <RoutedUICommand x:Key="prikazKalendara"></RoutedUICommand>
+        <RoutedUICommand x:Key="prikazUcionica"></RoutedUICommand>
+        <RoutedUICommand x:Key="prikazPredmeta"></RoutedUICommand>
+        <RoutedUICommand x:Key="prikazSmerova"></RoutedUICommand>
+        <RoutedUICommand x:Key="prikazSoftvera"></RoutedUICommand>
         <RoutedUICommand x:Key="izmeni" Text="izmena"></RoutedUICommand>
         <RoutedUICommand x:Key="obrisi" Text="brisanje"></RoutedUICommand>
         <RoutedUICommand x:Key="undo" Text="undo"></RoutedUICommand>
@@ -28,6 +34,11 @@
         <CommandBinding Command="{StaticResource noviPredmet}" Executed="dodavanjePredmetaClick"></CommandBinding>
         <CommandBinding Command="{StaticResource noviSmer}" Executed="dodavanjeSmeraClick"></CommandBinding>
         <CommandBinding Command="{StaticResource noviSoftver}" Executed="dodavanjeSoftveraClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prikazKalendara}" Executed="pregledKalendaraClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prikazUcionica}" Executed="pregledUcionicaClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prikazPredmeta}" Executed="pregledPredmetaClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prikazSmerova}" Executed="pregledSmerovaClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prikazSoftvera}" Executed="pregledSoftveraClick"></CommandBinding>
         <CommandBinding Command="{StaticResource izmeni}" Executed="izmeniElement"></CommandBinding>
         <CommandBinding Command="{StaticResource obrisi}" Executed="obrisiElement"></CommandBinding>
         <CommandBinding Command="{StaticResource undo}" Executed="undoClick"></CommandBinding>
@@ -38,12 +49,17 @@
         <CommandBinding Command="{StaticResource filter}" Executed="otvoriKriterijumFilter"></CommandBinding>
         <CommandBinding Command="{StaticResource pretraga}" Executed="pretragaFokus"></CommandBinding>
     </Window.CommandBindings>
-    
+
     <Window.InputBindings>
         <KeyBinding Key="U" Modifiers="Ctrl" Command="{StaticResource novaUcionica}"></KeyBinding>
         <KeyBinding Key="P" Modifiers="Ctrl" Command="{StaticResource noviPredmet}"></KeyBinding>
         <KeyBinding Key="M" Modifiers="Ctrl" Command="{StaticResource noviSmer}"></KeyBinding>
         <KeyBinding Key="T" Modifiers="Ctrl" Command="{StaticResource noviSoftver}"></KeyBinding>
+        <KeyBinding Key="K" Modifiers="Ctrl + Alt" Command="{StaticResource prikazKalendara}"></KeyBinding>
+        <KeyBinding Key="U" Modifiers="Ctrl + Alt" Command="{StaticResource prikazUcionica}"></KeyBinding>
+        <KeyBinding Key="P" Modifiers="Ctrl + Alt" Command="{StaticResource prikazPredmeta}"></KeyBinding>
+        <KeyBinding Key="M" Modifiers="Ctrl + Alt" Command="{StaticResource prikazSmerova}"></KeyBinding>
+        <KeyBinding Key="T" Modifiers="Ctrl + Alt" Command="{StaticResource prikazSoftvera}"></KeyBinding>
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
         <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
@@ -51,8 +67,8 @@
         <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
         <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
         <KeyBinding Key="Tab" Modifiers="Ctrl" Command="{StaticResource backToTabs}"></KeyBinding>
-        <KeyBinding Key="F" Modifiers="Shift" Command="{StaticResource filter}"></KeyBinding>
-        <KeyBinding Key="P" Modifiers="Shift" Command="{StaticResource pretraga}"></KeyBinding>
+        <KeyBinding Key="F" Modifiers="Ctrl + Shift" Command="{StaticResource filter}"></KeyBinding>
+        <KeyBinding Key="P" Modifiers="Ctrl + Shift" Command="{StaticResource pretraga}"></KeyBinding>
     </Window.InputBindings>
 
     <Grid>
@@ -68,33 +84,67 @@
                 <Menu.Items>
                    
                     <MenuItem Header="_File" HorizontalAlignment="Left">
-                        <MenuItem Click="dodavanjeUcioniceClick" Header="_Nova učionica" InputGestureText="Ctrl+U">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="U" Modifiers="Ctrl" Command="{StaticResource novaUcionica}"></KeyBinding>
-                            </MenuItem.InputBindings>
+                        <MenuItem Header="_Dodavanje">
+                            <MenuItem Click="dodavanjeUcioniceClick" Header="_Učionica" InputGestureText="Ctrl+U">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="U" Modifiers="Ctrl" Command="{StaticResource novaUcionica}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
+                            
+                            <MenuItem Click="dodavanjeSmeraClick" Header="_Smer" InputGestureText="Ctrl+M">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="M" Modifiers="Ctrl" Command="{StaticResource noviSmer}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
+
+                            <MenuItem Click="dodavanjePredmetaClick" Header="_Predmet" InputGestureText="Ctrl+P">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="P" Modifiers="Ctrl" Command="{StaticResource noviPredmet}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
+
+                            <MenuItem Click="dodavanjeSoftveraClick" Header="_Softver" InputGestureText="Ctrl+T">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="T" Modifiers="Ctrl" Command="{StaticResource noviSoftver}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
                         </MenuItem>
-                        
-                        <MenuItem Click="dodavanjeSmeraClick" Header="_Novi smer" InputGestureText="Ctrl+M">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="M" Modifiers="Ctrl" Command="{StaticResource noviSmer}"></KeyBinding>
-                            </MenuItem.InputBindings>
+
+                        <MenuItem Header="Pregled">
+                            <MenuItem Click="pregledKalendaraClick" Header="_Kalendar" InputGestureText="Ctrl+Alt+K">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="K" Modifiers="Ctrl+Alt" Command="{StaticResource prikazKalendara}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
+
+                            <MenuItem Click="pregledUcionicaClick" Header="_Učionica" InputGestureText="Ctrl+Alt+U">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="U" Modifiers="Ctrl+Alt" Command="{StaticResource prikazUcionica}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
+
+                            <MenuItem Click="pregledSmerovaClick" Header="_Smer" InputGestureText="Ctrl+Alt+M">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="M" Modifiers="Ctrl+Alt" Command="{StaticResource prikazSmerova}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
+
+                            <MenuItem Click="pregledPredmetaClick" Header="_Predmet" InputGestureText="Ctrl+Alt+P">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="P" Modifiers="Ctrl+Alt" Command="{StaticResource prikazPredmeta}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
+
+                            <MenuItem Click="pregledSoftveraClick" Header="_Softver" InputGestureText="Ctrl+Alt+T">
+                                <MenuItem.InputBindings>
+                                    <KeyBinding Key="T" Modifiers="Ctrl+Alt" Command="{StaticResource prikazSoftvera}"></KeyBinding>
+                                </MenuItem.InputBindings>
+                            </MenuItem>
                         </MenuItem>
-                        
-                        <MenuItem Click="dodavanjePredmetaClick" Header="_Novi predmet" InputGestureText="Ctrl+P">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="P" Modifiers="Ctrl" Command="{StaticResource noviPredmet}"></KeyBinding>
-                            </MenuItem.InputBindings>
-                        </MenuItem>
-                        
-                        <MenuItem Click="dodavanjeSoftveraClick" Header="_Novi softver" InputGestureText="Ctrl+T">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="T" Modifiers="Ctrl" Command="{StaticResource noviSoftver}"></KeyBinding>
-                            </MenuItem.InputBindings>
-                        </MenuItem>
-                        
+
                         <Separator></Separator>
                         
-                        <MenuItem Click="saveClick" Header="_Sačuvaj" InputGestureText="Ctrl+S">
+                        <MenuItem Click="saveClick" Header="_Sačuvaj" InputGestureText="Ctrl+S" Name="MenuItemSacuvaj">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -102,7 +152,7 @@
                         
                         <Separator></Separator>
                         
-                        <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q">
+                        <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q" Name="MenuItemUgasi">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -110,13 +160,13 @@
                     </MenuItem>
                     
                     <MenuItem Header="_Edit" HorizontalAlignment="Left">
-                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z">
+                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z" Name="MenuItemUndo" IsEnabled="False">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
-                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y">
+                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y" Name="MenuItemRedo" IsEnabled="False">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -124,18 +174,32 @@
                         
                         <Separator></Separator>
 
-                        <MenuItem Click="izmeniElement" Header="_Izmeni element tabele" InputGestureText="Ctrl+I">
+                        <MenuItem Click="izmeniElement" Header="_Izmeni element tabele" InputGestureText="Ctrl+I" Name="MenuItemIzmeni" IsEnabled="False">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
-                        <MenuItem Click="obrisiElement" Header="_Obriši element tabele" InputGestureText="Ctrl+delete">
+                        <MenuItem Click="obrisiElement" Header="_Obriši element tabele" InputGestureText="Ctrl+delete" Name="MenuItemObrisi" IsEnabled="False">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
+
+                        <Separator></Separator>
+
+                        <MenuItem Click="otvoriKriterijumFilter" Header="_Izbor kriterijuma filtriranja" InputGestureText="Ctrl+Shift+F" Name="MenuItemIzborFiltera" IsEnabled="False">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{StaticResource filter}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="pretragaFokus" Header="Pretraga stavki u tabeli" InputGestureText="Ctrl+Shift+P" Name="MenuItemPretraga" IsEnabled="False">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="P" Modifiers="Ctrl+Shift" Command="{StaticResource pretraga}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
                     </MenuItem>
                     
                     <MenuItem Header="_Help" HorizontalAlignment="Left"></MenuItem>
@@ -177,23 +241,96 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
+                            <RowDefinition Height="29"/>
                             <RowDefinition Height="10*"/>
                             <RowDefinition Height="2*"/>
                             <RowDefinition Height="0.7*"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="1" Name="tabelaUcionica" LostFocus="tabelaUcionicaIzgubilaFokus" GotFocus="tabelaUcionicaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Label Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0*"/>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="UcionicaFilterKriterijum" KeyUp="ponudaOpcija">
+                                            <ComboBoxItem Content="Oznaka"/>
+                                            <ComboBoxItem Content="Broj radnih mesta"/>
+                                            <ComboBoxItem Content="Projektor"/>
+                                            <ComboBoxItem Content="Tabla"/>
+                                            <ComboBoxItem Content="Pametna tabla"/>
+                                            <ComboBoxItem Content="Operativni sistem"/>
+                                            <ComboBoxItem Content="Opis"/>
+                                        </ComboBox>
+                                    </Grid>
+                                    <Grid Grid.Column="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="UcionicaFilterUnos" TextChanged="filtrirajUcionicu"/>
+                                    </Grid>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Label Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="0.1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="UcionicaPretragaUnos"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <DataGrid Grid.Row="2" Name="tabelaUcionica" LostFocus="tabelaUcionicaIzgubilaFokus" GotFocus="tabelaUcionicaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = BrojRadnihMesta, FallbackValue='-'}" Header="Broj radnih mesta" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = PrisustvoProjektora, FallbackValue='-'}" Header="Projektor" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = PrisustvoTable, FallbackValue='-'}" Header="Tabla" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = PrisustvoPametneTable, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
                             <ScrollViewer>
                                 <Grid DataContext="{Binding ElementName=tabelaUcionica,Path=SelectedItem}" Name="detaljanPrikazUcionica">
                                     <Grid.ColumnDefinitions>
@@ -231,7 +368,7 @@
                             </ScrollViewer>
                         </Border>
 
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
@@ -308,21 +445,98 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
+                            <RowDefinition Height="29"/>
                             <RowDefinition Height="10*"/>
                             <RowDefinition Height="2*"/>
                             <RowDefinition Height="0.7*"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="1" Name="tabelaPredmeta" LostFocus="tabelaPredmetaIzgubilaFokus" GotFocus="tabelaPredmetaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Label Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0*"/>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="PredmetFilterKriterijum" KeyUp="ponudaOpcija">
+                                            <ComboBoxItem Content="Naziv"/>
+                                            <ComboBoxItem Content="Oznaka"/>
+                                            <ComboBoxItem Content="Veličina grupe"/>
+                                            <ComboBoxItem Content="Opis"/>
+                                            <ComboBoxItem Content="Minimalna dužina termina"/>
+                                            <ComboBoxItem Content="Broj termina"/>
+                                            <ComboBoxItem Content="Projektor"/>
+                                            <ComboBoxItem Content="Tabla"/>
+                                            <ComboBoxItem Content="Pametna tabla"/>
+                                            <ComboBoxItem Content="Operativni sistem"/>
+                                        </ComboBox>
+                                    </Grid>
+                                    <Grid Grid.Column="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="PredmetFilterUnos" TextChanged="filtrirajPredmet"/>
+                                    </Grid>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Label Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="0.1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="PredmetPretragaUnos"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <DataGrid Grid.Row="2" Name="tabelaPredmeta" LostFocus="tabelaPredmetaIzgubilaFokus" GotFocus="tabelaPredmetaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = VelicinaGrupe , FallbackValue='-'}" Header="Veličina grupe" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Minimalna dužina termina" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Min dužina termina" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Broj termina" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = NeophodanProjektor, FallbackValue='-'}" Header="Projektor" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = NeophodnaTabla, FallbackValue='-'}" Header="Tabla" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = NeophodnaPametnaTabla, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="Auto"/>
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"></DataGridTextColumn>
                             </DataGrid.Columns>
 
                             <DataGrid.CellStyle>
@@ -333,7 +547,7 @@
                             </DataGrid.CellStyle>
                         </DataGrid>
 
-                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
                             <ScrollViewer>
                                 <Grid DataContext="{Binding ElementName=tabelaPredmeta,Path=SelectedItem}" Name="detaljanPrikazPredmet">
                                     <Grid.ColumnDefinitions>
@@ -371,13 +585,13 @@
                                     <TextBlock Text="{Binding OperativniSistem}" Grid.Column="1" Grid.Row="7" />
                                     <TextBlock Text="Neophodni softveri: " FontWeight="Bold" Grid.Row="8" />
                                     <TextBlock Text="{Binding SoftveriLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="8" />
-                                    <TextBlock Text="Smerovi: " FontWeight="Bold" Grid.Row="9" />
-                                    <TextBlock Text="{Binding SmeroviLista, FallbackValue='-'}" Grid.Column="1" Grid.Row="9" />
+                                    <TextBlock Text="Smer: " FontWeight="Bold" Grid.Row="9" />
+                                    <TextBlock Text="{Binding SmerDetalji, FallbackValue='-'}" Grid.Column="1" Grid.Row="9" />
                                 </Grid>
                             </ScrollViewer>
                         </Border>
 
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
@@ -485,10 +699,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SmerFilterKriterijum">
-                                            <ComboBox.InputBindings>
-                                                <KeyBinding Key="F" Modifiers="Shift" Command="{StaticResource filter}"></KeyBinding>
-                                            </ComboBox.InputBindings>
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SmerFilterKriterijum" KeyUp="ponudaOpcija">
                                             <ComboBoxItem Content="Naziv"/>
                                             <ComboBoxItem Content="Oznaka"/>
                                             <ComboBoxItem Content="Datum uvođenja"/>
@@ -526,7 +737,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SmerPretragaUnos" TextChanged="pretraziSmer"/>
+                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="SmerPretragaUnos"/>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -641,11 +852,85 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
+                            <RowDefinition Height="29"/>
                             <RowDefinition Height="10*"/>
-                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="0.7*"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="1" Name="tabelaSoftvera" LostFocus="tabelaSoftveraIzgubilaFokus" GotFocus="tabelaSoftveraDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Label Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0*"/>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SoftverFilterKriterijum" KeyUp="ponudaOpcija">
+                                            <ComboBoxItem Content="Naziv"/>
+                                            <ComboBoxItem Content="Oznaka"/>
+                                            <ComboBoxItem Content="Operativni sistem"/>
+                                            <ComboBoxItem Content="Proizvođač"/>
+                                            <ComboBoxItem Content="Godina izdavanja"/>
+                                            <ComboBoxItem Content="Cena"/>
+                                            <ComboBoxItem Content="Sajt"/>
+                                            <ComboBoxItem Content="Opis"/>
+                                        </ComboBox>
+                                    </Grid>
+                                    <Grid Grid.Column="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SoftverFilterUnos" TextChanged="filtrirajSoftver"/>
+                                    </Grid>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Label Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="9*"/>
+                                            <ColumnDefinition Width="0.1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="SoftverPretragaUnos"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <DataGrid Grid.Row="2" Name="tabelaSoftvera" LostFocus="tabelaSoftveraIzgubilaFokus" GotFocus="tabelaSoftveraDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto"/>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
@@ -658,7 +943,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
+                        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
                             <ScrollViewer>
                                 <Grid DataContext="{Binding ElementName=tabelaSoftvera,Path=SelectedItem}" Name="detaljanPrikazSoftver">
                                     <Grid.ColumnDefinitions>
@@ -696,7 +981,7 @@
                             </ScrollViewer>
                         </Border>
 
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>

@@ -109,9 +109,14 @@ namespace HCI_Projekat
             {
                 novaUcionica.Oznaka = oznakaUcionica.Text;
                 novaUcionica.Opis = opisUcionica.Text;
+
                 novaUcionica.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
+                novaUcionica.PametnaTablaString = novaUcionica.PrisustvoPametneTable ? "prisutna" : "nije prisutna";
                 novaUcionica.PrisustvoTable = prisustvoTableUcionica.IsChecked;
+                novaUcionica.TablaString = novaUcionica.PrisustvoTable ? "prisutna" : "nije prisutna";
                 novaUcionica.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
+                novaUcionica.ProjektorString = novaUcionica.PrisustvoProjektora ? "prisutan" : "nije prisutan";
+
                 novaUcionica.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
                 if ((bool)LinuxOSUcionica.IsChecked)
                     novaUcionica.OperativniSistem = "Linux";
@@ -198,31 +203,37 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka())
             {
-                racunarskiCentar.Ucionice[oznakaUcionica.Text].Oznaka = oznakaUcionica.Text;
-                racunarskiCentar.Ucionice[oznakaUcionica.Text].Opis = opisUcionica.Text;
-                racunarskiCentar.Ucionice[oznakaUcionica.Text].PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
-                racunarskiCentar.Ucionice[oznakaUcionica.Text].PrisustvoTable = prisustvoTableUcionica.IsChecked;
-                racunarskiCentar.Ucionice[oznakaUcionica.Text].PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
-                racunarskiCentar.Ucionice[oznakaUcionica.Text].BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
-                if ((bool)LinuxOSUcionica.IsChecked)
-                    racunarskiCentar.Ucionice[oznakaUcionica.Text].OperativniSistem = "Linux";
-                else if ((bool)WindowsOSUcionica.IsChecked)
-                    racunarskiCentar.Ucionice[oznakaUcionica.Text].OperativniSistem = "Windows";
-                else
-                    racunarskiCentar.Ucionice[oznakaUcionica.Text].OperativniSistem = "Windows i Linux";
+                Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcionica.Text];
+                ucionicaIzmena.Oznaka = oznakaUcionica.Text;
+                ucionicaIzmena.Opis = opisUcionica.Text;
 
-                racunarskiCentar.Ucionice[oznakaUcionica.Text].InstaliraniSoftveri.Clear();
+                ucionicaIzmena.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
+                ucionicaIzmena.PametnaTablaString = ucionicaIzmena.PrisustvoPametneTable ? "prisutna" : "nije prisutna";
+                ucionicaIzmena.PrisustvoTable = prisustvoTableUcionica.IsChecked;
+                ucionicaIzmena.TablaString = ucionicaIzmena.PrisustvoTable ? "prisutna" : "nije prisutna";
+                ucionicaIzmena.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
+                ucionicaIzmena.ProjektorString = ucionicaIzmena.PrisustvoProjektora ? "prisutan" : "nije prisutan";
+
+                ucionicaIzmena.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text);
+                if ((bool)LinuxOSUcionica.IsChecked)
+                    ucionicaIzmena.OperativniSistem = "Linux";
+                else if ((bool)WindowsOSUcionica.IsChecked)
+                    ucionicaIzmena.OperativniSistem = "Windows";
+                else
+                    ucionicaIzmena.OperativniSistem = "Windows i Linux";
+
+                ucionicaIzmena.InstaliraniSoftveri.Clear();
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {
-                        racunarskiCentar.Ucionice[oznakaUcionica.Text].InstaliraniSoftveri.Add(softver.Oznaka);
+                        ucionicaIzmena.InstaliraniSoftveri.Add(softver.Oznaka);
                         softver.Instaliran = false;
                     }
                 }
 
-                tabelaUcionica[indeks] = racunarskiCentar.Ucionice[oznakaUcionica.Text];
+                tabelaUcionica[indeks] = ucionicaIzmena;
                 this.Close();
             }
         }

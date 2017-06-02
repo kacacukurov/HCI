@@ -21,9 +21,13 @@ namespace HCI_Projekat
         private bool neophodnaPametnaTabla;
         private string operativniSistem;
         private List<string> softveri;  
+
         private bool obrisan;
         private string softveriLista;
-        private string smeroviLista;
+        private string smerDetalji;
+        private string projektorString;
+        private string tablaString;
+        private string pametnaTablaString;
         private int preostaliTermini;
 
         public Predmet() {
@@ -134,10 +138,28 @@ namespace HCI_Projekat
             set { this.softveriLista = value; }
         }
 
-        public string SmeroviLista
+        public string SmerDetalji
         {
-            get { return smeroviLista; }
-            set { this.smeroviLista = value; }
+            get { return smerDetalji; }
+            set { this.smerDetalji = value; }
+        }
+
+        public string ProjektorString
+        {
+            get { return projektorString; }
+            set { this.projektorString = value; }
+        }
+
+        public string TablaString
+        {
+            get { return tablaString; }
+            set { this.tablaString = value; }
+        }
+
+        public string PametnaTablaString
+        {
+            get { return pametnaTablaString; }
+            set { this.pametnaTablaString = value; }
         }
 
         public int PreostaliTermini

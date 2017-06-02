@@ -82,7 +82,6 @@ namespace HCI_Projekat
 
         public void nextStep(object sender, RoutedEventArgs e)
         {
-            
             Keyboard.ClearFocus();
             nextClick(sender, e);
         }
@@ -129,9 +128,14 @@ namespace HCI_Projekat
                 predmet.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text);
                 predmet.BrTermina = int.Parse(BrojTerminaPredmet.Text);
                 predmet.PreostaliTermini = predmet.BrTermina;
+
                 predmet.NeophodanProjektor = PrisustvoProjektoraPredmet.IsChecked;
+                predmet.ProjektorString = predmet.NeophodanProjektor ? "neophodan" : "nije neophodan";
                 predmet.NeophodnaTabla = PrisustvoTablePredmet.IsChecked;
+                predmet.TablaString = predmet.NeophodnaTabla ? "neophodna" : "nije neophodna";
                 predmet.NeophodnaPametnaTabla = PrisustvoPametneTable.IsChecked;
+                predmet.PametnaTablaString = predmet.NeophodnaPametnaTabla ? "neophodna" : "nije neophodna";
+
                 if ((bool)Windows.IsChecked)
                     predmet.OperativniSistem = Windows.Content.ToString();
                 if ((bool)Linux.IsChecked)
@@ -140,42 +144,37 @@ namespace HCI_Projekat
                     predmet.OperativniSistem = Svejedno.Content.ToString();
 
                 StringBuilder sb = new StringBuilder();
-                int brojSoftvera = 0;
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {    
                         predmet.Softveri.Add(softver.Oznaka);
-                        if (brojSoftvera != 0)
-                            sb.Append("\n\n");
                         sb.Append("Oznaka softvera: " + softver.Oznaka);
                         sb.Append("\nNaziv softvera: " + softver.Naziv);
                         sb.Append("\nOpis softvera: " + softver.Opis);
-                        brojSoftvera++;
                         softver.Instaliran = false;
                     }
                 }
                 predmet.SoftveriLista = sb.ToString();
 
                 sb.Clear();
-                int brojSmerova = 0;
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
                 {
                     Smer smer = (Smer)smeroviTabela.Items[i];
                     if (smer.UPredmetu)
                     {
                         predmet.Smer = smer.Oznaka;
-                        if (brojSmerova != 0)
-                            sb.Append("\n\n");
-                        sb.Append("Oznaka smera: " + smer.Oznaka);
-                        sb.Append("\nNaziv smera: " + smer.Naziv);
-                        sb.Append("\nOpis smera: " + smer.Opis);
+                        smer.Predmeti.Add(predmet.Oznaka);
+                        
+                        sb.Append("\n\n");
+                        sb.Append("Oznaka: " + smer.Oznaka);
+                        sb.Append("\nNaziv: " + smer.Naziv);
                         smer.UPredmetu = false;
                         break;
                     }
                 }
-                predmet.SmeroviLista = sb.ToString();
+                predmet.SmerDetalji = sb.ToString();
 
                 tabelaPredmeta.Add(predmet);
                 racunarskiCentar.DodajPredmet(predmet);
@@ -253,50 +252,77 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka())
             {
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].Naziv = NazivPredmeta.Text;
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].Opis = OpisPredmeta.Text;
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text);
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text);
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].BrTermina = int.Parse(BrojTerminaPredmet.Text);
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].NeophodanProjektor = PrisustvoProjektoraPredmet.IsChecked;
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].NeophodnaTabla = PrisustvoTablePredmet.IsChecked;
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].NeophodnaPametnaTabla = PrisustvoPametneTable.IsChecked;
-                if ((bool)Windows.IsChecked)
-                    racunarskiCentar.Predmeti[OznakaPredmeta.Text].OperativniSistem = Windows.Content.ToString();
-                if ((bool)Linux.IsChecked)
-                    racunarskiCentar.Predmeti[OznakaPredmeta.Text].OperativniSistem = Linux.Content.ToString();
-                if ((bool)Svejedno.IsChecked)
-                    racunarskiCentar.Predmeti[OznakaPredmeta.Text].OperativniSistem = Svejedno.Content.ToString();
+                Predmet predmetIzmena = racunarskiCentar.Predmeti[OznakaPredmeta.Text];
+                predmetIzmena.Naziv = NazivPredmeta.Text;
+                predmetIzmena.Opis = OpisPredmeta.Text;
+                predmetIzmena.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text);
+                predmetIzmena.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text);
+                predmetIzmena.BrTermina = int.Parse(BrojTerminaPredmet.Text);
 
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].Softveri.Clear();
+                predmetIzmena.NeophodanProjektor = PrisustvoProjektoraPredmet.IsChecked;
+                predmetIzmena.ProjektorString = predmetIzmena.NeophodanProjektor ? "neophodan" : "nije neophodan";
+                predmetIzmena.NeophodnaTabla = PrisustvoTablePredmet.IsChecked;
+                predmetIzmena.TablaString = predmetIzmena.NeophodnaTabla ? "neophodna" : "nije neophodna";
+                predmetIzmena.NeophodnaPametnaTabla = PrisustvoPametneTable.IsChecked;
+                predmetIzmena.PametnaTablaString = predmetIzmena.NeophodnaPametnaTabla ? "neophodna" : "nije neophodna";
+
+                if ((bool)Windows.IsChecked)
+                    predmetIzmena.OperativniSistem = Windows.Content.ToString();
+                else if ((bool)Linux.IsChecked)
+                    predmetIzmena.OperativniSistem = Linux.Content.ToString();
+                else if ((bool)Svejedno.IsChecked)
+                    predmetIzmena.OperativniSistem = Svejedno.Content.ToString();
+
+                StringBuilder sb = new StringBuilder();
+                predmetIzmena.Softveri.Clear();
                 for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {
-                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Softveri.Add(softver.Oznaka);
+                        predmetIzmena.Softveri.Add(softver.Oznaka);
+                        sb.Append("Oznaka softvera: " + softver.Oznaka);
+                        sb.Append("\nNaziv softvera: " + softver.Naziv);
+                        sb.Append("\nOpis softvera: " + softver.Opis);
                         softver.Instaliran = false;
                     }
                 }
+                predmetIzmena.SoftveriLista = sb.ToString();
 
+                sb.Clear();
+                bool stariSmerPronadjen = false;
+                bool noviPredmetPostavljen = false;
                 for (int i = 0; i < smeroviTabela.Items.Count; i++)
                 {
                     Smer smer = (Smer)smeroviTabela.Items[i];
+                    //iz smera za koji je bio vezan predmet uklanjamo vezu
+                    if (smer.Predmeti.Contains(predmetIzmena.Oznaka))
+                    {
+                        smer.Predmeti.Remove(predmetIzmena.Oznaka);
+                        stariSmerPronadjen = true;
+                    }
                     if (smer.UPredmetu)
                     {
-                        racunarskiCentar.Predmeti[OznakaPredmeta.Text].Smer = smer.Oznaka;
+                        //u listu predmeta novoizabranog smera 
+                        if (!smer.Predmeti.Contains(predmetIzmena.Oznaka))
+                            smer.Predmeti.Add(predmetIzmena.Oznaka);
+                        predmetIzmena.Smer = smer.Oznaka;
+
+                        sb.Append("\n\n");
+                        sb.Append("Oznaka: " + smer.Oznaka);
+                        sb.Append("\nNaziv: " + smer.Naziv);
                         smer.UPredmetu = false;
-                        break;
+                        noviPredmetPostavljen = true;
                     }
+
+                    if (stariSmerPronadjen && noviPredmetPostavljen)
+                        break;
                 }
-                tabelaPredmeta[indeks] = racunarskiCentar.Predmeti[OznakaPredmeta.Text];
+                predmetIzmena.SmerDetalji = sb.ToString();
+
+                tabelaPredmeta[indeks] = predmetIzmena;
                 this.Close();
             }
-        }
-
-        private void smeroviTabela_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
     }
 }

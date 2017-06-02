@@ -13,12 +13,14 @@
     <script src="../js/jquery-ui.min.js"></script>
     <script src="../js/fullcalendar.min.js"></script>
     <script src="../js/scheduler.min.js"></script>
+    <script src="../js/jquery.qtip.min.js"></script>
 
 
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link href="../css/fullcalendar.min.css" rel="stylesheet" />
     <link href="../css/fullcalendar.print.css" rel="stylesheet" media="print" />
     <link href="../css/scheduler.min.css" rel="stylesheet" />
+    <link href="../css/jquery.qtip.min.css" rel="stylesheet" />
 
 
     <title>Proba</title>
@@ -69,17 +71,37 @@
     <div id='external-events'>
         <h4>Nova stavka kalendara</h4>
         <div class='fc-event' id="poljeKalendara"></div>
-        <div>Predmet: <select id="predmeti" onchange="predmetPromenjen()"></select></div>
-        <br/>
-        Duzina trajanja termina: <div id="duzina"></div><br/>
-        Broj nerasporedjenih termina: <div id="termini"></div><br/>
+        <div>Predmet: <select id="predmeti" onchange="predmetPromenjen()"></select></div><br/>
+        Duzina trajanja termina: <b id="duzina"></b><br/>
+        Broj nerasporedjenih termina: <b id="termini"></b>
         <div id="calendarTrash" class="calendar-trash">
             <h4>Prevucite ovde za brisanje</h4>
         </div>
+        <button id="prikazNedelje" onclick="prikaziCeluNedelju()">Nedeljni prikaz</button>
+        <div>Prikazi po danu:
+            <select id="dani">
+                <option>Ponedeljak</option>
+                <option>Utorak</option>
+                <option>Sreda</option>
+                <option>Četvrtak</option>
+                <option>Petak</option>
+                <option>Subota</option>
+            </select>
+            <button id="prikaziDanDugme" onclick="prikaziPoDanu()">Filtriraj</button>
+        </div>
+        <div>Prikazi po učionici:
+            <select id="ucionice"></select>
+            <button id="prikaziUcionicu" onclick="prikaziPoUcionici()">Filtriraj</button>
+        </div>
+        <div>Prikazi po predmetu:
+            <select id="predmetiFilter"></select>
+            <button id="prikaziPredmete" onclick="prikaziPoPredmetu()">Filtriraj</button>
+        </div>
+        <div>Prikazi po smeru:
+            <select id="smerFilter"></select>
+            <button id="prikaziSmerove" onclick="prikaziPoSmeru()">Filtriraj</button>
+        </div>
     </div>
-
-    
-
         <div id="calendar" style="height:80%; width:85%"></div>
 
     <div style='clear:both'></div>

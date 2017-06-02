@@ -24,17 +24,16 @@ namespace HCI_Projekat
         }
 
         public void posaljiPodatke()
-        {
+        {   //ucionice
             string ucionice = "";
-            
-
             foreach (string u in racunarskiCentar.Ucionice.Keys)
             {
                 if (!racunarskiCentar.Ucionice[u].Obrisan)
                     ucionice += u + "|";
             }
+            //predmeti
             string predmeti = "{\"predmeti\":[";
-            
+            string nazivi = "{\"predmeti\":[";
             List<Predmet> neobrisaniPredmeti = new List<Predmet>();
             foreach (Predmet p in racunarskiCentar.Predmeti.Values)
             {
@@ -47,12 +46,50 @@ namespace HCI_Projekat
                 if (j + 1 == neobrisaniPredmeti.Count)
                 {
                     predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini + "\"}";
+                    nazivi += "{\"oznaka\":\"" + p.Oznaka + "\",\"naziv\":\"" + p.Naziv + "\"}";
                 }
                 else
+                {
                     predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini + "\"},";
-                j++;
+                    nazivi += "{\"oznaka\":\"" + p.Oznaka + "\",\"naziv\":\"" + p.Naziv + "\"},";
+                }
+                    j++;
             }
             predmeti += "]}";
+           
+            //smerovi
+            nazivi += "],\"smerovi\":[";
+            string smerovi = "";
+            int k = 0;
+            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            {
+                if(k + 1 == racunarskiCentar.Smerovi.Values.Count)
+                {
+                    nazivi += "{\"oznaka\":\"" + s.Oznaka + "\",\"naziv\":\"" + s.Naziv + "\"}";
+                }
+                else
+                {
+                    nazivi += "{\"oznaka\":\"" + s.Oznaka + "\",\"naziv\":\"" + s.Naziv + "\"},";
+                }
+                smerovi += s.Oznaka + '|';
+                k++;
+            }
+            //puni nazivi smerova i predmeta
+            nazivi += "]}";
+
+            if (_instanceBrowser.CanExecuteJavascriptInMainFrame)
+            {
+                _instanceBrowser.ExecuteScriptAsync("ucitajUcionice('" + ucionice + "');");
+                _instanceBrowser.ExecuteScriptAsync("ucitajPredmete('" + predmeti + "');");
+                _instanceBrowser.ExecuteScriptAsync("ucitajSmerove('" + smerovi + "');");
+                _instanceBrowser.ExecuteScriptAsync("ucitajNazive('" + nazivi + "');");
+            }
+            ucitajPolja();
+        }
+
+        public void ucitajPolja()
+        {
+            //polja kalendara 
             string polja = "{\"lista\":[";
             int i = 0;
             foreach (KalendarPolje kal in racunarskiCentar.PoljaKalendara.Values)
@@ -60,18 +97,15 @@ namespace HCI_Projekat
                 if (i + 1 == racunarskiCentar.PoljaKalendara.Values.Count)
                 {
                     polja += "{\"id\":\"" + kal.Id + "\",\"pocetak\":\"" + kal.Pocetak + "\",\"kraj\":\"" + kal.Kraj + "\",\"naziv\":\"" + kal.NazivPolja + "\",\"dan\":\"" + kal.Dan + "\",\"ucionica\":\"" + kal.Ucionica + "\"}";
-                } else
+                }
+                else
                     polja += "{\"id\":\"" + kal.Id + "\",\"pocetak\":\"" + kal.Pocetak + "\",\"kraj\":\"" + kal.Kraj + "\",\"naziv\":\"" + kal.NazivPolja + "\",\"dan\":\"" + kal.Dan + "\",\"ucionica\":\"" + kal.Ucionica + "\"},";
                 i++;
             }
             polja += "]}";
 
-            
-
             if (_instanceBrowser.CanExecuteJavascriptInMainFrame)
             {
-                _instanceBrowser.ExecuteScriptAsync("ucitajUcionice('" + ucionice + "');");
-                _instanceBrowser.ExecuteScriptAsync("ucitajPredmete('" + predmeti + "');");
                 _instanceBrowser.ExecuteScriptAsync("ucitajPostojecaPolja('" + polja + "');");
             }
         }
@@ -80,7 +114,7 @@ namespace HCI_Projekat
         {
             if (_instanceBrowser.CanExecuteJavascriptInMainFrame)
             {
-                _instanceBrowser.ExecuteScriptAsync("ucitajSmerove('" + racunarskiCentar.Predmeti[predmet].Smer + "');");
+                _instanceBrowser.ExecuteScriptAsync("ucitajSmer('" + racunarskiCentar.Predmeti[predmet].Smer + "');");
             }
         }
 

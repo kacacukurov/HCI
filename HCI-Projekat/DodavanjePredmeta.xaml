@@ -316,7 +316,7 @@
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
                                         </DataGrid.Columns>
-                                        
+
                                     </DataGrid>
                                 </Grid>
                             </Grid>

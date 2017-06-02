@@ -240,6 +240,7 @@
     <Content Include="html\css\fullcalendar.min.css" />
     <Content Include="html\css\fullcalendar.print.css" />
     <Content Include="html\css\fullcalendar.print.min.css" />
+    <Content Include="html\css\jquery.qtip.min.css" />
     <Content Include="html\css\scheduler.min.css" />
     <Content Include="html\html\kalendar.html" />
     <Content Include="html\js\bootstrap.min.js" />
@@ -248,6 +249,7 @@
     <Content Include="html\js\jquery-ui.js" />
     <Content Include="html\js\jquery-ui.min.js" />
     <Content Include="html\js\jquery.min.js" />
+    <Content Include="html\js\jquery.qtip.min.js" />
     <Content Include="html\js\jquery.raty.js" />
     <Content Include="html\js\jquery.raty.min.js" />
     <Content Include="html\js\moment.js" />

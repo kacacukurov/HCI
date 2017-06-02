@@ -250,7 +250,7 @@ namespace HCI_Projekat
 
         private void izmenaPredmeta()
         {
-            if (validacijaPodataka())
+            if (validacijaPodataka() && validacijeIzmeneBrojaTermina())
             {
                 Predmet predmetIzmena = racunarskiCentar.Predmeti[OznakaPredmeta.Text];
                 predmetIzmena.Naziv = NazivPredmeta.Text;
@@ -323,6 +323,27 @@ namespace HCI_Projekat
                 tabelaPredmeta[indeks] = predmetIzmena;
                 this.Close();
             }
+        }
+
+        private bool validacijeIzmeneBrojaTermina()
+        {
+            int stariBrojTermina = racunarskiCentar.Predmeti[OznakaPredmeta.Text].BrTermina;
+            int preostaliTermini = racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini;
+            int noviBrojTermina = int.Parse(BrojTerminaPredmet.Text);
+            if (noviBrojTermina > stariBrojTermina)
+                racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini += noviBrojTermina - stariBrojTermina;
+            else
+            {
+                int razlika = stariBrojTermina - noviBrojTermina;
+                if (razlika > racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini)
+                {
+                    MessageBox.Show("Ne možete da smanjujete broj termina, ako su oni iskorišteni!");
+                    return false;
+                }
+                else
+                    racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini -= razlika;
+            }
+            return true;
         }
     }
 }

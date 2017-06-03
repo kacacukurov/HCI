@@ -223,25 +223,32 @@ namespace HCI_Projekat
             }
 
             bool postojiSoftver = false;
-            for (int i = 0; i < softverTabela.Items.Count; i++)
+            if (softverTabela.Items.Count > 0)
             {
-                Softver softver = (Softver)softverTabela.Items[i];
-                if (softver.Instaliran)
-                    postojiSoftver = true;
-            }
-            if (!postojiSoftver)
-            {
-                MessageBox.Show("Niste označili potreban softver/softvere!");
-                if (tabControlUcionica.SelectedIndex != 1)
+                for (int i = 0; i < softverTabela.Items.Count; i++)
                 {
-                    vratiNaKorak2();
-                    UpdateLayout();
+                    Softver softver = (Softver)softverTabela.Items[i];
+                    if (softver.Instaliran)
+                        postojiSoftver = true;
                 }
-                softverTabela.Focus();
-                DataGridCellInfo firstRowCell = new DataGridCellInfo(softverTabela.Items[0], softverTabela.Columns[3]);
-                softverTabela.CurrentCell = firstRowCell;
-                softverTabela.ScrollIntoView(softverTabela.Items[0]);
-                softverTabela.BeginEdit();
+                if (!postojiSoftver)
+                {
+                    MessageBox.Show("Niste označili potreban softver/softvere!");
+                    if (tabControlUcionica.SelectedIndex != 1)
+                    {
+                        vratiNaKorak2();
+                        UpdateLayout();
+                    }
+                    softverTabela.Focus();
+                    DataGridCellInfo firstRowCell = new DataGridCellInfo(softverTabela.Items[0], softverTabela.Columns[3]);
+                    softverTabela.CurrentCell = firstRowCell;
+                    softverTabela.ScrollIntoView(softverTabela.Items[0]);
+                    softverTabela.BeginEdit();
+                    return false;
+                }
+            }
+            else {
+                MessageBox.Show("Morate prvo uneti softver da biste mogli da unesete učionicu!");
                 return false;
             }
             return true;

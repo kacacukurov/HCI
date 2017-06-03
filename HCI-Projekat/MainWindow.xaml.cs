@@ -88,12 +88,6 @@ namespace HCI_Projekat
             InitializeChromium();
             cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar);
             chromeBrowser.RegisterJsObject("cefCustomObject", cef);
-
-            /*List<string> smerKriterijumi = new List<string>
-            {
-                "naziv: ", "oznaka: ", "opis: ", "naziv: oznaka: ", "naziv: opis: ", "oznaka: opis: ", "naziv: oznaka: opis: "
-            };
-            SmerPretragaUnos.ItemsSource = smerKriterijumi;*/
         }
 
         private void InitializeChromium()
@@ -322,11 +316,32 @@ namespace HCI_Projekat
             }
         }
 
+        private void pretraziUcionice(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            string parametar = t.Text.Trim();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
+            if (parametar == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Ucionica u = o as Ucionica;
+                    return (u.Oznaka.ToUpper().Contains(parametar.ToUpper()) || u.BrojRadnihMesta.ToString().Contains(parametar)
+                    || u.ProjektorString.ToUpper().Contains(parametar.ToUpper()) || u.TablaString.ToUpper().Contains(parametar.ToUpper())
+                    || u.PametnaTablaString.ToUpper().Contains(parametar.ToUpper()) || u.OperativniSistem.ToUpper().Contains(parametar.ToUpper())
+                    || u.OperativniSistem.ToUpper().Contains(parametar.ToUpper()));
+                };
+            }
+        }
+
         private void filtrirajUcionicu(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
-            string filter = t.Text;
-            string parametar = UcionicaFilterKriterijum.Text;
+            string filter = t.Text.Trim();
+            string parametar = UcionicaFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
             if (filter == "")
@@ -347,11 +362,31 @@ namespace HCI_Projekat
                     else if (parametar == "Pametna tabla")
                         return (u.PametnaTablaString.ToUpper().StartsWith(filter.ToUpper()));
                     else if (parametar == "Operativni sistem")
-                    {
                         return (u.OperativniSistem.ToUpper().StartsWith(filter.ToUpper()));
-                    }
                     else
                         return (u.Opis.ToUpper().StartsWith(filter.ToUpper()));
+                };
+            }
+        }
+
+        private void pretraziPredmete(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            string parametar = t.Text.Trim();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+            if (parametar == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Predmet p = o as Predmet;
+                    return (p.Naziv.ToUpper().Contains(parametar.ToUpper()) || p.Oznaka.ToUpper().Contains(parametar.ToUpper())
+                    || p.VelicinaGrupe.ToString().Contains(parametar) || p.Opis.ToUpper().Contains(parametar.ToUpper())
+                    || p.MinDuzinaTermina.ToString().Contains(parametar) || p.BrTermina.ToString().Contains(parametar)
+                    || p.ProjektorString.ToUpper().Contains(parametar.ToUpper()) || p.TablaString.ToUpper().Contains(parametar.ToUpper())
+                    || p.PametnaTablaString.ToUpper().Contains(parametar.ToUpper()) || p.OperativniSistem.ToUpper().Contains(parametar.ToUpper()));
                 };
             }
         }
@@ -359,8 +394,8 @@ namespace HCI_Projekat
         private void filtrirajPredmet(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
-            string filter = t.Text;
-            string parametar = PredmetFilterKriterijum.Text;
+            string filter = t.Text.Trim();
+            string parametar = PredmetFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
             if (filter == "")
@@ -394,11 +429,32 @@ namespace HCI_Projekat
             }
         }
 
+        private void pretraziSoftvere(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            string parametar = t.Text.Trim();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
+            if (parametar == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Softver s = o as Softver;
+                    return (s.Naziv.ToUpper().Contains(parametar.ToUpper()) || s.Oznaka.ToUpper().Contains(parametar.ToUpper())
+                    || s.OperativniSistem.ToUpper().Contains(parametar.ToUpper()) || s.Proizvodjac.ToUpper().Contains(parametar.ToUpper())
+                    || s.GodIzdavanja.ToString().Contains(parametar) || s.Cena.ToString().Contains(parametar)
+                    || s.Sajt.ToUpper().Contains(parametar.ToUpper()) || s.Opis.ToUpper().Contains(parametar.ToUpper()));
+                };
+             }
+        }
+
         private void filtrirajSoftver(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
-            string filter = t.Text;
-            string parametar = SoftverFilterKriterijum.Text;
+            string filter = t.Text.Trim();
+            string parametar = SoftverFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
             if (filter == "")
@@ -428,11 +484,30 @@ namespace HCI_Projekat
             }
         }
 
+        private void pretraziSmerove(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            string parametar = t.Text.Trim();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
+            if (parametar == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Smer s = o as Smer;
+                    return (s.Naziv.ToUpper().Contains(parametar.ToUpper()) || s.Oznaka.ToUpper().Contains(parametar.ToUpper())
+                    || s.Datum.ToString().Contains(parametar) || s.Opis.ToUpper().Contains(parametar.ToUpper()));
+                };
+            }
+        }
+
         private void filtrirajSmer(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
-            string filter = t.Text;
-            string parametar = SmerFilterKriterijum.Text;
+            string filter = t.Text.Trim();
+            string parametar = SmerFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
             if (filter == "")
@@ -761,7 +836,7 @@ namespace HCI_Projekat
                     }
                     if (koristiSeUPredmetu)
                     {
-                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer je povezan sa nekim od predmeta!");
+                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer ga koristi neki od predmeta!");
                         continue;
                     }
 
@@ -774,7 +849,7 @@ namespace HCI_Projekat
                     }
                     if (koristiSeUucionici)
                     {
-                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer je povezan sa nekom od učionica!");
+                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer se koristi u nekoj od učionica!");
                         continue;
                     }
 
@@ -822,11 +897,14 @@ namespace HCI_Projekat
                     TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaSmera = content.Text;
 
-                    //provera da li se nalazi u nekom predmetu, ako se nalazi, sprecava se brisanje
+                    //provera da li se nalazi u nekom predmetu, ako se nalazi, brise se i taj predmet kom pripada
                     if (racunarskiCentar.Smerovi[oznakaSmera].Predmeti.Count > 0)
                     {
-                        MessageBox.Show("Ne možete obrisati smer " + oznakaSmera + ", jer je povezan sa nekim od predmeta!");
-                        continue;
+                        foreach(string predmetOznaka in racunarskiCentar.Smerovi[oznakaSmera].Predmeti)
+                        {
+                            racunarskiCentar.Predmeti[predmetOznaka].Obrisan = true;
+                            predmetiKolekcija.Remove(racunarskiCentar.Predmeti[predmetOznaka]);
+                        }
                     }
 
                     removedItems.Add(racunarskiCentar.Smerovi[oznakaSmera]);
@@ -966,6 +1044,13 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex == 0)
             {
                 cef.posaljiPodatke();
+                MenuItemPretraga.IsEnabled = false;
+                MenuItemPretraga.IsEnabled = false;
+            }
+            else if(tabControl.SelectedIndex == 1 || tabControl.SelectedIndex == 2 || tabControl.SelectedIndex == 3 || tabControl.SelectedIndex == 4)
+            {
+                MenuItemIzborFiltera.IsEnabled = true;
+                MenuItemPretraga.IsEnabled = true;
             }
         }
     }

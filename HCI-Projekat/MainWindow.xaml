@@ -110,7 +110,7 @@
                             </MenuItem>
                         </MenuItem>
 
-                        <MenuItem Header="Pregled">
+                        <MenuItem Header="_Pregled">
                             <MenuItem Click="pregledKalendaraClick" Header="_Kalendar" InputGestureText="Ctrl+Alt+K">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="K" Modifiers="Ctrl+Alt" Command="{StaticResource prikazKalendara}"></KeyBinding>
@@ -189,13 +189,13 @@
 
                         <Separator></Separator>
 
-                        <MenuItem Click="otvoriKriterijumFilter" Header="_Izbor kriterijuma filtriranja" InputGestureText="Ctrl+Shift+F" Name="MenuItemIzborFiltera" IsEnabled="False">
+                        <MenuItem Click="otvoriKriterijumFilter" Header="_Filtriranje elemenata tabele" InputGestureText="Ctrl+Shift+F" Name="MenuItemIzborFiltera" IsEnabled="False">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{StaticResource filter}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
-                        <MenuItem Click="pretragaFokus" Header="Pretraga stavki u tabeli" InputGestureText="Ctrl+Shift+P" Name="MenuItemPretraga" IsEnabled="False">
+                        <MenuItem Click="pretragaFokus" Header="_Pretraga elemenata tabele" InputGestureText="Ctrl+Shift+P" Name="MenuItemPretraga" IsEnabled="False">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="P" Modifiers="Ctrl+Shift" Command="{StaticResource pretraga}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -313,7 +313,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="UcionicaPretragaUnos"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="UcionicaPretragaUnos" TextChanged="pretraziUcionice"/>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -520,7 +520,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="PredmetPretragaUnos"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="PredmetPretragaUnos" TextChanged="pretraziPredmete"/>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -739,7 +739,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="SmerPretragaUnos"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SmerPretragaUnos" TextChanged="pretraziSmerove"/>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -927,7 +927,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <toolkit:AutoCompleteBox Grid.Column="0" Grid.Row="1" Name="SoftverPretragaUnos"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SoftverPretragaUnos" TextChanged="pretraziSoftvere"/>
                                     </Grid>
                                 </Grid>
                             </Grid>

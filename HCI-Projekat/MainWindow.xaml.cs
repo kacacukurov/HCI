@@ -110,18 +110,32 @@ namespace HCI_Projekat
 
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)
         {
-            if(tabControl.SelectedIndex != 1)   
-                tabControl.SelectedIndex = 1;
-            var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false);
-            ucionicaWindow.ShowDialog();
+            if (racunarskiCentar.Softveri.Count > 0)
+            {
+                if (tabControl.SelectedIndex != 1)
+                    tabControl.SelectedIndex = 1;
+                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false);
+                ucionicaWindow.ShowDialog();
+            }
+            else
+                MessageBox.Show("Ne možete uneti učionicu dok god ne unesete bar jedan softver!");
         }
 
         private void dodavanjePredmetaClick(object sender, RoutedEventArgs e)
         {
-            if (tabControl.SelectedIndex != 2)
-                tabControl.SelectedIndex = 2;
-            var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false);
-            predmetWindow.ShowDialog();
+            if (racunarskiCentar.Smerovi.Count > 0 && racunarskiCentar.Softveri.Count > 0)
+            {
+                if (tabControl.SelectedIndex != 2)
+                    tabControl.SelectedIndex = 2;
+                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false);
+                predmetWindow.ShowDialog();
+            }
+            else if (racunarskiCentar.Smerovi.Count == 0 && racunarskiCentar.Softveri.Count == 0)
+                MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan smer i bar jedan softver!");
+            else if (racunarskiCentar.Smerovi.Count == 0)
+                MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan smer!");
+            else if (racunarskiCentar.Softveri.Count == 0)
+                MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan softver!");
         }
 
         private void dodavanjeSmeraClick(object sender, RoutedEventArgs e)

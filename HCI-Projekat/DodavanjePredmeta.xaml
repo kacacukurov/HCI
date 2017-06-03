@@ -613,9 +613,9 @@
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
                                         <StackPanel>
-                                            <RadioButton x:Name="Linux" Content="Linux"/>
-                                            <RadioButton x:Name="Windows" Content="Windows"/>
-                                            <RadioButton x:Name="Svejedno" Content="Linux i Windows" IsChecked="True"/>
+                                            <RadioButton x:Name="Linux" Content="Linux" Checked="prikazOdgovarajucihSoftvera"/>
+                                            <RadioButton x:Name="Windows" Content="Windows" Checked="prikazOdgovarajucihSoftvera"/>
+                                            <RadioButton x:Name="Svejedno" Content="Svejedno" IsChecked="True" Checked="prikazOdgovarajucihSoftvera"/>
                                         </StackPanel>
                                     </Viewbox>
                                 </Grid>

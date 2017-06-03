@@ -272,9 +272,9 @@
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
                                         <StackPanel>
-                                            <RadioButton Name="LinuxOSSoftver" IsChecked="True" Content="Linux"/>
+                                            <RadioButton Name="LinuxOSSoftver" Content="Linux"/>
                                             <RadioButton Name="WindowsOSSoftver" Content="Windows"/>
-                                            <RadioButton Name="WindowsAndLinuxOSSoftver" Content="Linux i Windows"/>
+                                            <RadioButton Name="WindowsAndLinuxOSSoftver" Content="Linux i Windows" IsChecked="True"/>
                                         </StackPanel>
                                     </Viewbox>
                                 </Grid>
@@ -362,38 +362,7 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <!--<Grid>
-                        <Grid HorizontalAlignment="Center" Background="White" Height="416" VerticalAlignment="Center" Margin="50,0,44,25" Width="392">
-                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="102,55,240,0" TextAlignment="Right" Text="Oznaka:" VerticalAlignment="Top" Width="50" />
-                            <TextBox Height="23" HorizontalAlignment="Right" Margin="0,55,119,0" Name="oznakaSoftver" VerticalAlignment="Top" Width="100" />
-
-                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="102,135,240,0" TextAlignment="Right" Text="Naziv:" VerticalAlignment="Top" Width="50" />
-                            <TextBox Height="23" HorizontalAlignment="Right" Margin="0,135,119,0" Name="nazivSoftver" VerticalAlignment="Top" Width="100" />
-
-                            <TextBlock Height="29" HorizontalAlignment="Center" Margin="54,215,240,0" TextAlignment="Right" Text="Operativni sistem:" VerticalAlignment="Top" Width="98" />
-                            <StackPanel Margin="0,215,112,121" HorizontalAlignment="Right" Height="80">
-                                <RadioButton HorizontalAlignment="Left" Content="Linux" Name="LinusOSSoftver" Width="72" Height="30" VerticalAlignment="Top" IsChecked="True"/>
-                                <RadioButton HorizontalAlignment="Left" Content="Windows" Name="WindowsOSSoftver" Width="72" Height="30" VerticalAlignment="Top"/>
-                                <RadioButton HorizontalAlignment="Left" Content="Windows i Linux" Name="WindowsAndLinusOSSoftver" Width="107" Height="30" VerticalAlignment="Top"/>
-                            </StackPanel>
-
-                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="81,347,240,0" TextAlignment="Right" Text="Proizvođač:" VerticalAlignment="Top" Width="71"/>
-                            <TextBox Height="23" HorizontalAlignment="Left" Margin="173,347,0,0" Name="proizvodjacSoftver" VerticalAlignment="Top" Width="150" />
-                        </Grid>
-
-                        <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
-                            <Button Width="60" Height="20" Content="Nastavi &gt;" Click="nextClick" Name="nextButton" HorizontalAlignment="Right" Margin="0,0,10,0" Background="DarkGreen" Foreground="White">
-                                <Button.InputBindings>
-                                    <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
-                                </Button.InputBindings>
-                            </Button>
-                            <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab1" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
-                                <Button.InputBindings>
-                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
-                                </Button.InputBindings>
-                            </Button>
-                        </StackPanel>
-                    </Grid>-->
+                    
                 </TabItem>
 
                 <TabItem Header="Korak 2" Name="Korak2Softver" HorizontalAlignment="Center">
@@ -612,39 +581,7 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <!--<Grid>
-                        <Grid HorizontalAlignment="Center" Background="White" Height="416" VerticalAlignment="Center" Margin="50,0,44,25" Width="392">
-                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="81,45,261,0" TextAlignment="Right" Text="Sajt:" VerticalAlignment="Top" Width="50" />
-                            <TextBox Height="23" HorizontalAlignment="Right" Margin="0,45,138,0" Name="sajtSoftver" VerticalAlignment="Top" Width="100" />
-
-                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="81,115,261,0" TextAlignment="Right" Text="Godina:" VerticalAlignment="Top" Width="50" />
-                            <TextBox Height="23" HorizontalAlignment="Right" Margin="0,115,138,0" Name="godinaSoftver" VerticalAlignment="Top" Width="100" />
-
-                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="60,185,261,0" TextAlignment="Right" Text="Cena:" VerticalAlignment="Top" Width="71"/>
-                            <TextBox Height="23" HorizontalAlignment="Left" Margin="154,185,0,0" Name="cenaSoftver" VerticalAlignment="Top" Width="55" />
-
-                            <TextBlock Height="23" HorizontalAlignment="Center" Margin="101,255,261,0" TextAlignment="Right" Text="Opis:" VerticalAlignment="Top" Width="30"/>
-                            <TextBox Height="100" HorizontalAlignment="Left" Margin="154,255,0,0" Name="opisSoftver" VerticalAlignment="Top" Width="193" />
-                        </Grid>
-
-                        <StackPanel VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Stretch">
-                            <Button Width="60" Height="20" Content="&lt; Nazad" Click="backClick" Name="backButton" HorizontalAlignment="Left" Margin="10,0,0,0" Background="Blue" Foreground="White">
-                                <Button.InputBindings>
-                                    <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
-                                </Button.InputBindings>
-                            </Button>
-                            <Button Width="60" Height="20" Content="Završi" Click="finishClick" Name="finishButton" HorizontalAlignment="Right" Margin="0,-20,10,0" Background="DarkGreen" Foreground="White">
-                                <Button.InputBindings>
-                                    <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
-                                </Button.InputBindings>
-                            </Button>
-                            <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="cancelButtonTab2" HorizontalAlignment="Right" Margin="0,-20,80,0" Background="DarkRed" Foreground="White">
-                                <Button.InputBindings>
-                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
-                                </Button.InputBindings>
-                            </Button>
-                        </StackPanel>
-                    </Grid>-->
+                    
                 </TabItem>
 
             </TabControl>

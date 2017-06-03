@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace HCI_Projekat
@@ -17,10 +20,13 @@ namespace HCI_Projekat
         private ObservableCollection<Ucionica> tabelaUcionica;
         private bool izmena;
         public int indeks;
+        public bool inicijalizacija;
 
         public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena)
         {
+            this.inicijalizacija = false;
             InitializeComponent();
+            this.inicijalizacija = true;
             novaUcionica = new Ucionica();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -39,6 +45,47 @@ namespace HCI_Projekat
             if(!izmena)
                 oznakaUcionica.Focus();
             BackStepMenuItem.IsEnabled = false;
+        }
+
+        private void prikazOdgovarajucihSoftvera(object sender, EventArgs e)
+        {
+            if (inicijalizacija)
+            {
+                if ((bool)LinuxOSUcionica.IsChecked)
+                {
+                    // filtriranje i prikazivanje softvera za linux i cross platform
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
+
+                    cv.Filter = o =>
+                    {
+                        Softver s = o as Softver;
+                        return (s.OperativniSistem.ToUpper().Equals("LINUX") || s.OperativniSistem.ToUpper().Contains("LINUX"));
+                    };
+
+                }
+                else if ((bool)WindowsOSUcionica.IsChecked)
+                {
+                    // filtriranje i prikazivanje softvera za windows i cross platform
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
+
+                    cv.Filter = o =>
+                    {
+                        Softver s = o as Softver;
+                        return (s.OperativniSistem.ToUpper().Equals("WINDOWS") || s.OperativniSistem.ToUpper().Contains("WINDOWS"));
+                    };
+                }
+                else if ((bool)WindowsAndLinuxOSUcionica.IsChecked)
+                {
+                    // prikaz svih softvera koji postoje (linux, windows, cross platform)
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
+
+                    cv.Filter = o =>
+                    {
+                        Softver s = o as Softver;
+                        return (s.OperativniSistem.ToUpper().Contains("LINUX") || s.OperativniSistem.ToUpper().Contains("WINDOWS"));
+                    };
+                }
+            }
         }
 
         private void cutClick(object sender, RoutedEventArgs e)

@@ -158,15 +158,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#calendar').fullCalendar('renderEvent', event, true);
                 alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
             }
-            else if (odabranaUcionica.os.indexOf(predmet.os) == -1) {
-                event.resourceId = oldResourceId;
-                event.start = oldStart;
-                event.end = oldEnd;
-                $('#calendar').fullCalendar('renderEvent', event, true);
-                alert("Ne mozete dodati predmet, ucionica nema odgovarajuci OS!");
+            else if (parseInt(predmet.brojMesta) > parseInt(odabranaUcionica.brojMesta)) {
+                $('#calendar').fullCalendar('removeEvents', event._id);
+                alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
             }
             else {
-                posaljiObjekat(event, true);
+                if (osPredmet.length == 3) {
+                    if ((odabranaUcionica.os.indexOf(osPredmet[0]) == -1) || (odabranaUcionica.os.indexOf(osPredmet[2]) == -1)) {
+                        event.resourceId = oldResourceId;
+                        event.start = oldStart;
+                        event.end = oldEnd;
+                        $('#calendar').fullCalendar('renderEvent', event, true);
+                        alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
+                    } else {
+                        posaljiObjekat(event, true);
+                        $('#termini').text(predmet.termini);
+                    }
+                }
+                else if (odabranaUcionica.os.indexOf(predmet.os) == -1) {
+                    event.resourceId = oldResourceId;
+                    event.start = oldStart;
+                    event.end = oldEnd;
+                    $('#calendar').fullCalendar('renderEvent', event, true);
+                    alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
+                } else {
+                    posaljiObjekat(event, true);
+                    $('#termini').text(predmet.termini);
+                }
             }
         },
         eventDragStop: function (event, jsEvent) {

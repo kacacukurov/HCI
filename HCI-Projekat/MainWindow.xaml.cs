@@ -28,6 +28,8 @@ namespace HCI_Projekat
         private static string imeFajla = "racunarskiCentar.xml";
         public ChromiumWebBrowser chromeBrowser;
         CefCustomObject cef;
+        private int brojAktivnihSmerova;
+        private int brojAktivnihSoftvera;
 
         public MainWindow()
         {
@@ -36,6 +38,8 @@ namespace HCI_Projekat
 
             racunarskiCentar = new RacunarskiCentar();
             DeserijalizacijaPodataka();
+            brojAktivnihSmerova = brojLogickiAktivnihSmerova();
+            brojAktivnihSoftvera = brojLogickiAktivnihSoftvera();
 
             predmetiKolekcija = new ObservableCollection<Predmet>();
             foreach (Predmet p in racunarskiCentar.Predmeti.Values)
@@ -108,10 +112,33 @@ namespace HCI_Projekat
             BrowserGrid.Children.Add(chromeBrowser);
         }
 
+        private int brojLogickiAktivnihSoftvera()
+        {
+            int brojLogickiAktivnih = 0;
+            foreach(Softver s in racunarskiCentar.Softveri.Values)
+            {
+                if (!s.Obrisan)
+                    brojLogickiAktivnih++;
+            }
+            return brojLogickiAktivnih;
+        }
+
+        private int brojLogickiAktivnihSmerova()
+        {
+            int brojLogickiAktivnihSmerova = 0;
+            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            {
+                if (!s.Obrisan)
+                    brojLogickiAktivnihSmerova++;
+            }
+            return brojLogickiAktivnihSmerova;
+        }
+
         private void dodavanjeUcioniceClick(object sender, RoutedEventArgs e)
         {
-            if (racunarskiCentar.Softveri.Count > 0)
+            if (racunarskiCentar.Softveri.Count > 0 && brojAktivnihSoftvera > 0)
             {
+                // dodavanje nove ucionice je moguce samo ako postoji neki logicki aktivan softver
                 if (tabControl.SelectedIndex != 1)
                     tabControl.SelectedIndex = 1;
                 var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false);
@@ -123,18 +150,19 @@ namespace HCI_Projekat
 
         private void dodavanjePredmetaClick(object sender, RoutedEventArgs e)
         {
-            if (racunarskiCentar.Smerovi.Count > 0 && racunarskiCentar.Softveri.Count > 0)
+            if (racunarskiCentar.Smerovi.Count > 0 && racunarskiCentar.Softveri.Count > 0 && brojAktivnihSmerova > 0 && brojAktivnihSoftvera > 0)
             {
+                // dodavanje novog predmeta je moguce samo ako postoji neki logicki aktivan softver i neki logicki aktivan smer
                 if (tabControl.SelectedIndex != 2)
                     tabControl.SelectedIndex = 2;
                 var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false);
                 predmetWindow.ShowDialog();
             }
-            else if (racunarskiCentar.Smerovi.Count == 0 && racunarskiCentar.Softveri.Count == 0)
+            else if ((racunarskiCentar.Smerovi.Count == 0 && racunarskiCentar.Softveri.Count == 0) || (brojAktivnihSoftvera == 0 && brojAktivnihSmerova == 0))
                 MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan smer i bar jedan softver!");
-            else if (racunarskiCentar.Smerovi.Count == 0)
+            else if (racunarskiCentar.Smerovi.Count == 0 || brojAktivnihSmerova == 0)
                 MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan smer!");
-            else if (racunarskiCentar.Softveri.Count == 0)
+            else if (racunarskiCentar.Softveri.Count == 0 || brojAktivnihSoftvera == 0)
                 MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan softver!");
         }
 
@@ -142,16 +170,26 @@ namespace HCI_Projekat
         {
             if (tabControl.SelectedIndex != 3)
                 tabControl.SelectedIndex = 3;
+            int stariBrojSmerova = racunarskiCentar.Smerovi.Count;
             var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, false);
             smerWindow.ShowDialog();
+
+            if (racunarskiCentar.Smerovi.Count - stariBrojSmerova == 1)
+                // uspesno je dodat novi smer (logicki je aktivan)
+                brojAktivnihSmerova++;
         }
 
         private void dodavanjeSoftveraClick(object sender, RoutedEventArgs e)
         {
             if (tabControl.SelectedIndex != 4)
                 tabControl.SelectedIndex = 4;
+            int stariBrojSoftvera = racunarskiCentar.Softveri.Count;
             var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false);
             softverWindow.ShowDialog();
+
+            if (racunarskiCentar.Softveri.Count - stariBrojSoftvera == 1)
+                // uspesno je dodat novi softver (logicki je aktivan)
+                brojAktivnihSoftvera++;
         }
 
         private void pregledKalendaraClick(object sender, RoutedEventArgs e)
@@ -869,6 +907,8 @@ namespace HCI_Projekat
 
                     removedItems.Add(racunarskiCentar.Softveri[oznakaSoftvera]);
                     racunarskiCentar.Softveri[oznakaSoftvera].Obrisan = true;
+                    // za svako logicko brisanje softvera se smanjuje broj logicki aktivnih
+                    brojAktivnihSoftvera--;
                 }
 
                 foreach (Softver softver in removedItems)
@@ -923,6 +963,8 @@ namespace HCI_Projekat
 
                     removedItems.Add(racunarskiCentar.Smerovi[oznakaSmera]);
                     racunarskiCentar.Smerovi[oznakaSmera].Obrisan = true;
+                    // za svako logicko brisanje smera se smanjuje broj logicki aktivnih
+                    brojAktivnihSmerova--; 
                 }
 
                 foreach (Smer smer in removedItems)

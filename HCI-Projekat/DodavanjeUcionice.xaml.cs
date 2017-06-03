@@ -53,6 +53,22 @@ namespace HCI_Projekat
             {
                 if ((bool)LinuxOSUcionica.IsChecked)
                 {
+                    // ukoliko postoje vec prethodno izabrani softveri, proverava se da li medju njima ima neki
+                    // kom je OS Windows --> ukoliko ima, izbacuje se
+                    
+                    // samo odcekiramo softvere koji imaju OS Windows iz tabele softvera u prozoru za dodavanje
+
+                    for (int i = 0; i < softverTabela.Items.Count; i++)
+                    {
+                        Softver softver = (Softver)softverTabela.Items[i];
+                        if (softver.Instaliran && softver.OperativniSistem.Equals("Windows"))
+                        {
+                            softver.Instaliran = false;
+                        }
+                    }
+                    softverTabela.Items.Refresh();
+                    
+
                     // filtriranje i prikazivanje softvera za linux i cross platform
                     ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
 
@@ -61,10 +77,25 @@ namespace HCI_Projekat
                         Softver s = o as Softver;
                         return (s.OperativniSistem.ToUpper().Equals("LINUX") || s.OperativniSistem.ToUpper().Contains("LINUX"));
                     };
-
                 }
                 else if ((bool)WindowsOSUcionica.IsChecked)
                 {
+                    // ukoliko postoje vec prethodno izabrani softveri, proverava se da li medju njima ima neki
+                    // kom je OS Linux --> ukoliko ima, izbacuje se
+                    
+                    // samo odcekiramo softvere koji imaju OS Linux iz tabele softvera u prozoru za dodavanje
+
+                    for (int i = 0; i < softverTabela.Items.Count; i++)
+                    {
+                        Softver softver = (Softver)softverTabela.Items[i];
+                        if (softver.Instaliran && softver.OperativniSistem.Equals("Linux"))
+                        {
+                            softver.Instaliran = false;
+                        }
+                    }
+                    softverTabela.Items.Refresh();
+                    
+
                     // filtriranje i prikazivanje softvera za windows i cross platform
                     ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
 

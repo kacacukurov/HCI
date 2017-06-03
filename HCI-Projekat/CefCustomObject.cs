@@ -85,6 +85,7 @@ namespace HCI_Projekat
 
             //predmet za prvi smer
             string predmeti = "{\"predmeti\":[";
+            int b = 0;
             foreach (string pr in prviSmer.Predmeti)
             {
                 foreach (Predmet p in neobrisaniPredmeti)
@@ -94,11 +95,13 @@ namespace HCI_Projekat
                         predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini +
                                 "\",\"tabla\":\"" + p.NeophodnaTabla + "\",\"pametnaTabla\":\"" + p.NeophodnaPametnaTabla + "\",\"projektor\":\"" +
                                 p.NeophodanProjektor + "\",\"brojMesta\":\"" + p.VelicinaGrupe + "\",\"os\":\"" + p.OperativniSistem + "\"},";
+                        b++;
                     }
 
                 }
             }
-            predmeti = predmeti.Substring(0, predmeti.Length - 1);
+            if(b !=0)
+                predmeti = predmeti.Substring(0, predmeti.Length - 1);
             predmeti += "]}";
             if (_instanceBrowser.CanExecuteJavascriptInMainFrame)
             {

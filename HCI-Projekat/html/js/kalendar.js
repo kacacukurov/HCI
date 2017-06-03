@@ -65,18 +65,23 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('eventReceive', event);
             var predmet;
             var terminaNema = false;
+            var indeks;
             //provera da li ima jos termina
             for (var i = 0; i < predmetiLista.length; i++) {
                 if (event.title.split('-')[0] == predmetiLista[i].oznaka) {
                     if (parseInt(predmetiLista[i].termini) == 0)
                         terminaNema = true;
                     else {
-                        predmetiLista[i].termini = parseInt(predmetiLista[i].termini) - 1;
+                        indeks = i;
                         predmet = predmetiLista[i];
                     }
                 }
             }
-
+            if (terminaNema) {
+                $('#calendar').fullCalendar('removeEvents', event._id);
+                alert("Ne mozete dodati predmet, nema vise termina!");
+                return;
+            }
             //provera table, projektora, mesta, pametne table
             var oznakaUcionice = event.resourceId;
             var odabranaUcionica;
@@ -86,12 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             var osPredmet = predmet.os.split(' ');
             var osUcionica = odabranaUcionica.os.split(' ');
-
-            if (terminaNema) {
-                $('#calendar').fullCalendar('removeEvents', event._id);
-                alert("Ne mozete dodati predmet, nema vise termina!");
-            }
-            else if ((predmet.tabla && !odabranaUcionica.tabla) || (predmet.pametnaTabla && !odabranaUcionica.pametnaTabla) || (predmet.projektor &&
+            
+            
+            if ((predmet.tabla && !odabranaUcionica.tabla) || (predmet.pametnaTabla && !odabranaUcionica.pametnaTabla) || (predmet.projektor &&
                 !odabranaUcionica.projektor)) {
                 $('#calendar').fullCalendar('removeEvents', event._id);
                 alert("Ne mozete dodati predmet, fali tabla, pametna tabla ili projektor!");
@@ -100,13 +102,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#calendar').fullCalendar('removeEvents', event._id);
                 alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
             }
-            else if (odabranaUcionica.os.indexOf(predmet.os) == -1) {
-                $('#calendar').fullCalendar('removeEvents', event._id);
-                alert("Ne mozete dodati predmet, ucionica nema odgovarajuci OS!");
-            }
             else {
-                posaljiObjekat(event, true);
-                $('#termini').text(predmet.termini);
+                if (osPredmet.length == 3) {
+                    if ((odabranaUcionica.os.indexOf(osPredmet[0]) == -1) || (odabranaUcionica.os.indexOf(osPredmet[2]) == -1)) {
+                        $('#calendar').fullCalendar('removeEvents', event._id);
+                        alert("Ne mozete dodati predmet, ucionica nema odgovarajuci OS!");
+                    } else {
+                        predmetiLista[indeks].termini = parseInt(predmetiLista[indeks].termini) - 1;
+                        posaljiObjekat(event, true);
+                        $('#termini').text(predmet.termini);
+                    }
+                }
+                else if (odabranaUcionica.os.indexOf(predmet.os) == -1) {
+                    $('#calendar').fullCalendar('removeEvents', event._id);
+                    alert("Ne mozete dodati predmet, ucionica nema odgovarajuci OS!");
+                } else {
+                    predmetiLista[indeks].termini = parseInt(predmetiLista[indeks].termini) - 1;
+                    posaljiObjekat(event, true);
+                    $('#termini').text(predmet.termini);
+                }
             }
         },
         eventDrop: function (event) { // called when an event (already on the calendar) is moved

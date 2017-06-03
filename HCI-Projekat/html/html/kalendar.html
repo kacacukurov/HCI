@@ -34,16 +34,17 @@
 
         #external-events {
             float: right;
-            width: 150px;
+            width: 13%;
             padding: 0 10px;
             border: 1px solid #ccc;
             background: #eee;
             text-align: left;
             margin-top: 3%;
-            margin-right: 2%;
+            margin-right: 1%;
         }
         #calendarTrash {
             height: 150px;
+            border: groove;
         }
 
         #external-events h4 {
@@ -64,42 +65,38 @@
         #predmeti{
             float: left;
         }
+
+        #novi, #filterDiv{
+            border: groove;
+        }
     </style>
 </head>
 
 <body>
     <div id='external-events'>
-        <h4>Nova stavka kalendara</h4>
-        <div class='fc-event' id="poljeKalendara"></div>
-        <div>Predmet: <select id="predmeti" onchange="predmetPromenjen()"></select></div><br/>
-        Duzina trajanja termina: <b id="duzina"></b><br/>
-        Broj nerasporedjenih termina: <b id="termini"></b>
+        <div id="novi">
+            <h4>Nova stavka kalendara</h4>
+            <div class='fc-event' id="poljeKalendara" onclick="izmeniDuzinu()"></div>
+            <div>Smer: <select id="smerovi" onchange="smerPromenjen()"></select></div>
+            <div>Predmet: <select id="predmeti" onchange="predmetPromenjen()"></select></div><br />
+            Duzina trajanja termina: <b id="duzina"></b><br />
+            Broj nerasporedjenih termina: <b id="termini"></b>
+        </div>
         <div id="calendarTrash" class="calendar-trash">
-            <h4>Prevucite ovde za brisanje</h4>
+            Prevucite ovde za brisanje
         </div>
-        <button id="prikazNedelje" onclick="prikaziCeluNedelju()">Nedeljni prikaz</button>
-        <div>Prikazi po danu:
-            <select id="dani">
-                <option>Ponedeljak</option>
-                <option>Utorak</option>
-                <option>Sreda</option>
-                <option>Četvrtak</option>
-                <option>Petak</option>
-                <option>Subota</option>
+        <div id="filterDiv">
+            Filter <br/> 
+            <select id="vrstaFiltera" onchange="vrstaFilteraPromenjena()">
+                <option>Nedelja</option>
+                <option>Dan</option>
+                <option>Ucionica</option>
+                <option>Smer</option>
+                <option>Predmet</option>
             </select>
-            <button id="prikaziDanDugme" onclick="prikaziPoDanu()">Filtriraj</button>
-        </div>
-        <div>Prikazi po učionici:
-            <select id="ucionice"></select>
-            <button id="prikaziUcionicu" onclick="prikaziPoUcionici()">Filtriraj</button>
-        </div>
-        <div>Prikazi po predmetu:
-            <select id="predmetiFilter"></select>
-            <button id="prikaziPredmete" onclick="prikaziPoPredmetu()">Filtriraj</button>
-        </div>
-        <div>Prikazi po smeru:
-            <select id="smerFilter"></select>
-            <button id="prikaziSmerove" onclick="prikaziPoSmeru()">Filtriraj</button>
+            <br/>Podatak:
+            <select id="podaciFiltera"></select>
+            <button id="filtriraj" onclick="filtrirajPodatke()">Filtriraj</button>
         </div>
     </div>
         <div id="calendar" style="height:80%; width:85%"></div>

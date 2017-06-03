@@ -7,6 +7,9 @@ var predmetiNazivi = [];
 var izabraniPredmet = "";
 var izabraniSmer = "";
 var colors = ['Red', 'Blue', 'Green', 'Orange', 'Purple', 'Pink'];
+var oldResourceId;
+var oldStart;
+var oldEnd;
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -31,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#calendar').fullCalendar({
         forceEventDuration: true,
         allDay: false,
+        height: "auto",
         defaultView: 'agendaWeek',
         allDaySlot: false,
         defaultDate: '2016-02-15',
@@ -61,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('eventReceive', event);
             var predmet;
             var terminaNema = false;
+            //provera da li ima jos termina
             for (var i = 0; i < predmetiLista.length; i++) {
                 if (event.title.split('-')[0] == predmetiLista[i].oznaka) {
                     if (parseInt(predmetiLista[i].termini) == 0)
@@ -71,9 +76,33 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             }
+
+            //provera table, projektora, mesta, pametne table
+            var oznakaUcionice = event.resourceId;
+            var odabranaUcionica;
+            for (var i = 0; i < ucioniceLista.length; i++) {
+                if (ucioniceLista[i].oznaka == oznakaUcionice)
+                    odabranaUcionica = ucioniceLista[i];
+            }
+            var osPredmet = predmet.os.split(' ');
+            var osUcionica = odabranaUcionica.os.split(' ');
+
             if (terminaNema) {
                 $('#calendar').fullCalendar('removeEvents', event._id);
-                alert("Ne mozete dodati predmet!");
+                alert("Ne mozete dodati predmet, nema vise termina!");
+            }
+            else if ((predmet.tabla && !odabranaUcionica.tabla) || (predmet.pametnaTabla && !odabranaUcionica.pametnaTabla) || (predmet.projektor &&
+                !odabranaUcionica.projektor)) {
+                $('#calendar').fullCalendar('removeEvents', event._id);
+                alert("Ne mozete dodati predmet, fali tabla, pametna tabla ili projektor!");
+            }
+            else if (parseInt(predmet.brojMesta) > parseInt(odabranaUcionica.brojMesta)) {
+                $('#calendar').fullCalendar('removeEvents', event._id);
+                alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
+            }
+            else if (odabranaUcionica.os.indexOf(predmet.os) == -1) {
+                $('#calendar').fullCalendar('removeEvents', event._id);
+                alert("Ne mozete dodati predmet, ucionica nema odgovarajuci OS!");
             }
             else {
                 posaljiObjekat(event, true);
@@ -82,10 +111,54 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         eventDrop: function (event) { // called when an event (already on the calendar) is moved
             console.log('eventDrop', event);
-            posaljiObjekat(event, false);
+            //posaljiObjekat(event, false);
+            var predmet;
+            //provera da li ima jos termina
+            for (var i = 0; i < predmetiLista.length; i++) {
+                if (event.title.split('-')[0] == predmetiLista[i].oznaka) {
+                    predmet = predmetiLista[i];
+                }
+            }
+
+            //provera table, projektora, mesta, pametne table
+            var oznakaUcionice = event.resourceId;
+            var odabranaUcionica;
+            for (var i = 0; i < ucioniceLista.length; i++) {
+                if (ucioniceLista[i].oznaka == oznakaUcionice)
+                    odabranaUcionica = ucioniceLista[i];
+            }
+            var osPredmet = predmet.os.split(' ');
+            var osUcionica = odabranaUcionica.os.split(' ');
+            if ((predmet.tabla && !odabranaUcionica.tabla) || (predmet.pametnaTabla && !odabranaUcionica.pametnaTabla) || (predmet.projektor &&
+                 !odabranaUcionica.projektor)) {
+                event.resourceId = oldResourceId;
+                event.start = oldStart;
+                event.end = oldEnd;
+                $('#calendar').fullCalendar('renderEvent', event, true);
+                alert("Ne mozete dodati predmet, fali tabla, pametna tabla ili projektor!");
+            }
+            else if (parseInt(predmet.brojMesta) > parseInt(odabranaUcionica.brojMesta)) {
+                event.resourceId = oldResourceId;
+                event.start = oldStart;
+                event.end = oldEnd;
+                $('#calendar').fullCalendar('renderEvent', event, true);
+                alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
+            }
+            else if (odabranaUcionica.os.indexOf(predmet.os) == -1) {
+                event.resourceId = oldResourceId;
+                event.start = oldStart;
+                event.end = oldEnd;
+                $('#calendar').fullCalendar('renderEvent', event, true);
+                alert("Ne mozete dodati predmet, ucionica nema odgovarajuci OS!");
+            }
+            else {
+                posaljiObjekat(event, true);
+            }
         },
         eventDragStop: function (event, jsEvent) {
-
+            oldResourceId = event.resourceId;
+            oldStart = event.start;
+            oldEnd = event.end;
             var trashEl = jQuery('#calendarTrash');
             var ofs = trashEl.offset();
 
@@ -126,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 else
                     event.rendering = "";
             }
-            console.log(event.rendering);
+
             if (izabraniSmer != "") {
                 if (event.title.split('-')[1] != izabraniSmer)
                     event.rendering = "background";
@@ -139,28 +212,27 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function ucitajUcionice(ucionice) {
+    ucioniceLista = JSON.parse(ucionice).ucionice;
     $('#ucionice').empty();
     var res = $('#calendar').fullCalendar('getResources');
     for (var j = 0; j < res.length; j++) {
         $('#calendar').fullCalendar('removeResource', res[j]);
     }
-    var data = ucionice.split("|");
-    ucioniceLista = data;
-    for (var i = 0; i < data.length; i++) {
-        if (i + 1 != data.length) {
-            var resource = { id: i, title: data[i], eventColor: colors[i]};
-            $('#calendar').fullCalendar('addResource', resource);
-            $('#ucionice').append('<option id=' + data[i] + '>' + data[i] + '</option>');
-        }
+    for (var i = 0; i < ucioniceLista.length; i++) {
+        var resource = { id: ucioniceLista[i].oznaka, title: ucioniceLista[i].oznaka, eventColor: colors[i % colors.length] };
+        $('#calendar').fullCalendar('addResource', resource);
+        $('#ucionice').append('<option id=' + ucioniceLista[i].oznaka + '>' + ucioniceLista[i].oznaka + '</option>');
     }
 }
 
 function ucitajSmerove(smerovi) {
     $('#smerFilter').empty();
+    $('#smerovi').empty();
     smeroviLista = smerovi.split('|');
     for (var i = 0; i < smeroviLista.length; i++) {
         if (i + 1 != smeroviLista.length) {
             $('#smerFilter').append('<option>' + smeroviLista[i] + '</option>');
+            $('#smerovi').append('<option>' + smeroviLista[i] + '</option>');
         }
     }
 }
@@ -175,7 +247,9 @@ function ucitajSmer(smer) {
 function ucitajPredmete(predmetiString) {
     $('#predmeti').empty();
     $('#predmetiFilter').empty();
+    console.log(predmetiString);
     predmetiLista = JSON.parse(predmetiString).predmeti;
+    console.log(predmetiLista);
     for (var i = 0; i < predmetiLista.length; i++) {
         if (i == 0) {
             $('#poljeKalendara').text(predmetiLista[0].oznaka);
@@ -280,7 +354,13 @@ function dodajDogadjaje(data) {
 }
 
 function prikaziPoDanu() {
-    var dan = $('#dani').val();
+    izabraniPredmet = "";
+    izabraniSmer = "";
+    var allEvents = $('#calendar').fullCalendar('clientEvents');
+    for (var i = 0; i < allEvents.length; i++) {
+        allEvents[i].rendering = "";
+    }
+    var dan = $('#podaciFiltera').val();
     if(dan == 'Ponedeljak')
         $('#calendar').fullCalendar('changeView', 'agendaDay', '2016-02-15');
     else if(dan == 'Utorak')
@@ -298,18 +378,30 @@ function prikaziPoDanu() {
 function prikaziCeluNedelju() {
     izabraniPredmet = "";
     izabraniSmer = "";
+    var res = $('#calendar').fullCalendar('getResources');
+    for (var j = 0; j < res.length; j++) {
+        res[j].rendering = "";
+        $('#calendar').fullCalendar('removeResource', res[j]);
+    }
     $('#calendar').fullCalendar('changeView', 'agendaWeek');
     for (var i = 0; i < ucioniceLista.length; i++) {
-        if (i + 1 != ucioniceLista.length) {
-            var resource = { id: i, title: ucioniceLista[i], eventColor: colors[i] };
-            $('#calendar').fullCalendar('addResource', resource);
-        }
+        var resource = { id: ucioniceLista[i].oznaka, title: ucioniceLista[i].oznaka, eventColor: colors[i % colors.length] };
+        $('#calendar').fullCalendar('addResource', resource);
+        
     }
     cefCustomObject.ucitajPolja();
 }
 
 function prikaziPoUcionici() {
-    var ucionica = $('#ucionice').val();
+    $('#calendar').fullCalendar('changeView', 'agendaWeek');
+    var allEvents = $('#calendar').fullCalendar('clientEvents');
+    for (var i = 0; i < allEvents.length; i++) {
+        allEvents[i].rendering = "";
+    }
+
+    izabraniPredmet = "";
+    izabraniSmer = "";
+    var ucionica = $('#podaciFiltera').val();
     var res = $('#calendar').fullCalendar('getResources');
     var i;
     for (var j = 0; j < res.length; j++) {
@@ -320,13 +412,14 @@ function prikaziPoUcionici() {
             i = k;
     }
 
-    var resource = { id: i, title: ucionica};
+    var resource = { id: ucionica, title: ucionica };
     $('#calendar').fullCalendar('addResource', resource);
 }
 
 function prikaziPoPredmetu() {
+    $('#calendar').fullCalendar('changeView', 'agendaWeek');
     izabraniSmer = "";
-    izabraniPredmet = $('#predmetiFilter').val();
+    izabraniPredmet = $('#podaciFiltera').val();
     var allEvents = $('#calendar').fullCalendar('clientEvents');
     for (var i = 0; i < allEvents.length; i++) {
         $('#calendar').fullCalendar('renderEvent', allEvents[i]);
@@ -335,8 +428,9 @@ function prikaziPoPredmetu() {
 }
 
 function prikaziPoSmeru() {
+    $('#calendar').fullCalendar('changeView', 'agendaWeek');
     izabraniPredmet = "";
-    izabraniSmer = $('#smerFilter').val();
+    izabraniSmer = $('#podaciFiltera').val();
     var allEvents = $('#calendar').fullCalendar('clientEvents');
     for (var i = 0; i < allEvents.length; i++) {
         $('#calendar').fullCalendar('renderEvent', allEvents[i]);
@@ -347,4 +441,50 @@ function ucitajNazive(nazivi) {
     var data = JSON.parse(nazivi);
     predmetiNazivi = data.predmeti;
     smeroviNazivi = data.smerovi;
+}
+
+function smerPromenjen() {
+    cefCustomObject.dobaviPredmeteSmera($('#smerovi').val());
+}
+
+function filtrirajPodatke() {
+    var vrstaFiltera = $('#vrstaFiltera').val();
+    if (vrstaFiltera == "Nedelja") {
+        prikaziCeluNedelju();
+    } else if (vrstaFiltera == "Dan") {
+        prikaziPoDanu();
+    } else if (vrstaFiltera == "Ucionica") {
+        prikaziPoUcionici();
+    } else if (vrstaFiltera == "Smer") {
+        prikaziPoSmeru();
+    } else if (vrstaFiltera == "Predmet") {
+        prikaziPoPredmetu();
+    }
+}
+
+function vrstaFilteraPromenjena() {
+    $('#podaciFiltera').empty();
+    var vrstaFiltera = $('#vrstaFiltera').val();
+    if (vrstaFiltera == "Dan") {
+        $('#podaciFiltera').append('<option>Ponedeljak</option>');
+        $('#podaciFiltera').append('<option>Utorak</option>');
+        $('#podaciFiltera').append('<option>Sreda</option>');
+        $('#podaciFiltera').append('<option>Četvrtak</option>');
+        $('#podaciFiltera').append('<option>Petak</option>');
+        $('#podaciFiltera').append('<option>Subota</option>');
+    } else if (vrstaFiltera == "Ucionica") {
+        for (var i = 0; i < ucioniceLista.length; i++) {
+            $('#podaciFiltera').append('<option>' + ucioniceLista[i].oznaka + '</option>');
+        }
+
+    } else if (vrstaFiltera == "Smer") {
+        for (var i = 0; i < smeroviLista.length; i++) {
+            if(i + 1 != smeroviLista.length)
+                $('#podaciFiltera').append('<option>' + smeroviLista[i] + '</option>');
+        }
+    } else if (vrstaFiltera == "Predmet") {
+        for (var i = 0; i < predmetiLista.length; i++) {
+            $('#podaciFiltera').append('<option>' + predmetiLista[i].oznaka + '</option>');
+        }
+    }
 }

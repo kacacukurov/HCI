@@ -25,15 +25,49 @@ namespace HCI_Projekat
 
         public void posaljiPodatke()
         {   //ucionice
-            string ucionice = "";
-            foreach (string u in racunarskiCentar.Ucionice.Keys)
+            int i = 0; 
+            string ucionice = "{\"ucionice\":[";
+            foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
             {
-                if (!racunarskiCentar.Ucionice[u].Obrisan)
-                    ucionice += u + "|";
+                if (!u.Obrisan)
+                {
+                    if (i + 1 == racunarskiCentar.Ucionice.Values.Count)
+                    {
+                        ucionice += "{\"oznaka\":\"" + u.Oznaka + "\",\"tabla\":\"" + u.PrisustvoTable + "\",\"pametnaTabla\":\"" +
+                            u.PrisustvoPametneTable + "\",\"projektor\":\"" + u.PrisustvoProjektora + "\",\"brojMesta\":\"" + u.BrojRadnihMesta +
+                            "\",\"os\":\"" + u.OperativniSistem + "\"}";
+                    }
+                    else
+                    {
+                        ucionice += "{\"oznaka\":\"" + u.Oznaka + "\",\"tabla\":\"" + u.PrisustvoTable + "\",\"pametnaTabla\":\"" +
+                            u.PrisustvoPametneTable + "\",\"projektor\":\"" + u.PrisustvoProjektora + "\",\"brojMesta\":\"" + u.BrojRadnihMesta +
+                            "\",\"os\":\"" + u.OperativniSistem + "\"},";
+                    }
+                    i++;
+                }
+            }
+            ucionice += "]}";
+            //smerovi
+            //puni nazivi smerova i predmeta
+            string nazivi = "{\"smerovi\":[";
+            string smerovi = "";
+            int k = 0;
+            Smer prviSmer = new Smer();
+            foreach (Smer s in racunarskiCentar.Smerovi.Values)
+            {
+                if (!s.Obrisan)
+                {
+                    if (k == 0)
+                        prviSmer = s;
+                    nazivi += "{\"oznaka\":\"" + s.Oznaka + "\",\"naziv\":\"" + s.Naziv + "\"},";
+                    smerovi += s.Oznaka + '|';
+                    k++;
+                }
+                
             }
             //predmeti
-            string predmeti = "{\"predmeti\":[";
-            string nazivi = "{\"predmeti\":[";
+            nazivi = nazivi.Substring(0, nazivi.Length-1);
+            nazivi += "],\"predmeti\":[";
             List<Predmet> neobrisaniPredmeti = new List<Predmet>();
             foreach (Predmet p in racunarskiCentar.Predmeti.Values)
             {
@@ -45,38 +79,34 @@ namespace HCI_Projekat
             {
                 if (j + 1 == neobrisaniPredmeti.Count)
                 {
-                    predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini + "\"}";
                     nazivi += "{\"oznaka\":\"" + p.Oznaka + "\",\"naziv\":\"" + p.Naziv + "\"}";
                 }
                 else
                 {
-                    predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini + "\"},";
                     nazivi += "{\"oznaka\":\"" + p.Oznaka + "\",\"naziv\":\"" + p.Naziv + "\"},";
                 }
                     j++;
             }
-            predmeti += "]}";
-           
-            //smerovi
-            nazivi += "],\"smerovi\":[";
-            string smerovi = "";
-            int k = 0;
-            foreach(Smer s in racunarskiCentar.Smerovi.Values)
-            {
-                if(k + 1 == racunarskiCentar.Smerovi.Values.Count)
-                {
-                    nazivi += "{\"oznaka\":\"" + s.Oznaka + "\",\"naziv\":\"" + s.Naziv + "\"}";
-                }
-                else
-                {
-                    nazivi += "{\"oznaka\":\"" + s.Oznaka + "\",\"naziv\":\"" + s.Naziv + "\"},";
-                }
-                smerovi += s.Oznaka + '|';
-                k++;
-            }
-            //puni nazivi smerova i predmeta
+            
             nazivi += "]}";
 
+            //predmet za prvi smer
+            string predmeti = "{\"predmeti\":[";
+            foreach (string pr in prviSmer.Predmeti)
+            {
+                foreach (Predmet p in neobrisaniPredmeti)
+                {
+                    if(p.Oznaka == pr)
+                    {
+                        predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini +
+                                "\",\"tabla\":\"" + p.NeophodnaTabla + "\",\"pametnaTabla\":\"" + p.NeophodnaPametnaTabla + "\",\"projektor\":\"" +
+                                p.NeophodanProjektor + "\",\"brojMesta\":\"" + p.VelicinaGrupe + "\",\"os\":\"" + p.OperativniSistem + "\"},";
+                    }
+
+                }
+            }
+            predmeti = predmeti.Substring(0, predmeti.Length - 1);
+            predmeti += "]}";
             if (_instanceBrowser.CanExecuteJavascriptInMainFrame)
             {
                 _instanceBrowser.ExecuteScriptAsync("ucitajUcionice('" + ucionice + "');");
@@ -142,6 +172,42 @@ namespace HCI_Projekat
         {
             racunarskiCentar.Predmeti[oznakaPredmeta].PreostaliTermini++;
             racunarskiCentar.PoljaKalendara.Remove(id);
+        }
+
+        public void dobaviPredmeteSmera(string smer)
+        {
+            //predmet za prvi smer
+            string predmeti = "{\"predmeti\":[";
+            Smer odabraniSmer = null;
+
+            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            {
+                if (!s.Obrisan && (s.Oznaka == smer))
+                    odabraniSmer = s;
+            }
+            if(odabraniSmer != null)
+            {
+                foreach (string pr in odabraniSmer.Predmeti)
+                {
+                    foreach (Predmet p in racunarskiCentar.Predmeti.Values)
+                    {
+                        if ((p.Oznaka == pr) && !p.Obrisan)
+                        {
+                            predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini +
+                                    "\",\"tabla\":\"" + p.NeophodnaTabla + "\",\"pametnaTabla\":\"" + p.NeophodnaPametnaTabla + "\",\"projektor\":\"" +
+                                    p.NeophodanProjektor + "\",\"brojMesta\":\"" + p.VelicinaGrupe + "\",\"os\":\"" + p.OperativniSistem + "\"},";
+                        }
+
+                    }
+                }
+            }
+            if(odabraniSmer.Predmeti.Count != 0)
+                predmeti = predmeti.Substring(0, predmeti.Length - 1);
+            predmeti += "]}";
+            if (_instanceBrowser.CanExecuteJavascriptInMainFrame)
+            {
+                _instanceBrowser.ExecuteScriptAsync("ucitajPredmete('" + predmeti + "');");
+            }
         }
     }
 }

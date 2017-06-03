@@ -30,22 +30,15 @@ namespace HCI_Projekat
             foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
             {
                 if (!u.Obrisan)
-                {
-                    if (i + 1 == racunarskiCentar.Ucionice.Values.Count)
-                    {
-                        ucionice += "{\"oznaka\":\"" + u.Oznaka + "\",\"tabla\":\"" + u.PrisustvoTable + "\",\"pametnaTabla\":\"" +
-                            u.PrisustvoPametneTable + "\",\"projektor\":\"" + u.PrisustvoProjektora + "\",\"brojMesta\":\"" + u.BrojRadnihMesta +
-                            "\",\"os\":\"" + u.OperativniSistem + "\"}";
-                    }
-                    else
-                    {
-                        ucionice += "{\"oznaka\":\"" + u.Oznaka + "\",\"tabla\":\"" + u.PrisustvoTable + "\",\"pametnaTabla\":\"" +
+                { 
+                      ucionice += "{\"oznaka\":\"" + u.Oznaka + "\",\"tabla\":\"" + u.PrisustvoTable + "\",\"pametnaTabla\":\"" +
                             u.PrisustvoPametneTable + "\",\"projektor\":\"" + u.PrisustvoProjektora + "\",\"brojMesta\":\"" + u.BrojRadnihMesta +
                             "\",\"os\":\"" + u.OperativniSistem + "\"},";
-                    }
                     i++;
                 }
             }
+            if (i != 0)
+                ucionice = ucionice.Substring(0, ucionice.Length - 1);
             ucionice += "]}";
             //smerovi
             //puni nazivi smerova i predmeta

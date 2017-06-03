@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
@@ -50,9 +51,24 @@ namespace HCI_Projekat
             }
             softverTabela.ItemsSource = softveri;
             softverTabela.IsSynchronizedWithCurrentItem = true;
+
             if(!izmena)
                 OznakaPredmeta.Focus();
             BackStepMenuItem.IsEnabled = false;
+        }
+
+        private void izabranSmerPripadnostiPredmeta(object sender, EventArgs e)
+        {
+            for (int i = 0; i < smeroviTabela.Items.Count; i++)
+            {
+                if (smeroviTabela.SelectedIndex != i)
+                {
+                    DataGridRow selektovaniRed = (DataGridRow)smeroviTabela.ItemContainerGenerator.ContainerFromIndex(i);
+                    CheckBox content = smeroviTabela.Columns[2].GetCellContent(selektovaniRed) as CheckBox;
+                    if ((bool)content.IsChecked)
+                        content.IsChecked = false;
+                }
+            }
         }
 
         private void cutClick(object sender, RoutedEventArgs e)
@@ -379,7 +395,7 @@ namespace HCI_Projekat
                     }
                     if (smer.UPredmetu)
                     {
-                        //u listu predmeta novoizabranog smera 
+                        //u listu predmeta novoizabranog smera dodajemo i ovaj smer
                         if (!smer.Predmeti.Contains(predmetIzmena.Oznaka))
                             smer.Predmeti.Add(predmetIzmena.Oznaka);
                         predmetIzmena.Smer = smer.Oznaka;

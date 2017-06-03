@@ -465,7 +465,7 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex == 1)
             {
                 if (tabelaUcionica.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrane ucionice?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaUcionica.SelectedItems.Count + " izabrane ucionice?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiUcionicuClick(sender, e);
@@ -474,7 +474,7 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 2)
             {
                 if (tabelaPredmeta.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrana predmeta?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaPredmeta.SelectedItems.Count + " izabrana predmeta?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiPredmetClick(sender, e);
@@ -483,7 +483,7 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 3)
             {
                 if (tabelaSmerova.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrana smera?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSmerova.SelectedItems.Count + " izabrana smera?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiSmerClick(sender, e);
@@ -492,7 +492,7 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 4)
             {
                 if (tabelaSoftvera.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da obrišete " + tabelaSmerova.SelectedItems.Count + " izabrana softvera?";
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSoftvera.SelectedItems.Count + " izabrana softvera?";
                 brisanjeProzor.ShowDialog();
                 if(brisanjeProzor.daKlik)
                     obrisiSoftverClick(sender, e);
@@ -599,12 +599,15 @@ namespace HCI_Projekat
                 for (int i = 0; i < predmetWindow.smeroviTabela.Items.Count; i++) // iteriram kroz tabelu prozora za smerove
                 {
                     Smer smer = (Smer)predmetWindow.smeroviTabela.Items[i]; //uzmem softver iz tekuceg reda
-                    if (pre.Smer == smer.Oznaka)        //ako postoji u listi, cekiram ga
+                    if (pre.Smer == smer.Oznaka)  //ako postoji u listi, cekiram ga
+                    {
+                        predmetWindow.smeroviTabela.SelectedIndex = i;
                         smer.UPredmetu = true;
+                    }
                     else
                         smer.UPredmetu = false;
                 }
-
+                
                 for(int i = 0; i < predmetWindow.softverTabela.Items.Count; i++) // isto i za softvere
                 {
                     Softver softver = (Softver)predmetWindow.softverTabela.Items[i];

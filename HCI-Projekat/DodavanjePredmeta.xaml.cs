@@ -22,6 +22,7 @@ namespace HCI_Projekat
         private bool izmena;
         public int indeks;
         public bool inicijalizacija;
+        private bool dodavanjePredmetaIzborStarogUnosa;
 
         public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti, bool izmena)
         {
@@ -30,6 +31,7 @@ namespace HCI_Projekat
             this.izmena = izmena;
             tabelaPredmeta = predmeti;
             this.inicijalizacija = false;
+            this.dodavanjePredmetaIzborStarogUnosa = false;
 
             InitializeComponent();
             this.inicijalizacija = true;
@@ -211,8 +213,11 @@ namespace HCI_Projekat
                 izmenaPredmeta();
                 return;
             }
-            if (validacijaNovogPredmeta())
+            if (validacijaNovogPredmeta() && !dodavanjePredmetaIzborStarogUnosa)
             {
+                // ako su uneti podaci ispravni
+                // u slucaju da postoji predmet (logicki obrisan) sa istom sifrom kao sto je uneta
+                // i pritom je odlucio da zeli ipak da gazi stari unos
                 predmet.Oznaka = OznakaPredmeta.Text.Trim();
                 predmet.Naziv = NazivPredmeta.Text.Trim();
                 predmet.Opis = OpisPredmeta.Text.Trim();
@@ -273,14 +278,53 @@ namespace HCI_Projekat
                 racunarskiCentar.DodajPredmet(predmet);
                 this.Close();
             }
+            else if (dodavanjePredmetaIzborStarogUnosa)
+            {
+                // ukoliko postoji predmet (logicki neaktivan) sa istom oznakom
+                // kao sto je uneta, ponovo aktiviramo taj predmet (postaje logicki aktivan)
+                tabelaPredmeta.Add(racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()]);
+                this.Close();
+            }
         }
 
         private bool validacijaNovogPredmeta()
         {
-            if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text.Trim()))
+            if (!validacijaPodataka())
+            {
+                return false;
+            }
+            else if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text.Trim()))
             {
                 if (racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].Obrisan)
-                    racunarskiCentar.Predmeti.Remove(OznakaPredmeta.Text.Trim());
+                {
+                    dodavanjePredmetaIzborStarogUnosa = false;
+                    Predmet predmet = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+
+                    // vec postoji predmet sa tom oznakom, ali je logicki obrisan
+                    OdlukaDodavanjePredmet odluka = new OdlukaDodavanjePredmet();
+                    odluka.Oznaka.Text = "Oznaka: " + predmet.Oznaka;
+                    odluka.Naziv.Text = "Naziv: " + predmet.Naziv;
+                    odluka.Smer.Text = "Smer (oznaka): " + predmet.Smer;
+                    odluka.VelicinaGrupe.Text = "Veličina grupe: " + predmet.VelicinaGrupe.ToString();
+                    odluka.MinDuzinaTermina.Text = "Minimalna dužina termina: " + predmet.MinDuzinaTermina.ToString();
+                    odluka.BrojTermina.Text = "Broj termina: " + predmet.BrTermina.ToString();
+                    odluka.Projektor.Text = "Projektor: " + predmet.ProjektorString;
+                    odluka.Tabla.Text = "Tabla: " + predmet.TablaString;
+                    odluka.PametnaTabla.Text = "Pametna tabla: " + predmet.PametnaTablaString;
+                    odluka.OperativniSistem.Text = "Operativni sistem: " + predmet.OperativniSistem;
+                    odluka.ShowDialog();
+
+                    if (odluka.potvrdaNovogUnosa)
+                        // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan predmet
+                        racunarskiCentar.Predmeti.Remove(OznakaPredmeta.Text.Trim());
+                    else {
+                        // vracamo logicki obrisan predmet da bude aktivan
+                        predmet.Obrisan = false;
+                        dodavanjePredmetaIzborStarogUnosa = true;
+                        // u smeru kom pripada ovaj predmet belezimo promenu
+                        racunarskiCentar.Smerovi[predmet.Smer].Predmeti.Add(predmet.Oznaka);
+                    }
+                }
                 else
                 {
                     MessageBox.Show("Predmet sa unetom oznakom već postoji!");
@@ -289,8 +333,6 @@ namespace HCI_Projekat
                     OznakaPredmeta.Focus();
                     return false;
                 }
-            }else if (!validacijaPodataka()) {
-                return false;
             }
             return true;
         }

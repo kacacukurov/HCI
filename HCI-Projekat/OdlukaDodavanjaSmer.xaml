@@ -1,0 +1,47 @@
+﻿<Window x:Class="HCI_Projekat.OdlukaDodavanjaSmer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HCI_Projekat"
+        mc:Ignorable="d"
+        Title="Dodavanje novog smera" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Height="400" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <Viewbox Grid.Row="0" Margin="10,5,10,5" HorizontalAlignment="Center">
+            <TextBlock HorizontalAlignment="Center">U bazi postoji smer sa istom oznakom. <LineBreak></LineBreak> Njegovi podaci su:</TextBlock>
+        </Viewbox>
+        <Viewbox Grid.Row="2" Margin="20,10,10,10" HorizontalAlignment="Left">
+            <TextBlock Name="Oznaka"></TextBlock>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Margin="20,10,10,10" HorizontalAlignment="Left">
+            <TextBlock Name="Naziv"></TextBlock>
+        </Viewbox>
+        <Viewbox Grid.Row="6" Margin="20,10,10,10" HorizontalAlignment="Left">
+            <TextBlock Name="DatumUvodjenja"></TextBlock>
+        </Viewbox>
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1.22*"/>
+            </Grid.ColumnDefinitions>
+            <Viewbox Grid.Row="0" Margin="10,5,10,5">
+                <Button Width="110" Content="Sačuvaj novi unos" Click="noviUnos" Name="potvrdiUnos" Background="DarkGreen" Foreground="White"/>
+            </Viewbox>
+            <Viewbox Grid.Column="1" Margin="20,5,20,5">
+                <Button Width="120" Content="Vrati postojeći smer" Click="stariUnos" Name="odbaciUnos" Background="DarkBlue" Foreground="White"/>
+            </Viewbox>
+        </Grid>
+    </Grid>
+</Window>

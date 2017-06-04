@@ -21,12 +21,14 @@ namespace HCI_Projekat
         private bool izmena;
         public int indeks;
         public bool inicijalizacija;
+        private bool dodavanjeUcioniceIzborStarogUnosa;
 
         public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena)
         {
             this.inicijalizacija = false;
             InitializeComponent();
             this.inicijalizacija = true;
+            this.dodavanjeUcioniceIzborStarogUnosa = false;
             novaUcionica = new Ucionica();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -183,7 +185,7 @@ namespace HCI_Projekat
                 izmenaUcionice();
                 return;
             }
-            if (validacijaNoveUcionice())
+            if (validacijaNoveUcionice() && !dodavanjeUcioniceIzborStarogUnosa)
             {
                 novaUcionica.Oznaka = oznakaUcionica.Text.Trim();
                 novaUcionica.Opis = opisUcionica.Text.Trim();
@@ -227,6 +229,13 @@ namespace HCI_Projekat
                 racunarskiCentar.DodajUcionicu(novaUcionica);
                 this.Close();
             }
+            else if (dodavanjeUcioniceIzborStarogUnosa)
+            {
+                // ukoliko postoji predmet (logicki neaktivan) sa istom oznakom
+                // kao sto je uneta, ponovo aktiviramo taj predmet (postaje logicki aktivan)
+                tabelaUcionica.Add(racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()]);
+                this.Close();
+            }
         }
 
         private bool validacijaNoveUcionice()
@@ -234,7 +243,29 @@ namespace HCI_Projekat
             if (racunarskiCentar.Ucionice.ContainsKey(oznakaUcionica.Text.Trim()))
             {
                 if (racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()].Obrisan)
-                    racunarskiCentar.Ucionice.Remove(oznakaUcionica.Text.Trim());
+                {
+                    dodavanjeUcioniceIzborStarogUnosa = false;
+                    Ucionica ucionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+
+                    // vec postoji ucionica sa tom oznakom, ali je logicki obrisana
+                    OdlukaDodavanjaUcionica odluka = new OdlukaDodavanjaUcionica();
+                    odluka.Oznaka.Text = "Oznaka: " + ucionica.Oznaka;
+                    odluka.BrojRadnihMesta.Text = "Broj radnih mesta: " + ucionica.BrojRadnihMesta;
+                    odluka.Projektor.Text = "Projektor: " + ucionica.ProjektorString;
+                    odluka.Tabla.Text = "Tabla: " + ucionica.TablaString;
+                    odluka.PametnaTabla.Text = "Pametna tabla: " + ucionica.PametnaTablaString;
+                    odluka.OperativniSistem.Text = "Operativni sistem: " + ucionica.OperativniSistem;
+                    odluka.ShowDialog();
+
+                    if (odluka.potvrdaNovogUnosa)
+                        // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojecu neaktivnu ucionicu
+                        racunarskiCentar.Ucionice.Remove(oznakaUcionica.Text.Trim());
+                    else {
+                        // vracamo logicki obrisanu ucionicu da bude aktivna
+                        ucionica.Obrisan = false;
+                        dodavanjeUcioniceIzborStarogUnosa = true;
+                    }
+                }    
                 else
                 {
                     MessageBox.Show("Učionica sa unetom oznakom već postoji!");

@@ -25,12 +25,14 @@ namespace HCI_Projekat
         private ObservableCollection<Smer> tabelaSmerova;
         private bool izmena;
         public int indeks;
+        private bool dodavanjeSmeraIzborStarogUnosa;
 
         public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena)
         {
             smer = new Smer();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
+            this.dodavanjeSmeraIzborStarogUnosa = false;
             tabelaSmerova = smerovi;
             InitializeComponent();
             if(!izmena)
@@ -74,7 +76,7 @@ namespace HCI_Projekat
                 izmeniSmer();
                 return;
             }
-            if(validacijaDodavanjaSmera())
+            if(validacijaDodavanjaSmera() && !dodavanjeSmeraIzborStarogUnosa)
             {
                 smer.Naziv = NazivSmera.Text.Trim();
                 smer.Oznaka = OznakaSmera.Text.Trim();
@@ -86,24 +88,51 @@ namespace HCI_Projekat
                 racunarskiCentar.DodajSmer(smer);
                 this.Close();
             }
+            else if (dodavanjeSmeraIzborStarogUnosa)
+            {
+                // ukoliko postoji smer (logicki neaktivan) sa istom oznakom
+                // kao sto je uneta, ponovo aktiviramo taj smer (postaje logicki aktivan)
+                tabelaSmerova.Add(racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()]);
+                this.Close();
+            }
         }
 
         private bool validacijaDodavanjaSmera()
         {
-            if (racunarskiCentar.Smerovi.ContainsKey(OznakaSmera.Text.Trim()))
+            if (!validacijaPraznihPolja())
             {
+                return false;
+            }
+            else if (racunarskiCentar.Smerovi.ContainsKey(OznakaSmera.Text.Trim()))
+            {
+
                 if (racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()].Obrisan)
-                    racunarskiCentar.Smerovi.Remove(OznakaSmera.Text.Trim());
+                {
+                    dodavanjeSmeraIzborStarogUnosa = false;
+                    Smer smer = racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()];
+
+                    // vec postoji smer sa tom oznakom, ali je logicki obrisan
+                    OdlukaDodavanjaSmer odluka = new OdlukaDodavanjaSmer();
+                    odluka.Oznaka.Text = "Oznaka: " + smer.Oznaka;
+                    odluka.Naziv.Text = "Naziv: " + smer.Naziv;
+                    odluka.DatumUvodjenja.Text = "Datum uvođenja: " + smer.Datum;
+                    odluka.ShowDialog();
+
+                    if (odluka.potvrdaNovogUnosa)
+                        // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan smer
+                        racunarskiCentar.Smerovi.Remove(OznakaSmera.Text.Trim());
+                    else {
+                        // vracamo logicki obrisan smer da bude aktivan
+                        smer.Obrisan = false;
+                        dodavanjeSmeraIzborStarogUnosa = true;
+                    }
+                }
                 else
                 {
                     MessageBox.Show("Smer sa unetom oznakom već postoji!");
                     OznakaSmera.Focus();
                     return false;
                 }
-            }
-            else if (!validacijaPraznihPolja())
-            {
-                return false;
             }
             return true;
         }

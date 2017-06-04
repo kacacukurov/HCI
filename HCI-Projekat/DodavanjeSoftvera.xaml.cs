@@ -14,12 +14,14 @@ namespace HCI_Projekat
         private ObservableCollection<Softver> tabelaSoftvera;
         private bool izmena;
         public int indeks;
+        private bool dodavanjeSoftveraIzborStarogUnosa;
 
         public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena)
         {
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
+            this.dodavanjeSoftveraIzborStarogUnosa = false;
             tabelaSoftvera = softveri;
             noviSoftver = new Softver();
             if(!izmena)
@@ -90,7 +92,7 @@ namespace HCI_Projekat
                 izmeniSoftver();
                 return;
             }
-            if (validacijaNovogSoftvera())
+            if (validacijaNovogSoftvera() && !dodavanjeSoftveraIzborStarogUnosa)
             {
                 noviSoftver.Oznaka = oznakaSoftver.Text.Trim();
                 noviSoftver.Naziv = nazivSoftver.Text.Trim();
@@ -110,6 +112,13 @@ namespace HCI_Projekat
                 racunarskiCentar.DodajSoftver(noviSoftver);
                 this.Close();
             }
+            else if (dodavanjeSoftveraIzborStarogUnosa)
+            {
+                // ukoliko postoji softver (logicki neaktivan) sa istom oznakom
+                // kao sto je uneta, ponovo aktiviramo taj softver (postaje logicki aktivan)
+                tabelaSoftvera.Add(racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()]);
+                this.Close();
+            }
         }
 
         private bool validacijaNovogSoftvera()
@@ -117,10 +126,33 @@ namespace HCI_Projekat
             if (racunarskiCentar.Softveri.ContainsKey(oznakaSoftver.Text.Trim()))
             {
                 if (racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()].Obrisan)
-                    racunarskiCentar.Softveri.Remove(oznakaSoftver.Text.Trim());
+                {
+                    dodavanjeSoftveraIzborStarogUnosa = false;
+                    Softver softver = racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()];
+
+                    // vec postoji softver sa tom oznakom, ali je logicki obrisan
+                    OdlukaDodavanjaSoftver odluka = new OdlukaDodavanjaSoftver();
+                    odluka.Oznaka.Text = "Oznaka: " + softver.Oznaka;
+                    odluka.Naziv.Text = "Naziv: " + softver.Naziv;
+                    odluka.OperativniSistem.Text = "Operativni sistem: " + softver.OperativniSistem;
+                    odluka.Proizvodjac.Text = "Proizvođač: " + softver.Proizvodjac;
+                    odluka.GodinaIzdavanja.Text = "Godina izdavanja: " + softver.GodIzdavanja.ToString();
+                    odluka.Sajt.Text = "Sajt: " + softver.Sajt;
+                    odluka.Cena.Text = "Cena: " + softver.Cena.ToString();
+                    odluka.ShowDialog();
+
+                    if (odluka.potvrdaNovogUnosa)
+                        // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan softver
+                        racunarskiCentar.Softveri.Remove(oznakaSoftver.Text.Trim());
+                    else {
+                        // vracamo logicki obrisan softver da bude aktivan
+                        softver.Obrisan = false;
+                        dodavanjeSoftveraIzborStarogUnosa = true;
+                    }
+                }
                 else
                 {
-                    MessageBox.Show("Softver sa unetom oznakom vec postoji!");
+                    MessageBox.Show("Softver sa unetom oznakom već postoji!");
                     vratiNaKorak1();
                     UpdateLayout();
                     oznakaSoftver.Focus();
@@ -255,7 +287,7 @@ namespace HCI_Projekat
                 softverIzmena.Proizvodjac = proizvodjacSoftver.Text.Trim();
                 softverIzmena.Sajt = sajtSoftver.Text.Trim();
 
-                // DODATI AZURIRANJE STRINGA U UCIONICI< PREDMETU UKOLIKO SE PROMENIO NAZIV, OZNAKA ILI OPIS SOFTVERA
+                // DODATI AZURIRANJE STRINGA U UCIONICI/PREDMETU UKOLIKO SE PROMENIO NAZIV, OZNAKA ILI OPIS SOFTVERA
                 /*
                 if(promenilaSeOznaka || promenioSeNaziv || promenioSeOpis)
                 {

@@ -177,6 +177,9 @@ namespace HCI_Projekat
             if (racunarskiCentar.Smerovi.Count - stariBrojSmerova == 1)
                 // uspesno je dodat novi smer (logicki je aktivan)
                 brojAktivnihSmerova++;
+            else
+                // mozda je izvrseno aktiviranje nekog logicki neaktivnog smera, pa je sada postao aktivan
+                brojAktivnihSmerova = brojLogickiAktivnihSmerova();
         }
 
         private void dodavanjeSoftveraClick(object sender, RoutedEventArgs e)
@@ -190,6 +193,9 @@ namespace HCI_Projekat
             if (racunarskiCentar.Softveri.Count - stariBrojSoftvera == 1)
                 // uspesno je dodat novi softver (logicki je aktivan)
                 brojAktivnihSoftvera++;
+            else
+                // mozda je izvrseno aktiviranje nekog logicki neaktivnog softvera, pa je sada postao aktivan
+                brojAktivnihSoftvera = brojLogickiAktivnihSoftvera();
         }
 
         private void pregledKalendaraClick(object sender, RoutedEventArgs e)

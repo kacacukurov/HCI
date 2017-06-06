@@ -13,7 +13,7 @@ var oldEnd;
 
 
 document.addEventListener('DOMContentLoaded', function () {
-   
+
     $('#external-events .fc-event').each(function () {
         // store data so the calendar knows to render an event upon drop
         $(this).data('event', {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         selectable: true,
         droppable: true,
         eventOverlap: false,
-        eventDurationEditable : false,
+        eventDurationEditable: false,
         minTime: "07:00:00",
         maxTime: "22:00:00",
         eventConstraint: {
@@ -91,12 +91,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (ucioniceLista[i].oznaka == oznakaUcionice)
                         odabranaUcionica = ucioniceLista[i];    //nadjemo ucionicu u koju ju uradio drop
                 }
-                
-                if (predmet.tabla) {
-                    if (!odabranaUcionica.tabla) {
-                        $('#calendar').fullCalendar('removeEvents', event._id);
-                        cefCustomObject.alert("Ne mozete dodati predmet u ovu ucionicu, nema tablu!");
-                    }
+
+                if (predmet.tabla && !odabranaUcionica.tabla) {
+                    $('#calendar').fullCalendar('removeEvents', event._id);
+                    cefCustomObject.alert("Ne mozete dodati predmet u ovu ucionicu, nema tablu!");
                 }
                 else if (predmet.pametnaTabla && !odabranaUcionica.pametnaTabla) {
                     $('#calendar').fullCalendar('removeEvents', event._id);
@@ -110,8 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     $('#calendar').fullCalendar('removeEvents', event._id);
                     cefCustomObject.alert("Ne mozete dodati predmet, ucionica nema dovoljno mesta!");
                 }
-                else
-                {
+                else {
                     var brInstaliranih = 0;
                     for (var i = 0; i < predmet.softveri.length; i++) {
                         for (var j = 0; j < odabranaUcionica.softveri.length; j++) {
@@ -120,9 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                     if (brInstaliranih == predmet.softveri.length) {
-                        predmetiLista[indeks].termini = parseInt(predmetiLista[indeks].termini) - 1;
-                        posaljiObjekat(event, true);
-                        $('#termini').text(predmet.termini);
+                        posaljiObjekat(event, true, indeks);
                     } else {
                         $('#calendar').fullCalendar('removeEvents', event._id);
                         cefCustomObject.alert("Ne mozete dodati predmet, ucionica nema odgovarajuće softvere!");
@@ -192,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
                 if (brInstaliranih == predmet.softveri.length) {
-                    posaljiObjekat(event, false);
+                    posaljiObjekat(event, false, 0);
                 } else {
                     $('#calendar').fullCalendar('removeEvents', event._id);
                     event.resourceId = oldResourceId;
@@ -229,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cefCustomObject.obrisiPolje(event._id, event.title.split('-')[0]);
                 var select = document.getElementById("predmeti");
                 var oznakaPredmeta = select.options[select.selectedIndex].id;
-                if(event.title.split('-')[0] == oznakaPredmeta)
+                if (event.title.split('-')[0] == oznakaPredmeta)
                     $('#termini').text(predmet.termini);
             }
         }, eventRender: function (event, element) {
@@ -240,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     leave: true
                 },
                 content: event.description
-                
+
             });
             if (izabraniPredmet != "") {
                 if (event.title.split('-')[0] != izabraniPredmet)   //postavimo da imaju background ukoliko nisu filtrirani
@@ -262,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function ucitajUcionice(ucioniceString) {
     ucioniceLista = JSON.parse(ucioniceString).ucionice;
-    var res = $('#calendar').fullCalendar('getResources'); 
+    var res = $('#calendar').fullCalendar('getResources');
     for (var j = 0; j < res.length; j++) {       //brisem postojece ucionice u kalendaru
         $('#calendar').fullCalendar('removeResource', res[j]);
     }
@@ -386,7 +381,7 @@ function predmetPromenjen() {   //kada se odabere novi predmet u comboboxu
     }
 }
 
-function posaljiObjekat(event, dodat) { //poziva se kada se doda novo polje ili se starom promeni mesto
+function posaljiObjekat(event, dodat, indeks) { //poziva se kada se doda novo polje ili se starom promeni mesto
     var predmet;
     for (var i = 0; i < predmetiLista.length; i++) {
         if (predmetiLista[i].oznaka == event.title.split('-')[0])
@@ -434,11 +429,13 @@ function posaljiObjekat(event, dodat) { //poziva se kada se doda novo polje ili 
 
         drugi.description = 'Predmet: ' + nazivP + ' \nSmer: ' + nazivS;
         if (!preklapaSe) {
+            predmetiLista[indeks].termini = parseInt(predmetiLista[indeks].termini) - 1;
+            $('#termini').text(predmet.termini);
             $('#calendar').fullCalendar('renderEvent', drugi, true);
             cefCustomObject.getEvent(id, title, start, end, day, ucionica, dodat);
         } else
             cefCustomObject.alert("Novi predmet se preklapa sa nekim postojecim zbog duzine trajanja termina!");
-        
+
     } else {
         end = event.end.format('YYYY-MM-DD HH:mm:ss');
         cefCustomObject.getEvent(id, title, start, end, day, ucionica, dodat);
@@ -453,17 +450,17 @@ function prikaziPoDanu() {  //kada korisnik odabere prikaz po samo jednom danu
         allEvents[i].rendering = "";    //svima skidam background, jer se ponovo postavlja u redner-u
     }
     var dan = $('#podaciFiltera').val();        //dobavimo dan
-    if(dan == 'Ponedeljak')
+    if (dan == 'Ponedeljak')
         $('#calendar').fullCalendar('changeView', 'agendaDay', '2016-02-15');
-    else if(dan == 'Utorak')
+    else if (dan == 'Utorak')
         $('#calendar').fullCalendar('changeView', 'agendaDay', '2016-02-16');
-    else if(dan == 'Sreda')
+    else if (dan == 'Sreda')
         $('#calendar').fullCalendar('changeView', 'agendaDay', '2016-02-17');
-    else if(dan == 'Četvrtak')
+    else if (dan == 'Četvrtak')
         $('#calendar').fullCalendar('changeView', 'agendaDay', '2016-02-18');
-    else if(dan == 'Petak')
+    else if (dan == 'Petak')
         $('#calendar').fullCalendar('changeView', 'agendaDay', '2016-02-19');
-    else if(dan == 'Subota')
+    else if (dan == 'Subota')
         $('#calendar').fullCalendar('changeView', 'agendaDay', '2016-02-20');
 }
 
@@ -577,7 +574,7 @@ function vrstaFilteraPromenjena() {     //kada se promeni vrsta filtera, da se m
 
     } else if (vrstaFiltera == "Smer") {
         for (var i = 0; i < smeroviLista.length; i++) {
-            if(i + 1 != smeroviLista.length)
+            if (i + 1 != smeroviLista.length)
                 $('#podaciFiltera').append('<option>' + smeroviLista[i] + '</option>');
         }
     } else if (vrstaFiltera == "Predmet") {

@@ -39,23 +39,8 @@ namespace HCI_Projekat
             this.dodavanjeSmeraIzborStarogUnosa = false;
             tabelaSmerova = smerovi;
             InitializeComponent();
-            if(!izmena)
+            if (!izmena)
                 OznakaSmera.Focus();
-        }
-
-        private void cutClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Cut");
-        }
-
-        private void copyClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Copy");
-        }
-
-        private void pasteClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Paste");
         }
 
         private void undoClick(object sender, RoutedEventArgs e)
@@ -71,6 +56,20 @@ namespace HCI_Projekat
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void resetujBojuOkvira(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox t = (TextBox)sender;
+                t.ClearValue(Border.BorderBrushProperty);
+            }
+            catch
+            {
+                DatePicker d = (DatePicker)sender;
+                d.ClearValue(Border.BorderBrushProperty);
+            }
         }
 
         private void UnetaOznakaSmera(object sender, TextChangedEventArgs e)
@@ -93,26 +92,6 @@ namespace HCI_Projekat
             unosPrviPut = false;
         }
 
-        private void proveraPraznogPolja(object sender, EventArgs e)
-        {
-            try
-            {
-                TextBox t = (TextBox)sender;
-                if (t.Text.Trim().Equals(string.Empty))
-                    t.BorderBrush = System.Windows.Media.Brushes.Red;
-                else
-                    t.ClearValue(Border.BorderBrushProperty);
-            }
-            catch
-            {
-                DatePicker d = (DatePicker)sender;
-                if(d.SelectedDate.ToString().Equals(string.Empty))
-                    d.BorderBrush = System.Windows.Media.Brushes.Red;
-                else
-                    d.ClearValue(Border.BorderBrushProperty);
-            }
-        }
-
         private void finishClick(object sender, RoutedEventArgs e)
         {
             if (izmena)
@@ -120,7 +99,7 @@ namespace HCI_Projekat
                 izmeniSmer();
                 return;
             }
-            if(validacijaDodavanjaSmera() && !dodavanjeSmeraIzborStarogUnosa)
+            if (validacijaDodavanjaSmera() && !dodavanjeSmeraIzborStarogUnosa)
             {
                 smer.Naziv = NazivSmera.Text.Trim();
                 smer.Oznaka = OznakaSmera.Text.Trim();
@@ -210,7 +189,6 @@ namespace HCI_Projekat
                 {
                     racunarskiCentar.Smerovi.Remove(staraOznaka);
                     racunarskiCentar.Smerovi.Add(smerIzmena.Oznaka, smerIzmena);
-                    promeniOznakuSmeraUPoljima(staraOznaka, OznakaSmera.Text.Trim());
                 }
 
                 tabelaSmerova[indeks] = smerIzmena;
@@ -222,6 +200,17 @@ namespace HCI_Projekat
         {
             if (NazivSmera.Text.Trim() == "" || OznakaSmera.Text.Trim() == "" || OpisSmera.Text.Trim() == "" || DatumUvodjenja.Text.Trim() == "")
             {
+                //povera paznih polja kako bi se uokvirila crvenim
+                if (OznakaSmera.Text.Trim() == "")
+                    OznakaSmera.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (NazivSmera.Text.Trim() == "")
+                    NazivSmera.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (OpisSmera.Text.Trim() == "")
+                    OpisSmera.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (DatumUvodjenja.Text.Trim() == "")
+                    DatumUvodjenja.BorderBrush = System.Windows.Media.Brushes.Red;
+
+
                 MessageBox.Show("Niste popunili sva polja!");
                 if (OznakaSmera.Text.Trim() == "")
                     OznakaSmera.Focus();
@@ -246,27 +235,18 @@ namespace HCI_Projekat
 
         private void otvori(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Tab)
+            if (e.Key == Key.Tab)
             {
                 if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
                     DatumUvodjenja.IsDropDownOpen = true;
             }
-                
+
         }
 
         private void otvoriUnazad(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Tab && (Keyboard.Modifiers & ( ModifierKeys.Shift)) == ModifierKeys.Shift)
+            if (e.Key == Key.Tab && (Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift)
                 DatumUvodjenja.IsDropDownOpen = true;
-        }
-
-        private void promeniOznakuSmeraUPoljima(string staraOznaka, string novaOznaka)
-        {
-            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
-            {
-                if (polje.NazivPolja.Split('-')[1].Trim() == staraOznaka)    //idem kroz sva polja i trazim ucionice
-                    polje.NazivPolja = polje.NazivPolja.Split('-')[0].Trim() + '-' + novaOznaka;
-            }
         }
     }
 }

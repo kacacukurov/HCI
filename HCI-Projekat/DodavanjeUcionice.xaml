@@ -18,11 +18,16 @@
         <RoutedUICommand x:Key="prethodniDeo" Text="back"></RoutedUICommand>
         <RoutedUICommand x:Key="undo" Text="undo"></RoutedUICommand>
         <RoutedUICommand x:Key="redo" Text="redo"></RoutedUICommand>
-        <RoutedUICommand x:Key="cut" Text="cut"></RoutedUICommand>
-        <RoutedUICommand x:Key="copy" Text="copy"></RoutedUICommand>
-        <RoutedUICommand x:Key="paste" Text="paste"></RoutedUICommand>
         <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}">
             <Setter Property="Focusable" Value="False"/>
+        </Style>
+        <ContextMenu x:Key="TextBoxContextMenu" Background="White">
+            <MenuItem Command="ApplicationCommands.Copy" />
+            <MenuItem Command="ApplicationCommands.Cut" />
+            <MenuItem Command="ApplicationCommands.Paste" />
+        </ContextMenu>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
         </Style>
     </Window.Resources>
 
@@ -35,9 +40,6 @@
         <CommandBinding Command="{StaticResource prethodniDeo}" Executed="backStep"></CommandBinding>
         <CommandBinding Command="{StaticResource undo}" Executed="undoClick"></CommandBinding>
         <CommandBinding Command="{StaticResource redo}" Executed="redoClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource cut}" Executed="cutClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource copy}" Executed="copyClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource paste}" Executed="pasteClick"></CommandBinding>
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -49,9 +51,9 @@
         <KeyBinding Key="B" Modifiers="Ctrl" Command="{StaticResource prethodniDeo}"></KeyBinding>
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
         <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
-        <KeyBinding Key="X" Modifiers="Ctrl" Command="{StaticResource cut}"></KeyBinding>
-        <KeyBinding Key="C" Modifiers="Ctrl" Command="{StaticResource copy}"></KeyBinding>
-        <KeyBinding Key="V" Modifiers="Ctrl" Command="{StaticResource paste}"></KeyBinding>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
     </Window.InputBindings>
 
     <Grid>
@@ -95,21 +97,21 @@
 
                         <Separator></Separator>
 
-                        <MenuItem Click="cutClick" Header="_Cut" InputGestureText="Ctrl+X">
+                        <MenuItem Header="_Cut" InputGestureText="Ctrl+X" Command="ApplicationCommands.Cut">
                             <MenuItem.InputBindings>
-                                <KeyBinding Key="X" Modifiers="Ctrl" Command="{StaticResource cut}"></KeyBinding>
+                                <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
-                        <MenuItem Click="copyClick" Header="_Copy" InputGestureText="Ctrl+C">
+                        <MenuItem Header="_Copy" InputGestureText="Ctrl+C" Command="ApplicationCommands.Copy">
                             <MenuItem.InputBindings>
-                                <KeyBinding Key="C" Modifiers="Ctrl" Command="{StaticResource copy}"></KeyBinding>
+                                <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
-                        <MenuItem Click="pasteClick" Header="_Paste" InputGestureText="Ctrl+V">
+                        <MenuItem Header="_Paste" InputGestureText="Ctrl+V" Command="ApplicationCommands.Paste">
                             <MenuItem.InputBindings>
-                                <KeyBinding Key="V" Modifiers="Ctrl" Command="{StaticResource paste}"></KeyBinding>
+                                <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
@@ -145,19 +147,19 @@
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem HorizontalAlignment="Left" Name="Cut" Width="27" Click="cutClick">
+                    <MenuItem HorizontalAlignment="Left" Name="Cut" Width="27" Command="ApplicationCommands.Cut">
                         <MenuItem.Icon>
                             <Image Source="picture/cut.png" Stretch="UniformToFill" ToolTip="Cut"/>
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem HorizontalAlignment="Left" Name="Copy" Width="27" Click="copyClick">
+                    <MenuItem HorizontalAlignment="Left" Name="Copy" Width="27" Command="ApplicationCommands.Copy">
                         <MenuItem.Icon>
                             <Image Source="picture/copy.png" Stretch="UniformToFill" ToolTip="Copy"/>
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem HorizontalAlignment="Left" Name="Paste" Width="27" Click="pasteClick">
+                    <MenuItem HorizontalAlignment="Left" Name="Paste" Width="27" Command="ApplicationCommands.Paste">
                         <MenuItem.Icon>
                             <Image Source="picture/paste.png" Stretch="UniformToFill" ToolTip="Paste"/>
                         </MenuItem.Icon>
@@ -227,7 +229,7 @@
                                         <RowDefinition Height="1.2*"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
-                                    <TextBox Grid.Column="0" Grid.Row="1" Name="oznakaUcionica" TextChanged="UnetaOznakaUcionice" LostFocus="proveraPraznogPolja"/>
+                                    <TextBox Grid.Column="0" Grid.Row="1" Name="oznakaUcionica" LostFocus="resetujBojuOkvira" TextChanged="UnetaOznakaUcionice" ContextMenu="{StaticResource TextBoxContextMenu}"/>
                                     <TextBlock Grid.Column="2" Grid.Row="1" Name="GreskaOznakaUcionice" FontSize="12" VerticalAlignment="Bottom" Foreground="Red"/>
                                 </Grid>
                                 <Grid Grid.Row="1" Grid.Column="0">
@@ -256,7 +258,7 @@
                                         <RowDefinition Height="7*"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
-                                    <TextBox Grid.Row="1" Grid.Column="0" Name="opisUcionica" LostFocus="proveraPraznogPolja"/>
+                                    <TextBox Grid.Column="0" Name="opisUcionica" LostFocus="resetujBojuOkvira" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,-3,0,10" Grid.RowSpan="2" ContextMenu="{StaticResource TextBoxContextMenu}"/>
                                 </Grid>
                             </Grid>
                             <Grid Grid.Column="1" Grid.Row="1">

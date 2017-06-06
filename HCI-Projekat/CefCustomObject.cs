@@ -25,7 +25,7 @@ namespace HCI_Projekat
 
         public void posaljiPodatke()
         {   //ucionice
-            int i = 0; 
+            int i = 0;
             string ucionice = "{\"ucionice\":[";
             foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
             {
@@ -35,14 +35,14 @@ namespace HCI_Projekat
                           u.PrisustvoPametneTable + "\",\"projektor\":\"" + u.PrisustvoProjektora + "\",\"brojMesta\":\"" + u.BrojRadnihMesta +
                           "\",\"os\":\"" + u.OperativniSistem + "\",\"softveri\":[";
                     int soft = 0;
-                    foreach(string s in u.InstaliraniSoftveri)
+                    foreach (string s in u.InstaliraniSoftveri)
                     {
                         ucionice += "{\"oznaka\":\"" + s + "\"},";
                         soft++;
                     }
-                    if(soft != 0)
+                    if (soft != 0)
                     {
-                        ucionice = ucionice.Substring(0, ucionice.Length-1);
+                        ucionice = ucionice.Substring(0, ucionice.Length - 1);
                     }
                     ucionice += "]},";
 
@@ -68,10 +68,10 @@ namespace HCI_Projekat
                     smerovi += s.Oznaka + '|';
                     k++;
                 }
-                
+
             }
             //predmeti
-            nazivi = nazivi.Substring(0, nazivi.Length-1);
+            nazivi = nazivi.Substring(0, nazivi.Length - 1);
             nazivi += "],\"predmeti\":[";
             List<Predmet> neobrisaniPredmeti = new List<Predmet>();
             foreach (Predmet p in racunarskiCentar.Predmeti.Values)
@@ -96,7 +96,7 @@ namespace HCI_Projekat
             {
                 foreach (Predmet p in neobrisaniPredmeti)
                 {
-                    if(p.Oznaka == pr)
+                    if (p.Oznaka == pr)
                     {
                         predmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini +
                                 "\",\"tabla\":\"" + p.NeophodnaTabla + "\",\"pametnaTabla\":\"" + p.NeophodnaPametnaTabla + "\",\"projektor\":\"" +
@@ -106,7 +106,7 @@ namespace HCI_Projekat
 
                 }
             }
-            if(b !=0)
+            if (b != 0)
                 predmeti = predmeti.Substring(0, predmeti.Length - 1);
             predmeti += "]}";
 
@@ -129,7 +129,7 @@ namespace HCI_Projekat
                 sviPredmeti += "]},";
                 l++;
             }
-            
+
             if (l != 0)
                 sviPredmeti = sviPredmeti.Substring(0, sviPredmeti.Length - 1);
             sviPredmeti += "]}";
@@ -152,7 +152,7 @@ namespace HCI_Projekat
             int i = 0;
             foreach (KalendarPolje kal in racunarskiCentar.PoljaKalendara.Values)
             {
-                polja += "{\"id\":\"" + kal.Id + "\",\"pocetak\":\"" + kal.Pocetak + "\",\"kraj\":\"" + kal.Kraj + "\",\"naziv\":\"" + 
+                polja += "{\"id\":\"" + kal.Id + "\",\"pocetak\":\"" + kal.Pocetak + "\",\"kraj\":\"" + kal.Kraj + "\",\"naziv\":\"" +
                         kal.NazivPolja + "\",\"dan\":\"" + kal.Dan + "\",\"ucionica\":\"" + kal.Ucionica + "\"},";
                 i++;
             }
@@ -176,10 +176,11 @@ namespace HCI_Projekat
 
         public void getEvent(string id, string naziv, string pocetak, string kraj, string dan, string ucionica, bool dodat)
         {
-            if(!racunarskiCentar.PoljaKalendara.ContainsKey(id))
+            if (!racunarskiCentar.PoljaKalendara.ContainsKey(id))
             {
                 racunarskiCentar.PoljaKalendara.Add(id, new KalendarPolje(id, naziv, pocetak, kraj, dan, ucionica));
-            }else
+            }
+            else
             {
                 KalendarPolje polje = racunarskiCentar.PoljaKalendara[id];
                 polje.Pocetak = pocetak;
@@ -206,12 +207,12 @@ namespace HCI_Projekat
             string predmeti = "{\"predmeti\":[";
             Smer odabraniSmer = null;
 
-            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            foreach (Smer s in racunarskiCentar.Smerovi.Values)
             {
                 if (!s.Obrisan && (s.Oznaka == smer))
                     odabraniSmer = s;
             }
-            if(odabraniSmer != null)
+            if (odabraniSmer != null)
             {
                 foreach (string pr in odabraniSmer.Predmeti)
                 {
@@ -227,7 +228,7 @@ namespace HCI_Projekat
                     }
                 }
             }
-            if(odabraniSmer.Predmeti.Count != 0)
+            if (odabraniSmer.Predmeti.Count != 0)
                 predmeti = predmeti.Substring(0, predmeti.Length - 1);
             predmeti += "]}";
             if (_instanceBrowser.CanExecuteJavascriptInMainFrame)

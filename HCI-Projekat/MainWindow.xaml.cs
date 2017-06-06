@@ -54,7 +54,7 @@ namespace HCI_Projekat
             detaljanPrikazPredmet.Visibility = Visibility.Collapsed;
 
             softveriKolekcija = new ObservableCollection<Softver>();
-            foreach(Softver s in racunarskiCentar.Softveri.Values)
+            foreach (Softver s in racunarskiCentar.Softveri.Values)
             {
                 if (!s.Obrisan)
                     softveriKolekcija.Add(s);
@@ -64,9 +64,9 @@ namespace HCI_Projekat
             tabelaSoftvera.IsReadOnly = true;
             tabelaSoftvera.UnselectAll();
             detaljanPrikazSoftver.Visibility = Visibility.Hidden;
-            
+
             smeroviKolekcija = new ObservableCollection<Smer>();
-            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            foreach (Smer s in racunarskiCentar.Smerovi.Values)
             {
                 if (!s.Obrisan)
                     smeroviKolekcija.Add(s);
@@ -78,7 +78,7 @@ namespace HCI_Projekat
             detaljanPrikazSmer.Visibility = Visibility.Hidden;
 
             ucioniceKolekcija = new ObservableCollection<Ucionica>();
-            foreach(Ucionica u in racunarskiCentar.Ucionice.Values)
+            foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
             {
                 if (!u.Obrisan)
                     ucioniceKolekcija.Add(u);
@@ -108,14 +108,14 @@ namespace HCI_Projekat
 
             chromeBrowser = new ChromiumWebBrowser();
             chromeBrowser.Address = page;
-            
+
             BrowserGrid.Children.Add(chromeBrowser);
         }
 
         private int brojLogickiAktivnihSoftvera()
         {
             int brojLogickiAktivnih = 0;
-            foreach(Softver s in racunarskiCentar.Softveri.Values)
+            foreach (Softver s in racunarskiCentar.Softveri.Values)
             {
                 if (!s.Obrisan)
                     brojLogickiAktivnih++;
@@ -126,7 +126,7 @@ namespace HCI_Projekat
         private int brojLogickiAktivnihSmerova()
         {
             int brojLogickiAktivnihSmerova = 0;
-            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            foreach (Smer s in racunarskiCentar.Smerovi.Values)
             {
                 if (!s.Obrisan)
                     brojLogickiAktivnihSmerova++;
@@ -200,31 +200,31 @@ namespace HCI_Projekat
 
         private void pregledKalendaraClick(object sender, RoutedEventArgs e)
         {
-            if(tabControl.SelectedIndex != 0)
+            if (tabControl.SelectedIndex != 0)
                 tabControl.SelectedIndex = 0;
         }
 
         private void pregledUcionicaClick(object sender, RoutedEventArgs e)
         {
-            if(tabControl.SelectedIndex != 1)
+            if (tabControl.SelectedIndex != 1)
                 tabControl.SelectedIndex = 1;
         }
 
         private void pregledPredmetaClick(object sender, RoutedEventArgs e)
         {
-            if(tabControl.SelectedIndex != 2)
+            if (tabControl.SelectedIndex != 2)
                 tabControl.SelectedIndex = 2;
         }
 
         private void pregledSmerovaClick(object sender, RoutedEventArgs e)
         {
-            if(tabControl.SelectedIndex != 3)
+            if (tabControl.SelectedIndex != 3)
                 tabControl.SelectedIndex = 3;
         }
 
         private void pregledSoftveraClick(object sender, RoutedEventArgs e)
         {
-            if(tabControl.SelectedIndex != 4)
+            if (tabControl.SelectedIndex != 4)
                 tabControl.SelectedIndex = 4;
         }
 
@@ -505,7 +505,7 @@ namespace HCI_Projekat
                     || s.GodIzdavanja.ToString().Contains(parametar) || s.Cena.ToString().Contains(parametar)
                     || s.Sajt.ToUpper().Contains(parametar.ToUpper()) || s.Opis.ToUpper().Contains(parametar.ToUpper()));
                 };
-             }
+            }
         }
 
         private void filtrirajSoftver(object sender, TextChangedEventArgs e)
@@ -593,14 +593,14 @@ namespace HCI_Projekat
         private void obrisiElement(object sender, RoutedEventArgs e)
         {
             var brisanjeProzor = new PotvrdaBrisanja();
-           
+
             // trenutno smo u tabu za ucionice
             if (tabControl.SelectedIndex == 1)
             {
                 if (tabelaUcionica.SelectedItems.Count > 1)
                     brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaUcionica.SelectedItems.Count + " izabrane ucionice?";
                 brisanjeProzor.ShowDialog();
-                if(brisanjeProzor.daKlik)
+                if (brisanjeProzor.daKlik)
                     obrisiUcionicuClick(sender, e);
             }
             // trenutno smo u tabu za predmete
@@ -609,7 +609,7 @@ namespace HCI_Projekat
                 if (tabelaPredmeta.SelectedItems.Count > 1)
                     brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaPredmeta.SelectedItems.Count + " izabrana predmeta?";
                 brisanjeProzor.ShowDialog();
-                if(brisanjeProzor.daKlik)
+                if (brisanjeProzor.daKlik)
                     obrisiPredmetClick(sender, e);
             }
             // trenutno smo u tabu za smerove
@@ -618,7 +618,7 @@ namespace HCI_Projekat
                 if (tabelaSmerova.SelectedItems.Count > 1)
                     brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSmerova.SelectedItems.Count + " izabrana smera?";
                 brisanjeProzor.ShowDialog();
-                if(brisanjeProzor.daKlik)
+                if (brisanjeProzor.daKlik)
                     obrisiSmerClick(sender, e);
             }
             // trenutno smo u tabu za softvere
@@ -627,7 +627,7 @@ namespace HCI_Projekat
                 if (tabelaSoftvera.SelectedItems.Count > 1)
                     brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSoftvera.SelectedItems.Count + " izabrana softvera?";
                 brisanjeProzor.ShowDialog();
-                if(brisanjeProzor.daKlik)
+                if (brisanjeProzor.daKlik)
                     obrisiSoftverClick(sender, e);
             }
         }
@@ -689,7 +689,7 @@ namespace HCI_Projekat
         private void izmeniSmeroveClick(object sender, RoutedEventArgs e)
         {
             var izmenaSmerova = new IzmenaSmerova();
-            if(izmenaSmerova.potvrdaIzmena)
+            if (izmenaSmerova.potvrdaIzmena)
             {
 
             }
@@ -739,8 +739,8 @@ namespace HCI_Projekat
                     else
                         smer.UPredmetu = false;
                 }
-                
-                for(int i = 0; i < predmetWindow.softverTabela.Items.Count; i++) // isto i za softvere
+
+                for (int i = 0; i < predmetWindow.softverTabela.Items.Count; i++) // isto i za softvere
                 {
                     Softver softver = (Softver)predmetWindow.softverTabela.Items[i];
                     if (pre.Softveri.IndexOf(softver.Oznaka) != -1)
@@ -857,7 +857,7 @@ namespace HCI_Projekat
                     TextBlock content = tabelaPredmeta.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaPredmeta = content.Text;
 
-                    if(racunarskiCentar.Predmeti[oznakaPredmeta].BrTermina != racunarskiCentar.Predmeti[oznakaPredmeta].PreostaliTermini)
+                    if (racunarskiCentar.Predmeti[oznakaPredmeta].BrTermina != racunarskiCentar.Predmeti[oznakaPredmeta].PreostaliTermini)
                     {
                         MessageBox.Show("Ne možete obrisati predmet, jer je već raspoređen u kalendaru!");
                         return;
@@ -937,10 +937,10 @@ namespace HCI_Projekat
                     DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaUcionice = content.Text;
-                    
-                    foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
                     {
-                        if(polje.Ucionica == oznakaUcionice)
+                        if (polje.Ucionica == oznakaUcionice)
                         {
                             MessageBox.Show("Ne možete da obrišete učionicu jer se neki predmeti održavaju u njoj!");
                             return;
@@ -960,9 +960,11 @@ namespace HCI_Projekat
 
         public void obrisiSmerClick(object sender, RoutedEventArgs e)
         {
-            if (tabelaSmerova.SelectedIndex != -1) {
+            if (tabelaSmerova.SelectedIndex != -1)
+            {
                 List<Smer> removedItems = new List<Smer>();
-                foreach (object o in tabelaSmerova.SelectedItems) {
+                foreach (object o in tabelaSmerova.SelectedItems)
+                {
                     int index = tabelaSmerova.Items.IndexOf(o);
                     DataGridRow selektovaniRed = (DataGridRow)tabelaSmerova.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
@@ -971,7 +973,7 @@ namespace HCI_Projekat
                     //provera da li se nalazi u nekom predmetu, ako se nalazi, brise se i taj predmet kom pripada
                     if (racunarskiCentar.Smerovi[oznakaSmera].Predmeti.Count > 0)
                     {
-                        foreach(string predmetOznaka in racunarskiCentar.Smerovi[oznakaSmera].Predmeti)
+                        foreach (string predmetOznaka in racunarskiCentar.Smerovi[oznakaSmera].Predmeti)
                         {
                             racunarskiCentar.Predmeti[predmetOznaka].Obrisan = true;
                             predmetiKolekcija.Remove(racunarskiCentar.Predmeti[predmetOznaka]);
@@ -981,7 +983,7 @@ namespace HCI_Projekat
                     removedItems.Add(racunarskiCentar.Smerovi[oznakaSmera]);
                     racunarskiCentar.Smerovi[oznakaSmera].Obrisan = true;
                     // za svako logicko brisanje smera se smanjuje broj logicki aktivnih
-                    brojAktivnihSmerova--; 
+                    brojAktivnihSmerova--;
                 }
 
                 foreach (Smer smer in removedItems)
@@ -993,38 +995,26 @@ namespace HCI_Projekat
 
         private void tabelaSoftveraIzgubilaFokus(object sender, EventArgs e)
         {
-            detaljanPrikazSoftver.Visibility = Visibility.Hidden;
             MenuItemIzmeni.IsEnabled = false;
             MenuItemObrisi.IsEnabled = false;
-            MenuItemIzborFiltera.IsEnabled = false;
-            MenuItemPretraga.IsEnabled = false;
         }
 
         private void tabelaSmerovaIzgubilaFokus(object sender, EventArgs e)
         {
-            detaljanPrikazSmer.Visibility = Visibility.Hidden;
             MenuItemIzmeni.IsEnabled = false;
             MenuItemObrisi.IsEnabled = false;
-            MenuItemIzborFiltera.IsEnabled = false;
-            MenuItemPretraga.IsEnabled = false;
         }
 
         private void tabelaPredmetaIzgubilaFokus(object sender, EventArgs e)
         {
-            detaljanPrikazPredmet.Visibility = Visibility.Hidden;
             MenuItemIzmeni.IsEnabled = false;
             MenuItemObrisi.IsEnabled = false;
-            MenuItemIzborFiltera.IsEnabled = false;
-            MenuItemPretraga.IsEnabled = false;
         }
 
         private void tabelaUcionicaIzgubilaFokus(object sender, EventArgs e)
         {
-            detaljanPrikazUcionica.Visibility = Visibility.Hidden;
             MenuItemIzmeni.IsEnabled = false;
             MenuItemObrisi.IsEnabled = false;
-            MenuItemIzborFiltera.IsEnabled = false;
-            MenuItemPretraga.IsEnabled = false;
         }
 
         private void tabelaSmerovaDobilaFokus(object sender, EventArgs e)
@@ -1032,8 +1022,6 @@ namespace HCI_Projekat
             detaljanPrikazSmer.Visibility = Visibility.Visible;
             MenuItemIzmeni.IsEnabled = true;
             MenuItemObrisi.IsEnabled = true;
-            MenuItemIzborFiltera.IsEnabled = true;
-            MenuItemPretraga.IsEnabled = true;
         }
 
         private void tabelaSoftveraDobilaFokus(object sender, EventArgs e)
@@ -1041,8 +1029,6 @@ namespace HCI_Projekat
             detaljanPrikazSoftver.Visibility = Visibility.Visible;
             MenuItemIzmeni.IsEnabled = true;
             MenuItemObrisi.IsEnabled = true;
-            MenuItemIzborFiltera.IsEnabled = true;
-            MenuItemPretraga.IsEnabled = true;
         }
 
         private void tabelaPredmetaDobilaFokus(object sender, EventArgs e)
@@ -1050,8 +1036,6 @@ namespace HCI_Projekat
             detaljanPrikazPredmet.Visibility = Visibility.Visible;
             MenuItemIzmeni.IsEnabled = true;
             MenuItemObrisi.IsEnabled = true;
-            MenuItemIzborFiltera.IsEnabled = true;
-            MenuItemPretraga.IsEnabled = true;
         }
 
         private void tabelaUcionicaDobilaFokus(object sender, EventArgs e)
@@ -1059,8 +1043,6 @@ namespace HCI_Projekat
             detaljanPrikazUcionica.Visibility = Visibility.Visible;
             MenuItemIzmeni.IsEnabled = true;
             MenuItemObrisi.IsEnabled = true;
-            MenuItemIzborFiltera.IsEnabled = true;
-            MenuItemPretraga.IsEnabled = true;
         }
 
         private void SerijalizacijaPodataka(object sender, EventArgs e)
@@ -1084,7 +1066,7 @@ namespace HCI_Projekat
             sw.Close();
             fs.Close();
             Console.WriteLine("Serijalizacija uspesno izvrsena!\n");
-            foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
             {
                 Console.WriteLine(polje.Id + "|" + polje.Pocetak + "|" + polje.Kraj + "|" + polje.Dan + "|" + polje.NazivPolja);
             }
@@ -1111,7 +1093,7 @@ namespace HCI_Projekat
                 Console.WriteLine("Deserijalizacija uspesno izvrsena!\n");
             }
         }
-        
+
         private void tabChanged(object sender, SelectionChangedEventArgs e)
         {
             if (tabControl.SelectedIndex == 0)
@@ -1120,7 +1102,7 @@ namespace HCI_Projekat
                 MenuItemPretraga.IsEnabled = false;
                 MenuItemPretraga.IsEnabled = false;
             }
-            else if(tabControl.SelectedIndex == 1 || tabControl.SelectedIndex == 2 || tabControl.SelectedIndex == 3 || tabControl.SelectedIndex == 4)
+            else if (tabControl.SelectedIndex == 1 || tabControl.SelectedIndex == 2 || tabControl.SelectedIndex == 3 || tabControl.SelectedIndex == 4)
             {
                 MenuItemIzborFiltera.IsEnabled = true;
                 MenuItemPretraga.IsEnabled = true;

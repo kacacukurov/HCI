@@ -41,7 +41,7 @@ namespace HCI_Projekat
             this.inicijalizacija = true;
 
             List<Smer> smerovi = new List<Smer>();
-            foreach(Smer s in racunarskiCentar.Smerovi.Values)
+            foreach (Smer s in racunarskiCentar.Smerovi.Values)
             {
                 if (!s.Obrisan)
                 {
@@ -144,7 +144,7 @@ namespace HCI_Projekat
                 {
                     // prikaz svih softvera koji postoje (linux, windows, cross platform)
                     ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
-                    
+
                     cv.Filter = o =>
                     {
                         Softver s = o as Softver;
@@ -152,21 +152,6 @@ namespace HCI_Projekat
                     };
                 }
             }
-        }
-
-        private void cutClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Cut");
-        }
-
-        private void copyClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Copy");
-        }
-
-        private void pasteClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Paste");
         }
 
         private void undoClick(object sender, RoutedEventArgs e)
@@ -210,6 +195,12 @@ namespace HCI_Projekat
             this.Close();
         }
 
+        private void resetujBojuOkvira(object sender, EventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            t.ClearValue(Border.BorderBrushProperty);
+        }
+
         private void UnetaOznakaPredmeta(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
@@ -220,7 +211,7 @@ namespace HCI_Projekat
                 else
                     GreskaOznakaPredmeta.Text = "";
             }
-            else if(!unosPrviPut && izmena)
+            else if (!unosPrviPut && izmena)
             {
                 if (racunarskiCentar.Predmeti.ContainsKey(t.Text.Trim()) && !t.Text.Trim().Equals(oznakaPredmetaZaIzmenu))
                     GreskaOznakaPredmeta.Text = "Oznaka zauzeta!";
@@ -230,19 +221,11 @@ namespace HCI_Projekat
             unosPrviPut = false;
         }
 
-        private void proveraPraznogPolja(object sender, EventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-            if (t.Text.Trim().Equals(string.Empty))
-                t.BorderBrush = System.Windows.Media.Brushes.Red;
-            else
-                t.ClearValue(Border.BorderBrushProperty);
-        }
-
         private void finishClick(object sender, RoutedEventArgs e)
         {
             finishButton.Focus();
-            if (izmena) { 
+            if (izmena)
+            {
                 izmenaPredmeta();
                 return;
             }
@@ -280,7 +263,7 @@ namespace HCI_Projekat
                     Softver softver = (Softver)softverTabela.Items[i];
                     if (softver.Instaliran)
                     {
-                        brojSoftvera++; 
+                        brojSoftvera++;
                         predmet.Softveri.Add(softver.Oznaka);
 
                         if (brojSoftvera > 1)
@@ -390,6 +373,14 @@ namespace HCI_Projekat
         {
             if (OznakaPredmeta.Text.Trim() == "" || NazivPredmeta.Text.Trim() == "" || OpisPredmeta.Text.Trim() == "")
             {
+                //podesavanje crvenog okvira za polja koja nisu popunjena
+                if (OznakaPredmeta.Text.Trim() == "")
+                    OznakaPredmeta.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (NazivPredmeta.Text.Trim() == "")
+                    NazivPredmeta.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (OpisPredmeta.Text.Trim() == "")
+                    OpisPredmeta.BorderBrush = System.Windows.Media.Brushes.Red;
+
                 MessageBox.Show("Niste popunili sva polja!");
                 if (OznakaPredmeta.Text.Trim() == "")
                 {
@@ -436,7 +427,7 @@ namespace HCI_Projekat
                 return false;
             }
 
-            if(BrojTerminaPredmet.Text.Trim() == "" || VelicinaGrupePredmet.Text.Trim() == "" || DuzinaTerminaPredmet.Text.Trim() == "")
+            if (BrojTerminaPredmet.Text.Trim() == "" || VelicinaGrupePredmet.Text.Trim() == "" || DuzinaTerminaPredmet.Text.Trim() == "")
             {
                 MessageBox.Show("Niste popunili sva polja!");
                 if (VelicinaGrupePredmet.Text.Trim() == "")
@@ -572,7 +563,6 @@ namespace HCI_Projekat
                 {
                     racunarskiCentar.Predmeti.Remove(staraOznaka);
                     racunarskiCentar.Predmeti.Add(predmetIzmena.Oznaka, predmetIzmena);
-                    promeniOznakuPredmetaUPoljima(staraOznaka, OznakaPredmeta.Text.Trim());
                 }
 
                 tabelaPredmeta[indeks] = predmetIzmena;
@@ -605,9 +595,9 @@ namespace HCI_Projekat
         {
             int staraDuzinaTermina = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].MinDuzinaTermina;
             int novaDuzina = int.Parse(DuzinaTerminaPredmet.Text.Trim());
-            if(staraDuzinaTermina != novaDuzina)
+            if (staraDuzinaTermina != novaDuzina)
             {
-                if(racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini !=
+                if (racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini !=
                     racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].BrTermina)
                 {
                     MessageBox.Show("Ne možete promeniti dužinu trajanja jednog termina, jer je predmet već raspoređen u kalendaru!");
@@ -627,7 +617,7 @@ namespace HCI_Projekat
                     sveUcionicePredmeta.Add(polje.Ucionica);
             }
 
-            List<string> ucionicePredmeta  = sveUcionicePredmeta.Distinct().ToList(); //izbacimo duplikate
+            List<string> ucionicePredmeta = sveUcionicePredmeta.Distinct().ToList(); //izbacimo duplikate
 
             int brojPotrebnihSoftvera = 0;
             int brojNadjenihSoftvera = 0;
@@ -636,10 +626,10 @@ namespace HCI_Projekat
                 Softver softver = (Softver)softverTabela.Items[i];
                 if (softver.Instaliran)
                 {
-                    foreach(string s in ucionicePredmeta)   //za svaki idem kroz ucionice u kojima se predaje predmet
+                    foreach (string s in ucionicePredmeta)   //za svaki idem kroz ucionice u kojima se predaje predmet
                     {
                         Ucionica u = racunarskiCentar.Ucionice[s];
-                        foreach(string soft in u.InstaliraniSoftveri)
+                        foreach (string soft in u.InstaliraniSoftveri)
                         {
                             if (soft.Trim().Equals(softver.Oznaka.Trim()))  //trazim taj softver u ucionici
                                 brojNadjenihSoftvera++;
@@ -648,7 +638,7 @@ namespace HCI_Projekat
                     brojPotrebnihSoftvera++;
                 }
             }
-            if(brojNadjenihSoftvera < brojPotrebnihSoftvera*ucionicePredmeta.Count)
+            if (brojNadjenihSoftvera < brojPotrebnihSoftvera * ucionicePredmeta.Count)
             {
                 MessageBox.Show("Ne možete izmeniti softvere predmeta, jer se oni ne nalaze u učionici u kojoj se predmet predaje!");
                 return false;
@@ -669,7 +659,7 @@ namespace HCI_Projekat
             }
 
             List<string> ucionicePredmeta = sveUcionicePredmeta.Distinct().ToList(); //izbacimo duplikate
-            foreach(string uoz in ucionicePredmeta)
+            foreach (string uoz in ucionicePredmeta)
             {
                 bool postoji = true;
                 if (!racunarskiCentar.Ucionice[uoz].PrisustvoTable)
@@ -740,15 +730,6 @@ namespace HCI_Projekat
                 }
             }
             return true;
-        }
-
-        private void promeniOznakuPredmetaUPoljima(string staraOznaka, string novaOznaka)
-        {
-            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
-            {
-                if (polje.NazivPolja.Split('-')[0].Trim() == staraOznaka)    //idem kroz sva polja i trazim ucionice
-                    polje.NazivPolja = novaOznaka + '-' + polje.NazivPolja.Split('-')[1].Trim();
-            }
         }
     }
 }

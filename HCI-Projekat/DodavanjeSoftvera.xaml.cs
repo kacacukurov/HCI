@@ -32,24 +32,9 @@ namespace HCI_Projekat
             this.dodavanjeSoftveraIzborStarogUnosa = false;
             tabelaSoftvera = softveri;
             noviSoftver = new Softver();
-            if(!izmena)
+            if (!izmena)
                 oznakaSoftver.Focus();
             BackStepMenuItem.IsEnabled = false;
-        }
-
-        private void cutClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Cut");
-        }
-
-        private void copyClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Copy");
-        }
-
-        private void pasteClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Paste");
         }
 
         private void undoClick(object sender, RoutedEventArgs e)
@@ -91,6 +76,12 @@ namespace HCI_Projekat
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void resetujBojuOkvira(object sender, EventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            t.ClearValue(Border.BorderBrushProperty);
         }
 
         private void UnetaOznakaSoftvera(object sender, TextChangedEventArgs e)
@@ -153,15 +144,6 @@ namespace HCI_Projekat
                     GreskaCenaSoftver.Text = "Unesite realan pozitivan broj!";
                 }
             }
-        }
-
-        private void proveraPraznogPolja(object sender, EventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-            if (t.Text.Trim().Equals(string.Empty))
-                t.BorderBrush = System.Windows.Media.Brushes.Red;
-            else
-                t.ClearValue(Border.BorderBrushProperty);
         }
 
         private void finishClick(object sender, RoutedEventArgs e)
@@ -261,9 +243,26 @@ namespace HCI_Projekat
 
         private bool validacijaPodataka()
         {
-            if (oznakaSoftver.Text.Trim() == "" || nazivSoftver.Text.Trim() == "" || proizvodjacSoftver.Text.Trim() == "" || opisSoftver.Text.Trim() == "" 
+            if (oznakaSoftver.Text.Trim() == "" || nazivSoftver.Text.Trim() == "" || proizvodjacSoftver.Text.Trim() == "" || opisSoftver.Text.Trim() == ""
                 || godinaSoftver.Text.Trim() == "" || cenaSoftver.Text.Trim() == "" || sajtSoftver.Text.Trim() == "")
             {
+                //provera praznih polja kako bi se uokvirili u crveno
+                if (oznakaSoftver.Text.Trim() == "")
+                    oznakaSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (nazivSoftver.Text.Trim() == "")
+                    nazivSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (proizvodjacSoftver.Text.Trim() == "")
+                    proizvodjacSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (sajtSoftver.Text.Trim() == "")
+                    sajtSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (godinaSoftver.Text.Trim() == "")
+                    godinaSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (cenaSoftver.Text.Trim() == "")
+                    cenaSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (opisSoftver.Text.Trim() == "")
+                    opisSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
+
+
                 MessageBox.Show("Niste popunili sva polja!");
                 if (oznakaSoftver.Text.Trim() == "")
                 {
@@ -307,7 +306,7 @@ namespace HCI_Projekat
                     UpdateLayout();
                     opisSoftver.Focus();
                 }
-                
+
                 return false;
             }
 
@@ -370,15 +369,15 @@ namespace HCI_Projekat
 
                 softverIzmena.Proizvodjac = proizvodjacSoftver.Text.Trim();
                 softverIzmena.Sajt = sajtSoftver.Text.Trim();
-                
+
 
                 // azurira se oznaka u listi instaliranih softvera/neophodnih softvera u ucionici/predmetu
                 // azurira se i ispis softvera za ucionicu/predmet
                 StringBuilder sb = new StringBuilder();
-                if(promenilaSeOznaka || promenioSeNaziv || promenioSeOpis)
+                if (promenilaSeOznaka || promenioSeNaziv || promenioSeOpis)
                 {
                     List<string> ucioniceZaIzmenu = new List<string>();
-                    foreach(Ucionica u in racunarskiCentar.Ucionice.Values)
+                    foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
                     {
                         if (u.InstaliraniSoftveri.Contains(staraOznaka))
                         {
@@ -393,7 +392,7 @@ namespace HCI_Projekat
                     }
                     // idemo kroz sve ucionice u kojima treba azurirati stanje softvera i menjamo staru oznaku novom (izbacili smo
                     // staru i sad ubacujemo novu), azuriramo ispis
-                    foreach(string oznaka in ucioniceZaIzmenu)
+                    foreach (string oznaka in ucioniceZaIzmenu)
                     {
                         Ucionica u = racunarskiCentar.Ucionice[oznaka];
                         u.InstaliraniSoftveri.Add(softverIzmena.Oznaka);
@@ -423,9 +422,9 @@ namespace HCI_Projekat
 
 
                     List<string> predmetiZaIzmenu = new List<string>();
-                    foreach(Predmet p in racunarskiCentar.Predmeti.Values)
+                    foreach (Predmet p in racunarskiCentar.Predmeti.Values)
                     {
-                        if(p.Softveri.Contains(staraOznaka))
+                        if (p.Softveri.Contains(staraOznaka))
                         {
                             if (promenilaSeOznaka)
                             {
@@ -467,7 +466,7 @@ namespace HCI_Projekat
                     }
                 }
 
-                if(promenilaSeOznaka)
+                if (promenilaSeOznaka)
                 {
                     racunarskiCentar.Softveri.Remove(staraOznaka);
                     racunarskiCentar.Softveri.Add(softverIzmena.Oznaka, softverIzmena);

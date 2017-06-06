@@ -38,7 +38,7 @@ namespace HCI_Projekat
             this.unosPrviPut = true;
             this.oznakaUcioniceZaIzmenu = oznaka;
             List<Softver> softveri = new List<Softver>();
-            foreach(Softver s in racunarskiCentar.Softveri.Values)
+            foreach (Softver s in racunarskiCentar.Softveri.Values)
             {
                 if (!s.Obrisan)
                 {
@@ -49,7 +49,7 @@ namespace HCI_Projekat
             softverTabela.ItemsSource = softveri;
             softverTabela.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica = ucionice;
-            if(!izmena)
+            if (!izmena)
                 oznakaUcionica.Focus();
             BackStepMenuItem.IsEnabled = false;
         }
@@ -62,7 +62,7 @@ namespace HCI_Projekat
                 {
                     // ukoliko postoje vec prethodno izabrani softveri, proverava se da li medju njima ima neki
                     // kom je OS Windows --> ukoliko ima, izbacuje se
-                    
+
                     // samo odcekiramo softvere koji imaju OS Windows iz tabele softvera u prozoru za dodavanje
 
                     for (int i = 0; i < softverTabela.Items.Count; i++)
@@ -74,7 +74,7 @@ namespace HCI_Projekat
                         }
                     }
                     softverTabela.Items.Refresh();
-                    
+
 
                     // filtriranje i prikazivanje softvera za linux i cross platform
                     ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
@@ -89,7 +89,7 @@ namespace HCI_Projekat
                 {
                     // ukoliko postoje vec prethodno izabrani softveri, proverava se da li medju njima ima neki
                     // kom je OS Linux --> ukoliko ima, izbacuje se
-                    
+
                     // samo odcekiramo softvere koji imaju OS Linux iz tabele softvera u prozoru za dodavanje
 
                     for (int i = 0; i < softverTabela.Items.Count; i++)
@@ -101,7 +101,7 @@ namespace HCI_Projekat
                         }
                     }
                     softverTabela.Items.Refresh();
-                    
+
 
                     // filtriranje i prikazivanje softvera za windows i cross platform
                     ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
@@ -124,21 +124,6 @@ namespace HCI_Projekat
                     };
                 }
             }
-        }
-
-        private void cutClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Cut");
-        }
-
-        private void copyClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Copy");
-        }
-
-        private void pasteClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Paste");
         }
 
         private void undoClick(object sender, RoutedEventArgs e)
@@ -182,6 +167,12 @@ namespace HCI_Projekat
             this.Close();
         }
 
+        private void resetujBojuOkvira(object sender, EventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            t.ClearValue(Border.BorderBrushProperty);
+        }
+
         private void UnetaOznakaUcionice(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
@@ -200,15 +191,6 @@ namespace HCI_Projekat
                     GreskaOznakaUcionice.Text = "";
             }
             unosPrviPut = false;
-        }
-
-        private void proveraPraznogPolja(object sender, EventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-            if (t.Text.Trim().Equals(string.Empty))
-                t.BorderBrush = System.Windows.Media.Brushes.Red;
-            else
-                t.ClearValue(Border.BorderBrushProperty);
         }
 
         private void finishClick(object sender, RoutedEventArgs e)
@@ -299,7 +281,7 @@ namespace HCI_Projekat
                         ucionica.Obrisan = false;
                         dodavanjeUcioniceIzborStarogUnosa = true;
                     }
-                }    
+                }
                 else
                 {
                     MessageBox.Show("Učionica sa unetom oznakom već postoji!");
@@ -334,6 +316,13 @@ namespace HCI_Projekat
         {
             if (oznakaUcionica.Text.Trim() == "" || opisUcionica.Text.Trim() == "" || brojRadnihMestaUcionica.Text.Trim() == "")
             {
+                // provera praznih polja da bismo ih uokvirili u crveno
+                if (oznakaUcionica.Text.Trim() == "")
+                    oznakaUcionica.BorderBrush = System.Windows.Media.Brushes.Red;
+                if (opisUcionica.Text.Trim() == "")
+                    opisUcionica.BorderBrush = System.Windows.Media.Brushes.Red;
+
+
                 MessageBox.Show("Niste popunili sva polja!");
                 if (oznakaUcionica.Text.Trim() == "")
                 {
@@ -448,13 +437,12 @@ namespace HCI_Projekat
                 }
                 ucionicaIzmena.SoftveriLista = sb.ToString();
 
-                if(oznakaIzmenjena)
+                if (oznakaIzmenjena)
                 {
                     racunarskiCentar.Ucionice.Remove(staraOznaka);
                     racunarskiCentar.Ucionice.Add(ucionicaIzmena.Oznaka, ucionicaIzmena);
-                    izmenaUcioniceUPoljima(staraOznaka, oznakaUcionica.Text.Trim());
                 }
-                
+
                 tabelaUcionica[indeks] = ucionicaIzmena;
                 this.Close();
             }
@@ -464,15 +452,15 @@ namespace HCI_Projekat
         {
             Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
             List<string> sviPredmetiUcionice = new List<string>();
-            foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {
                 if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
                     sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
             }
 
             List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
-            
-            foreach(string poz in predmetiUcionice)     // prolazim kroz sve predmete unutar ucionice
+
+            foreach (string poz in predmetiUcionice)     // prolazim kroz sve predmete unutar ucionice
             {
                 Predmet predmet = racunarskiCentar.Predmeti[poz];
                 foreach (string soft in predmet.Softveri)       //prolazim kroz sve softvere jednog predmeta
@@ -510,7 +498,7 @@ namespace HCI_Projekat
             }
 
             List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
-            foreach(string poz in predmetiUcionice)
+            foreach (string poz in predmetiUcionice)
             {
                 if (racunarskiCentar.Predmeti[poz].NeophodnaTabla)
                 {
@@ -570,15 +558,6 @@ namespace HCI_Projekat
                 }
             }
             return true;
-        }
-
-        private void izmenaUcioniceUPoljima(string staraOznaka, string novaOznaka)
-        {
-            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
-            {
-                if (polje.Ucionica == staraOznaka)    //idem kroz sva polja i trazim ucionice
-                    polje.Ucionica = novaOznaka;
-            }
         }
     }
 }

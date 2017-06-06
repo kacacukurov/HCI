@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -365,7 +366,8 @@ namespace HCI_Projekat
 
         private void izmenaUcionice()
         {
-            if (validacijaPodataka())
+            if (validacijaPodataka() && validacijaIzmeneSoftvera() && validacijaIzmeneTable() && validacijaIzmenePametneTable() &&
+                validacijaIzmeneProjektora())
             {
                 Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
 
@@ -411,6 +413,118 @@ namespace HCI_Projekat
                 tabelaUcionica[indeks] = ucionicaIzmena;
                 this.Close();
             }
+        }
+
+        private bool validacijaIzmeneSoftvera()
+        {
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            List<string> sviPredmetiUcionice = new List<string>();
+            foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
+            {
+                if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
+                    sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
+            }
+
+            List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
+            
+            foreach(string poz in predmetiUcionice)     // prolazim kroz sve predmete unutar ucionice
+            {
+                Predmet predmet = racunarskiCentar.Predmeti[poz];
+                foreach (string soft in predmet.Softveri)       //prolazim kroz sve softvere jednog predmeta
+                {
+                    bool postoji = false;
+                    for (int i = 0; i < softverTabela.Items.Count; i++) //iteriram kroz svaki oznaceni softver
+                    {
+                        Softver softver = (Softver)softverTabela.Items[i];
+                        if (softver.Instaliran)
+                        {
+                            if (soft.Trim().Equals(softver.Oznaka.Trim()))  //trazim taj softver u ucionici
+                                postoji = true;
+                        }
+                    }
+                    if (!postoji)
+                    {
+                        MessageBox.Show("Ne možete izmeniti softvere učionice, jer se oni potrebni predmetima koji se predaju u njoj!");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool validacijaIzmeneTable()
+        {
+            if (prisustvoTableUcionica.IsChecked)
+                return true;
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            List<string> sviPredmetiUcionice = new List<string>();
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
+            {
+                if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
+                    sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
+            }
+
+            List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
+            foreach(string poz in predmetiUcionice)
+            {
+                if (racunarskiCentar.Predmeti[poz].NeophodnaTabla)
+                {
+                    MessageBox.Show("Ne možete ukloniti tablu, postoje predmeti u učionici kojima je potrebna!");
+                    prisustvoTableUcionica.Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool validacijaIzmenePametneTable()
+        {
+            if (prisustvoPametneTableUcionica.IsChecked)
+                return true;
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            List<string> sviPredmetiUcionice = new List<string>();
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
+            {
+                if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
+                    sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
+            }
+
+            List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
+            foreach (string poz in predmetiUcionice)
+            {
+                if (racunarskiCentar.Predmeti[poz].NeophodnaPametnaTabla)
+                {
+                    MessageBox.Show("Ne možete ukloniti pametnu tablu, postoje predmeti u učionici kojima je potrebna!");
+                    prisustvoPametneTableUcionica.Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool validacijaIzmeneProjektora()
+        {
+            if (prisustvoProjektoraUcionica.IsChecked)
+                return true;
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            List<string> sviPredmetiUcionice = new List<string>();
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
+            {
+                if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
+                    sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
+            }
+
+            List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
+            foreach (string poz in predmetiUcionice)
+            {
+                if (racunarskiCentar.Predmeti[poz].NeophodanProjektor)
+                {
+                    MessageBox.Show("Ne možete ukloniti projektor, postoje predmeti u učionici kojima je potrebna!");
+                    prisustvoProjektoraUcionica.Focus();
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

@@ -456,7 +456,8 @@ namespace HCI_Projekat
 
         private void izmenaPredmeta()
         {
-            if (validacijaPodataka() && validacijeIzmeneBrojaTermina())
+            if (validacijaPodataka() && validacijeIzmeneBrojaTermina() && validacijaIzmeneDuzineTermina() && validacijaIzmeneSoftvera()
+                && validacijaIzmeneTable() && validacijaIzmenePametneTable() && validacijaIzmeneProjektora())
             {
                 Predmet predmetIzmena = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
 
@@ -550,6 +551,147 @@ namespace HCI_Projekat
                 }
                 else
                     racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].PreostaliTermini -= razlika;
+            }
+            return true;
+        }
+
+        private bool validacijaIzmeneDuzineTermina()
+        {
+            int staraDuzinaTermina = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].MinDuzinaTermina;
+            int novaDuzina = int.Parse(DuzinaTerminaPredmet.Text.Trim());
+            if(staraDuzinaTermina != novaDuzina)
+            {
+                if(racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].PreostaliTermini !=
+                    racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].BrTermina)
+                {
+                    MessageBox.Show("Ne možete promeniti dužinu trajanja jednog termina, jer je predmet već raspoređen u kalendaru!");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool validacijaIzmeneSoftvera()
+        {
+            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                if (polje.NazivPolja.Split('-')[0].Trim() == predmetStari.Oznaka)    //idem kroz sva polja i trazim ucionice
+                    sveUcionicePredmeta.Add(polje.Ucionica);
+            }
+
+            List<string> ucionicePredmeta  = sveUcionicePredmeta.Distinct().ToList(); //izbacimo duplikate
+
+            int brojPotrebnihSoftvera = 0;
+            int brojNadjenihSoftvera = 0;
+            for (int i = 0; i < softverTabela.Items.Count; i++) //iteriram kroz svaki oznaceni softver
+            {
+                Softver softver = (Softver)softverTabela.Items[i];
+                if (softver.Instaliran)
+                {
+                    foreach(string s in ucionicePredmeta)   //za svaki idem kroz ucionice u kojima se predaje predmet
+                    {
+                        Ucionica u = racunarskiCentar.Ucionice[s];
+                        foreach(string soft in u.InstaliraniSoftveri)
+                        {
+                            if (soft.Trim().Equals(softver.Oznaka.Trim()))  //trazim taj softver u ucionici
+                                brojNadjenihSoftvera++;
+                        }
+                    }
+                    brojPotrebnihSoftvera++;
+                }
+            }
+            if(brojNadjenihSoftvera < brojPotrebnihSoftvera*ucionicePredmeta.Count)
+            {
+                MessageBox.Show("Ne možete izmeniti softvere predmeta, jer se oni ne nalaze u učionici u kojoj se predmet predaje!");
+                return false;
+            }
+            return true;
+        }
+
+        private bool validacijaIzmeneTable()
+        {
+            if (!PrisustvoTablePredmet.IsChecked)
+                return true;
+            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                if (polje.NazivPolja.Split('-')[0].Trim() == predmetStari.Oznaka)    //idem kroz sva polja i trazim ucionice
+                    sveUcionicePredmeta.Add(polje.Ucionica);
+            }
+
+            List<string> ucionicePredmeta = sveUcionicePredmeta.Distinct().ToList(); //izbacimo duplikate
+            foreach(string uoz in ucionicePredmeta)
+            {
+                bool postoji = true;
+                if (!racunarskiCentar.Ucionice[uoz].PrisustvoTable)
+                    postoji = false;
+                if (!postoji)
+                {
+                    MessageBox.Show("Ne mozete dodati tablu predmetu, jer se predaje u ucionici u kojoj nema table!");
+                    PrisustvoTablePredmet.Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool validacijaIzmenePametneTable()
+        {
+            if (!PrisustvoPametneTable.IsChecked)
+                return true;
+
+            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                if (polje.NazivPolja.Split('-')[0].Trim() == predmetStari.Oznaka)    //idem kroz sva polja i trazim ucionice
+                    sveUcionicePredmeta.Add(polje.Ucionica);
+            }
+
+            List<string> ucionicePredmeta = sveUcionicePredmeta.Distinct().ToList(); //izbacimo duplikate
+            foreach (string uoz in ucionicePredmeta)
+            {
+                bool postoji = true;
+                if (!racunarskiCentar.Ucionice[uoz].PrisustvoPametneTable)
+                    postoji = false;
+                if (!postoji)
+                {
+                    MessageBox.Show("Ne mozete dodati pametnu tablu predmetu, jer se predaje u ucionici u kojoj nema table!");
+                    PrisustvoPametneTable.Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool validacijaIzmeneProjektora()
+        {
+            if (!PrisustvoProjektoraPredmet.IsChecked)
+                return true;
+
+            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                if (polje.NazivPolja.Split('-')[0].Trim() == predmetStari.Oznaka)    //idem kroz sva polja i trazim ucionice
+                    sveUcionicePredmeta.Add(polje.Ucionica);
+            }
+
+            List<string> ucionicePredmeta = sveUcionicePredmeta.Distinct().ToList(); //izbacimo duplikate
+            foreach (string uoz in ucionicePredmeta)
+            {
+                bool postoji = true;
+                if (!racunarskiCentar.Ucionice[uoz].PrisustvoProjektora)
+                    postoji = false;
+                if (!postoji)
+                {
+                    MessageBox.Show("Ne mozete dodati tablu projektor, jer se predaje u ucionici u kojoj nema table!");
+                    PrisustvoProjektoraPredmet.Focus();
+                    return false;
+                }
             }
             return true;
         }

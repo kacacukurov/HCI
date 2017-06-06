@@ -30,10 +30,22 @@ namespace HCI_Projekat
             foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
             {
                 if (!u.Obrisan)
-                { 
-                      ucionice += "{\"oznaka\":\"" + u.Oznaka + "\",\"tabla\":\"" + u.PrisustvoTable + "\",\"pametnaTabla\":\"" +
-                            u.PrisustvoPametneTable + "\",\"projektor\":\"" + u.PrisustvoProjektora + "\",\"brojMesta\":\"" + u.BrojRadnihMesta +
-                            "\",\"os\":\"" + u.OperativniSistem + "\"},";
+                {
+                    ucionice += "{\"oznaka\":\"" + u.Oznaka + "\",\"tabla\":\"" + u.PrisustvoTable + "\",\"pametnaTabla\":\"" +
+                          u.PrisustvoPametneTable + "\",\"projektor\":\"" + u.PrisustvoProjektora + "\",\"brojMesta\":\"" + u.BrojRadnihMesta +
+                          "\",\"os\":\"" + u.OperativniSistem + "\",\"softveri\":[";
+                    int soft = 0;
+                    foreach(string s in u.InstaliraniSoftveri)
+                    {
+                        ucionice += "{\"oznaka\":\"" + s + "\"},";
+                        soft++;
+                    }
+                    if(soft != 0)
+                    {
+                        ucionice = ucionice.Substring(0, ucionice.Length-1);
+                    }
+                    ucionice += "]},";
+
                     i++;
                 }
             }
@@ -70,17 +82,11 @@ namespace HCI_Projekat
             int j = 0;
             foreach (Predmet p in neobrisaniPredmeti)
             {
-                if (j + 1 == neobrisaniPredmeti.Count)
-                {
-                    nazivi += "{\"oznaka\":\"" + p.Oznaka + "\",\"naziv\":\"" + p.Naziv + "\"}";
-                }
-                else
-                {
-                    nazivi += "{\"oznaka\":\"" + p.Oznaka + "\",\"naziv\":\"" + p.Naziv + "\"},";
-                }
-                    j++;
+                nazivi += "{\"oznaka\":\"" + p.Oznaka + "\",\"naziv\":\"" + p.Naziv + "\"},";
+                j++;
             }
-            
+            if (j != 0)
+                nazivi = nazivi.Substring(0, nazivi.Length - 1);
             nazivi += "]}";
 
             //predmet za prvi smer
@@ -103,12 +109,38 @@ namespace HCI_Projekat
             if(b !=0)
                 predmeti = predmeti.Substring(0, predmeti.Length - 1);
             predmeti += "]}";
+
+            //svi predmeti koji postoje
+            string sviPredmeti = "{\"predmeti\":[";
+            int l = 0;
+            foreach (Predmet p in neobrisaniPredmeti)
+            {
+                sviPredmeti += "{\"oznaka\":\"" + p.Oznaka + "\",\"duzina\":\"" + p.MinDuzinaTermina + "\",\"termini\":\"" + p.PreostaliTermini +
+                        "\",\"tabla\":\"" + p.NeophodnaTabla + "\",\"pametnaTabla\":\"" + p.NeophodnaPametnaTabla + "\",\"projektor\":\"" +
+                        p.NeophodanProjektor + "\",\"brojMesta\":\"" + p.VelicinaGrupe + "\",\"os\":\"" + p.OperativniSistem + "\", \"softveri\":[";
+                int brSoft = 0;
+                foreach (string s in p.Softveri)
+                {
+                    sviPredmeti += "{\"oznaka\":\"" + s + "\"},";
+                    brSoft++;
+                }
+                if (brSoft != 0)
+                    sviPredmeti = sviPredmeti.Substring(0, sviPredmeti.Length - 1);
+                sviPredmeti += "]},";
+                l++;
+            }
+            
+            if (l != 0)
+                sviPredmeti = sviPredmeti.Substring(0, sviPredmeti.Length - 1);
+            sviPredmeti += "]}";
+
             if (_instanceBrowser.CanExecuteJavascriptInMainFrame)
             {
                 _instanceBrowser.ExecuteScriptAsync("ucitajUcionice('" + ucionice + "');");
                 _instanceBrowser.ExecuteScriptAsync("ucitajPredmete('" + predmeti + "');");
                 _instanceBrowser.ExecuteScriptAsync("ucitajSmerove('" + smerovi + "');");
                 _instanceBrowser.ExecuteScriptAsync("ucitajNazive('" + nazivi + "');");
+                _instanceBrowser.ExecuteScriptAsync("ucitajSvePredmete('" + sviPredmeti + "');");
             }
             ucitajPolja();
         }
@@ -120,14 +152,12 @@ namespace HCI_Projekat
             int i = 0;
             foreach (KalendarPolje kal in racunarskiCentar.PoljaKalendara.Values)
             {
-                if (i + 1 == racunarskiCentar.PoljaKalendara.Values.Count)
-                {
-                    polja += "{\"id\":\"" + kal.Id + "\",\"pocetak\":\"" + kal.Pocetak + "\",\"kraj\":\"" + kal.Kraj + "\",\"naziv\":\"" + kal.NazivPolja + "\",\"dan\":\"" + kal.Dan + "\",\"ucionica\":\"" + kal.Ucionica + "\"}";
-                }
-                else
-                    polja += "{\"id\":\"" + kal.Id + "\",\"pocetak\":\"" + kal.Pocetak + "\",\"kraj\":\"" + kal.Kraj + "\",\"naziv\":\"" + kal.NazivPolja + "\",\"dan\":\"" + kal.Dan + "\",\"ucionica\":\"" + kal.Ucionica + "\"},";
+                polja += "{\"id\":\"" + kal.Id + "\",\"pocetak\":\"" + kal.Pocetak + "\",\"kraj\":\"" + kal.Kraj + "\",\"naziv\":\"" + 
+                        kal.NazivPolja + "\",\"dan\":\"" + kal.Dan + "\",\"ucionica\":\"" + kal.Ucionica + "\"},";
                 i++;
             }
+            if (i != 0)
+                polja = polja.Substring(0, polja.Length - 1);
             polja += "]}";
 
             if (_instanceBrowser.CanExecuteJavascriptInMainFrame)

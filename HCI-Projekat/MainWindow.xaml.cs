@@ -861,6 +861,12 @@ namespace HCI_Projekat
                     TextBlock content = tabelaPredmeta.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaPredmeta = content.Text;
 
+                    if(racunarskiCentar.Predmeti[oznakaPredmeta].BrTermina != racunarskiCentar.Predmeti[oznakaPredmeta].PreostaliTermini)
+                    {
+                        MessageBox.Show("Ne možete obrisati predmet, jer je već raspoređen u kalendaru!");
+                        return;
+                    }
+
                     racunarskiCentar.Smerovi[racunarskiCentar.Predmeti[oznakaPredmeta].Smer].Predmeti.Remove(oznakaPredmeta);
                     removedItems.Add(racunarskiCentar.Predmeti[oznakaPredmeta]);
                     racunarskiCentar.Predmeti[oznakaPredmeta].Obrisan = true;
@@ -935,6 +941,15 @@ namespace HCI_Projekat
                     DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaUcionice = content.Text;
+                    
+                    foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if(polje.Ucionica == oznakaUcionice)
+                        {
+                            MessageBox.Show("Ne možete da obrišete učionicu jer se neki predmeti održavaju u njoj!");
+                            return;
+                        }
+                    }
 
                     removedItems.Add(racunarskiCentar.Ucionice[oznakaUcionice]);
                     racunarskiCentar.Ucionice[oznakaUcionice].Obrisan = true;

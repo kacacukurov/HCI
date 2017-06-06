@@ -141,7 +141,7 @@ namespace HCI_Projekat
                 // dodavanje nove ucionice je moguce samo ako postoji neki logicki aktivan softver
                 if (tabControl.SelectedIndex != 1)
                     tabControl.SelectedIndex = 1;
-                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false);
+                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false, "");
                 ucionicaWindow.ShowDialog();
             }
             else
@@ -155,7 +155,7 @@ namespace HCI_Projekat
                 // dodavanje novog predmeta je moguce samo ako postoji neki logicki aktivan softver i neki logicki aktivan smer
                 if (tabControl.SelectedIndex != 2)
                     tabControl.SelectedIndex = 2;
-                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false);
+                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false, "");
                 predmetWindow.ShowDialog();
             }
             else if ((racunarskiCentar.Smerovi.Count == 0 && racunarskiCentar.Softveri.Count == 0) || (brojAktivnihSoftvera == 0 && brojAktivnihSmerova == 0))
@@ -171,7 +171,7 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex != 3)
                 tabControl.SelectedIndex = 3;
             int stariBrojSmerova = racunarskiCentar.Smerovi.Count;
-            var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, false);
+            var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, false, "");
             smerWindow.ShowDialog();
 
             if (racunarskiCentar.Smerovi.Count - stariBrojSmerova == 1)
@@ -187,7 +187,7 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex != 4)
                 tabControl.SelectedIndex = 4;
             int stariBrojSoftvera = racunarskiCentar.Softveri.Count;
-            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false);
+            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false, "");
             softverWindow.ShowDialog();
 
             if (racunarskiCentar.Softveri.Count - stariBrojSoftvera == 1)
@@ -708,12 +708,11 @@ namespace HCI_Projekat
         {
             if (tabelaPredmeta.SelectedIndex != -1)
             {
-                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, true);
                 Predmet pre = (Predmet)tabelaPredmeta.SelectedItem;
+                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, true, pre.Oznaka);
                 predmetWindow.NazivPredmeta.Text = pre.Naziv;
-                predmetWindow.NazivPredmeta.Focus();
+                predmetWindow.OznakaPredmeta.Focus();
                 predmetWindow.OznakaPredmeta.Text = pre.Oznaka;
-                predmetWindow.OznakaPredmeta.IsEnabled = false;
                 predmetWindow.OpisPredmeta.Text = pre.Opis;
                 predmetWindow.VelicinaGrupePredmet.Text = pre.VelicinaGrupe.ToString();
                 predmetWindow.DuzinaTerminaPredmet.Text = pre.MinDuzinaTermina.ToString();
@@ -762,17 +761,16 @@ namespace HCI_Projekat
         {
             if (tabelaSoftvera.SelectedIndex != -1)
             {
-                var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, true);
                 Softver red = (Softver)tabelaSoftvera.SelectedItem;
+                var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, true, red.Oznaka);
                 softverWindow.nazivSoftver.Text = red.Naziv;
-                softverWindow.nazivSoftver.Focus();
+                softverWindow.oznakaSoftver.Focus();
                 softverWindow.proizvodjacSoftver.Text = red.Proizvodjac;
                 softverWindow.sajtSoftver.Text = red.Sajt;
                 softverWindow.godinaSoftver.Text = red.GodIzdavanja.ToString();
                 softverWindow.cenaSoftver.Text = red.Cena.ToString();
                 softverWindow.opisSoftver.Text = red.Opis;
                 softverWindow.oznakaSoftver.Text = red.Oznaka;
-                softverWindow.oznakaSoftver.IsEnabled = false;
 
                 if (red.OperativniSistem.Equals("Windows"))
                     softverWindow.WindowsOSSoftver.IsChecked = true;
@@ -793,12 +791,11 @@ namespace HCI_Projekat
         {
             if (tabelaUcionica.SelectedIndex != -1)
             {
-                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, true);
                 Ucionica red = (Ucionica)tabelaUcionica.SelectedItem;
+                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, true, red.Oznaka);
                 ucionicaWindow.oznakaUcionica.Text = red.Oznaka;
-                ucionicaWindow.oznakaUcionica.IsEnabled = false;
                 ucionicaWindow.brojRadnihMestaUcionica.Text = red.BrojRadnihMesta.ToString();
-                ucionicaWindow.brojRadnihMestaUcionica.Focus();
+                ucionicaWindow.oznakaUcionica.Focus();
                 ucionicaWindow.opisUcionica.Text = red.Opis;
                 ucionicaWindow.prisustvoPametneTableUcionica.IsChecked = red.PrisustvoPametneTable;
                 ucionicaWindow.prisustvoProjektoraUcionica.IsChecked = red.PrisustvoProjektora;
@@ -832,12 +829,11 @@ namespace HCI_Projekat
         {
             if (tabelaSmerova.SelectedIndex != -1)
             {
-                var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, true);
                 Smer row = (Smer)tabelaSmerova.SelectedItem;
+                var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, true, row.Oznaka);
                 smerWindow.NazivSmera.Text = row.Naziv;
-                smerWindow.NazivSmera.Focus();
+                smerWindow.OznakaSmera.Focus();
                 smerWindow.OznakaSmera.Text = row.Oznaka;
-                smerWindow.OznakaSmera.IsEnabled = false;
                 smerWindow.OpisSmera.Text = row.Opis;
                 smerWindow.DatumUvodjenja.Text = row.Datum.ToString();
 

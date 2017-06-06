@@ -24,14 +24,18 @@ namespace HCI_Projekat
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Smer> tabelaSmerova;
         private bool izmena;
+        private bool unosPrviPut;
+        private string oznakaSmeraZaIzmenu;
         public int indeks;
         private bool dodavanjeSmeraIzborStarogUnosa;
 
-        public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena)
+        public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena, string oznaka)
         {
             smer = new Smer();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
+            this.unosPrviPut = true;
+            this.oznakaSmeraZaIzmenu = oznaka;
             this.dodavanjeSmeraIzborStarogUnosa = false;
             tabelaSmerova = smerovi;
             InitializeComponent();
@@ -67,6 +71,46 @@ namespace HCI_Projekat
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void UnetaOznakaSmera(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (!izmena)
+            {
+                if (racunarskiCentar.Smerovi.ContainsKey(t.Text.Trim()))
+                    GreskaOznakaSmera.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaSmera.Text = "";
+            }
+            else if (!unosPrviPut && izmena)
+            {
+                if (racunarskiCentar.Smerovi.ContainsKey(t.Text.Trim()) && !t.Text.Trim().Equals(oznakaSmeraZaIzmenu))
+                    GreskaOznakaSmera.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaSmera.Text = "";
+            }
+            unosPrviPut = false;
+        }
+
+        private void proveraPraznogPolja(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox t = (TextBox)sender;
+                if (t.Text.Trim().Equals(string.Empty))
+                    t.BorderBrush = System.Windows.Media.Brushes.Red;
+                else
+                    t.ClearValue(Border.BorderBrushProperty);
+            }
+            catch
+            {
+                DatePicker d = (DatePicker)sender;
+                if(d.SelectedDate.ToString().Equals(string.Empty))
+                    d.BorderBrush = System.Windows.Media.Brushes.Red;
+                else
+                    d.ClearValue(Border.BorderBrushProperty);
+            }
         }
 
         private void finishClick(object sender, RoutedEventArgs e)
@@ -141,8 +185,14 @@ namespace HCI_Projekat
         {
             if (validacijaPraznihPolja())
             {
-                Smer smerIzmena = racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()];
+                Smer smerIzmena = racunarskiCentar.Smerovi[oznakaSmeraZaIzmenu];
+                string staraOznaka = smerIzmena.Oznaka;
+                bool oznakaIzmenjena = false;
 
+                if (!staraOznaka.Equals(OznakaSmera.Text.Trim()))
+                    oznakaIzmenjena = true;
+
+                smerIzmena.Oznaka = OznakaSmera.Text.Trim();
                 smerIzmena.Naziv = NazivSmera.Text.Trim();
                 smerIzmena.Opis = OpisSmera.Text.Trim();
                 smerIzmena.Datum = DateTime.Parse(DatumUvodjenja.Text.Trim());
@@ -151,8 +201,15 @@ namespace HCI_Projekat
                 {
                     foreach (string predmet in smerIzmena.Predmeti)
                     {
+                        racunarskiCentar.Predmeti[predmet].Smer = smerIzmena.Oznaka;
                         racunarskiCentar.Predmeti[predmet].SmerDetalji = "Oznaka: " + smerIzmena.Oznaka + "\nNaziv: " + smerIzmena.Naziv;
                     }
+                }
+
+                if (oznakaIzmenjena)
+                {
+                    racunarskiCentar.Smerovi.Remove(staraOznaka);
+                    racunarskiCentar.Smerovi.Add(smerIzmena.Oznaka, smerIzmena);
                 }
 
                 tabelaSmerova[indeks] = smerIzmena;

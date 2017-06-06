@@ -20,11 +20,13 @@ namespace HCI_Projekat
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Ucionica> tabelaUcionica;
         private bool izmena;
+        private bool unosPrviPut;
+        private string oznakaUcioniceZaIzmenu;
         public int indeks;
         public bool inicijalizacija;
         private bool dodavanjeUcioniceIzborStarogUnosa;
 
-        public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena)
+        public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena, string oznaka)
         {
             this.inicijalizacija = false;
             InitializeComponent();
@@ -33,6 +35,8 @@ namespace HCI_Projekat
             novaUcionica = new Ucionica();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
+            this.unosPrviPut = true;
+            this.oznakaUcioniceZaIzmenu = oznaka;
             List<Softver> softveri = new List<Softver>();
             foreach(Softver s in racunarskiCentar.Softveri.Values)
             {
@@ -176,6 +180,35 @@ namespace HCI_Projekat
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void UnetaOznakaUcionice(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (!izmena)
+            {
+                if (racunarskiCentar.Ucionice.ContainsKey(t.Text.Trim()))
+                    GreskaOznakaUcionice.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaUcionice.Text = "";
+            }
+            else if (!unosPrviPut && izmena)
+            {
+                if (racunarskiCentar.Ucionice.ContainsKey(t.Text.Trim()) && !t.Text.Trim().Equals(oznakaUcioniceZaIzmenu))
+                    GreskaOznakaUcionice.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaUcionice.Text = "";
+            }
+            unosPrviPut = false;
+        }
+
+        private void proveraPraznogPolja(object sender, EventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (t.Text.Trim().Equals(string.Empty))
+                t.BorderBrush = System.Windows.Media.Brushes.Red;
+            else
+                t.ClearValue(Border.BorderBrushProperty);
         }
 
         private void finishClick(object sender, RoutedEventArgs e)
@@ -369,7 +402,12 @@ namespace HCI_Projekat
             if (validacijaPodataka() && validacijaIzmeneSoftvera() && validacijaIzmeneTable() && validacijaIzmenePametneTable() &&
                 validacijaIzmeneProjektora())
             {
-                Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+                Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
+                string staraOznaka = ucionicaIzmena.Oznaka;
+                bool oznakaIzmenjena = false;
+
+                if (!staraOznaka.Equals(oznakaUcionica.Text.Trim()))
+                    oznakaIzmenjena = true;
 
                 ucionicaIzmena.Oznaka = oznakaUcionica.Text.Trim();
                 ucionicaIzmena.Opis = opisUcionica.Text.Trim();
@@ -410,6 +448,12 @@ namespace HCI_Projekat
                 }
                 ucionicaIzmena.SoftveriLista = sb.ToString();
 
+                if(oznakaIzmenjena)
+                {
+                    racunarskiCentar.Ucionice.Remove(staraOznaka);
+                    racunarskiCentar.Ucionice.Add(ucionicaIzmena.Oznaka, ucionicaIzmena);
+                }
+                
                 tabelaUcionica[indeks] = ucionicaIzmena;
                 this.Close();
             }
@@ -417,7 +461,7 @@ namespace HCI_Projekat
 
         private bool validacijaIzmeneSoftvera()
         {
-            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
             List<string> sviPredmetiUcionice = new List<string>();
             foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {
@@ -456,7 +500,7 @@ namespace HCI_Projekat
         {
             if (prisustvoTableUcionica.IsChecked)
                 return true;
-            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
             List<string> sviPredmetiUcionice = new List<string>();
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {
@@ -481,7 +525,7 @@ namespace HCI_Projekat
         {
             if (prisustvoPametneTableUcionica.IsChecked)
                 return true;
-            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
             List<string> sviPredmetiUcionice = new List<string>();
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {
@@ -506,7 +550,7 @@ namespace HCI_Projekat
         {
             if (prisustvoProjektoraUcionica.IsChecked)
                 return true;
-            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()];
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
             List<string> sviPredmetiUcionice = new List<string>();
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {

@@ -20,15 +20,19 @@ namespace HCI_Projekat
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Predmet> tabelaPredmeta;
         private bool izmena;
+        private bool unosPrviPut;
         public int indeks;
         public bool inicijalizacija;
         private bool dodavanjePredmetaIzborStarogUnosa;
+        private string oznakaPredmetaZaIzmenu;
 
-        public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti, bool izmena)
+        public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti, bool izmena, string oznaka)
         {
             predmet = new Predmet();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
+            this.unosPrviPut = true;
+            this.oznakaPredmetaZaIzmenu = oznaka;
             tabelaPredmeta = predmeti;
             this.inicijalizacija = false;
             this.dodavanjePredmetaIzborStarogUnosa = false;
@@ -204,6 +208,35 @@ namespace HCI_Projekat
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void UnetaOznakaPredmeta(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (!izmena)
+            {
+                if (racunarskiCentar.Predmeti.ContainsKey(t.Text.Trim()))
+                    GreskaOznakaPredmeta.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaPredmeta.Text = "";
+            }
+            else if(!unosPrviPut && izmena)
+            {
+                if (racunarskiCentar.Predmeti.ContainsKey(t.Text.Trim()) && !t.Text.Trim().Equals(oznakaPredmetaZaIzmenu))
+                    GreskaOznakaPredmeta.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaPredmeta.Text = "";
+            }
+            unosPrviPut = false;
+        }
+
+        private void proveraPraznogPolja(object sender, EventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (t.Text.Trim().Equals(string.Empty))
+                t.BorderBrush = System.Windows.Media.Brushes.Red;
+            else
+                t.ClearValue(Border.BorderBrushProperty);
         }
 
         private void finishClick(object sender, RoutedEventArgs e)
@@ -459,8 +492,14 @@ namespace HCI_Projekat
             if (validacijaPodataka() && validacijeIzmeneBrojaTermina() && validacijaIzmeneDuzineTermina() && validacijaIzmeneSoftvera()
                 && validacijaIzmeneTable() && validacijaIzmenePametneTable() && validacijaIzmeneProjektora())
             {
-                Predmet predmetIzmena = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+                Predmet predmetIzmena = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu];
+                string staraOznaka = predmetIzmena.Oznaka;
+                bool oznakaPromenjena = false;
 
+                if (!staraOznaka.Equals(OznakaPredmeta.Text.Trim()))
+                    oznakaPromenjena = true;
+
+                predmetIzmena.Oznaka = OznakaPredmeta.Text.Trim();
                 predmetIzmena.Naziv = NazivPredmeta.Text.Trim();
                 predmetIzmena.Opis = OpisPredmeta.Text.Trim();
                 predmetIzmena.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text.Trim());
@@ -508,9 +547,9 @@ namespace HCI_Projekat
                 {
                     Smer smer = (Smer)smeroviTabela.Items[i];
                     //iz smera za koji je bio vezan predmet uklanjamo vezu
-                    if (smer.Predmeti.Contains(predmetIzmena.Oznaka))
+                    if (smer.Predmeti.Contains(staraOznaka))
                     {
-                        smer.Predmeti.Remove(predmetIzmena.Oznaka);
+                        smer.Predmeti.Remove(staraOznaka);
                         stariSmerPronadjen = true;
                     }
                     if (smer.UPredmetu)
@@ -529,6 +568,12 @@ namespace HCI_Projekat
                         break;
                 }
 
+                if (oznakaPromenjena)
+                {
+                    racunarskiCentar.Predmeti.Remove(staraOznaka);
+                    racunarskiCentar.Predmeti.Add(predmetIzmena.Oznaka, predmetIzmena);
+                }
+
                 tabelaPredmeta[indeks] = predmetIzmena;
                 this.Close();
             }
@@ -536,33 +581,33 @@ namespace HCI_Projekat
 
         private bool validacijeIzmeneBrojaTermina()
         {
-            int stariBrojTermina = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].BrTermina;
-            int preostaliTermini = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].PreostaliTermini;
+            int stariBrojTermina = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].BrTermina;
+            int preostaliTermini = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini;
             int noviBrojTermina = int.Parse(BrojTerminaPredmet.Text.Trim());
             if (noviBrojTermina > stariBrojTermina)
-                racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini += noviBrojTermina - stariBrojTermina;
+                racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini += noviBrojTermina - stariBrojTermina;
             else
             {
                 int razlika = stariBrojTermina - noviBrojTermina;
-                if (razlika > racunarskiCentar.Predmeti[OznakaPredmeta.Text].PreostaliTermini)
+                if (razlika > racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini)
                 {
                     MessageBox.Show("Ne možete da smanjujete broj termina, jer su oni iskorišteni u kalendaru!");
                     return false;
                 }
                 else
-                    racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].PreostaliTermini -= razlika;
+                    racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini -= razlika;
             }
             return true;
         }
 
         private bool validacijaIzmeneDuzineTermina()
         {
-            int staraDuzinaTermina = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].MinDuzinaTermina;
+            int staraDuzinaTermina = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].MinDuzinaTermina;
             int novaDuzina = int.Parse(DuzinaTerminaPredmet.Text.Trim());
             if(staraDuzinaTermina != novaDuzina)
             {
-                if(racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].PreostaliTermini !=
-                    racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].BrTermina)
+                if(racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini !=
+                    racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].BrTermina)
                 {
                     MessageBox.Show("Ne možete promeniti dužinu trajanja jednog termina, jer je predmet već raspoređen u kalendaru!");
                     return false;
@@ -573,7 +618,7 @@ namespace HCI_Projekat
 
         private bool validacijaIzmeneSoftvera()
         {
-            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            Predmet predmetStari = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu];
             List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
             {
@@ -614,7 +659,7 @@ namespace HCI_Projekat
         {
             if (!PrisustvoTablePredmet.IsChecked)
                 return true;
-            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            Predmet predmetStari = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu];
             List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
             {
@@ -630,7 +675,7 @@ namespace HCI_Projekat
                     postoji = false;
                 if (!postoji)
                 {
-                    MessageBox.Show("Ne mozete dodati tablu predmetu, jer se predaje u ucionici u kojoj nema table!");
+                    MessageBox.Show("Ne možete dodati tablu predmetu, jer se predaje u učionici u kojoj nema table!");
                     PrisustvoTablePredmet.Focus();
                     return false;
                 }
@@ -643,7 +688,7 @@ namespace HCI_Projekat
             if (!PrisustvoPametneTable.IsChecked)
                 return true;
 
-            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            Predmet predmetStari = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu];
             List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
             {
@@ -659,7 +704,7 @@ namespace HCI_Projekat
                     postoji = false;
                 if (!postoji)
                 {
-                    MessageBox.Show("Ne mozete dodati pametnu tablu predmetu, jer se predaje u ucionici u kojoj nema table!");
+                    MessageBox.Show("Ne možete dodati pametnu tablu predmetu, jer se predaje u učionici u kojoj nema pametne table!");
                     PrisustvoPametneTable.Focus();
                     return false;
                 }
@@ -672,7 +717,7 @@ namespace HCI_Projekat
             if (!PrisustvoProjektoraPredmet.IsChecked)
                 return true;
 
-            Predmet predmetStari = racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()];
+            Predmet predmetStari = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu];
             List<string> sveUcionicePredmeta = new List<string>(); //tu se nalaze sve ucionice u kojima se odrzava predmet koji se menja
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
             {
@@ -688,7 +733,7 @@ namespace HCI_Projekat
                     postoji = false;
                 if (!postoji)
                 {
-                    MessageBox.Show("Ne mozete dodati tablu projektor, jer se predaje u ucionici u kojoj nema table!");
+                    MessageBox.Show("Ne možete dodati projektor predmetu, jer se predaje u učionici u kojoj nema projektora!");
                     PrisustvoProjektoraPredmet.Focus();
                     return false;
                 }

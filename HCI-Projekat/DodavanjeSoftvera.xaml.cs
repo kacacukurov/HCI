@@ -1,5 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace HCI_Projekat
@@ -13,14 +17,18 @@ namespace HCI_Projekat
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Softver> tabelaSoftvera;
         private bool izmena;
+        private bool unosPrviPut;
+        private string oznakaSoftveraZaIzmenu;
         public int indeks;
         private bool dodavanjeSoftveraIzborStarogUnosa;
 
-        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena)
+        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena, string oznaka)
         {
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
+            this.unosPrviPut = true;
+            this.oznakaSoftveraZaIzmenu = oznaka;
             this.dodavanjeSoftveraIzborStarogUnosa = false;
             tabelaSoftvera = softveri;
             noviSoftver = new Softver();
@@ -83,6 +91,77 @@ namespace HCI_Projekat
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void UnetaOznakaSoftvera(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (!izmena)
+            {
+                if (racunarskiCentar.Softveri.ContainsKey(t.Text.Trim()))
+                    GreskaOznakaSoftvera.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaSoftvera.Text = "";
+            }
+            else if (!unosPrviPut && izmena)
+            {
+                if (racunarskiCentar.Softveri.ContainsKey(t.Text.Trim()) && !t.Text.Trim().Equals(oznakaSoftveraZaIzmenu))
+                    GreskaOznakaSoftvera.Text = "Oznaka zauzeta!";
+                else
+                    GreskaOznakaSoftvera.Text = "";
+            }
+            unosPrviPut = false;
+        }
+
+        private void proveriUnetuGodinu(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (t.Text.Trim().Equals(string.Empty))
+                GreskaGodinaSoftver.Text = "";
+            else {
+                try
+                {
+                    int godina = Int32.Parse(t.Text.Trim());
+                    if (godina <= 0)
+                        GreskaGodinaSoftver.Text = "Unesite ceo pozitivan broj!";
+                    else
+                        GreskaGodinaSoftver.Text = "";
+                }
+                catch
+                {
+                    GreskaGodinaSoftver.Text = "Unesite ceo pozitivan broj!";
+                }
+            }
+        }
+
+        private void proveriUnetuCenu(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (t.Text.Trim().Equals(string.Empty))
+                GreskaCenaSoftver.Text = "";
+            else {
+                try
+                {
+                    double cena = Double.Parse(t.Text.Trim());
+                    if (cena <= 0)
+                        GreskaCenaSoftver.Text = "Unesite realan pozitivan broj!";
+                    else
+                        GreskaCenaSoftver.Text = "";
+                }
+                catch
+                {
+                    GreskaCenaSoftver.Text = "Unesite realan pozitivan broj!";
+                }
+            }
+        }
+
+        private void proveraPraznogPolja(object sender, EventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            if (t.Text.Trim().Equals(string.Empty))
+                t.BorderBrush = System.Windows.Media.Brushes.Red;
+            else
+                t.ClearValue(Border.BorderBrushProperty);
         }
 
         private void finishClick(object sender, RoutedEventArgs e)
@@ -261,16 +340,21 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka())
             {
-                Softver softverIzmena = racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()];
+                Softver softverIzmena = racunarskiCentar.Softveri[oznakaSoftveraZaIzmenu];
                 bool promenilaSeOznaka = false;
                 bool promenioSeNaziv = false;
                 bool promenioSeOpis = false;
+                string staraOznaka = softverIzmena.Oznaka;
 
-                if (softverIzmena.Naziv != nazivSoftver.Text.Trim())
+                if (!softverIzmena.Oznaka.Equals(oznakaSoftver.Text.Trim()))
+                    promenilaSeOznaka = true;
+                softverIzmena.Oznaka = oznakaSoftver.Text.Trim();
+
+                if (!softverIzmena.Naziv.Equals(nazivSoftver.Text.Trim()))
                     promenioSeNaziv = true;
                 softverIzmena.Naziv = nazivSoftver.Text.Trim();
 
-                if (softverIzmena.Opis != opisSoftver.Text.Trim())
+                if (!softverIzmena.Opis.Equals(opisSoftver.Text.Trim()))
                     promenioSeOpis = true;
                 softverIzmena.Opis = opisSoftver.Text.Trim();
 
@@ -286,14 +370,108 @@ namespace HCI_Projekat
 
                 softverIzmena.Proizvodjac = proizvodjacSoftver.Text.Trim();
                 softverIzmena.Sajt = sajtSoftver.Text.Trim();
+                
 
-                // DODATI AZURIRANJE STRINGA U UCIONICI/PREDMETU UKOLIKO SE PROMENIO NAZIV, OZNAKA ILI OPIS SOFTVERA
-                /*
+                // azurira se oznaka u listi instaliranih softvera/neophodnih softvera u ucionici/predmetu
+                // azurira se i ispis softvera za ucionicu/predmet
+                StringBuilder sb = new StringBuilder();
                 if(promenilaSeOznaka || promenioSeNaziv || promenioSeOpis)
                 {
-                    // naci povezane ucionice i predmete i azurirati im ispis
+                    List<string> ucioniceZaIzmenu = new List<string>();
+                    foreach(Ucionica u in racunarskiCentar.Ucionice.Values)
+                    {
+                        if (u.InstaliraniSoftveri.Contains(staraOznaka))
+                        {
+                            if (promenilaSeOznaka)
+                            {
+                                // ukoliko se promenila oznaka softvera, uklanjamo staru iz odgovarajcue liste u ucionici
+                                // u kojoj je instaliran i pamtimo oznaku ucionice u koju treba da dodamo promenjenu oznaku softvera
+                                u.InstaliraniSoftveri.Remove(staraOznaka);
+                                ucioniceZaIzmenu.Add(u.Oznaka);
+                            }
+                        }
+                    }
+                    // idemo kroz sve ucionice u kojima treba azurirati stanje softvera i menjamo staru oznaku novom (izbacili smo
+                    // staru i sad ubacujemo novu), azuriramo ispis
+                    foreach(string oznaka in ucioniceZaIzmenu)
+                    {
+                        Ucionica u = racunarskiCentar.Ucionice[oznaka];
+                        u.InstaliraniSoftveri.Add(softverIzmena.Oznaka);
+
+                        foreach (string s in u.InstaliraniSoftveri)
+                        {
+                            if (s.Equals(softverIzmena.Oznaka))
+                            {
+                                if (u.InstaliraniSoftveri.IndexOf(s) != 0)
+                                    sb.Append("\n");
+                                sb.Append("Oznaka: " + softverIzmena.Oznaka);
+                                sb.Append("\nNaziv: " + softverIzmena.Naziv);
+                                sb.Append("\nOpis: " + softverIzmena.Opis + "\n");
+                            }
+                            else {
+                                Softver softver = racunarskiCentar.Softveri[s];
+                                if (u.InstaliraniSoftveri.IndexOf(s) != 0)
+                                    sb.Append("\n");
+                                sb.Append("Oznaka: " + softver.Oznaka);
+                                sb.Append("\nNaziv: " + softver.Naziv);
+                                sb.Append("\nOpis: " + softver.Opis + "\n");
+                            }
+                        }
+                        u.SoftveriLista = sb.ToString();
+                        sb.Clear();
+                    }
+
+
+                    List<string> predmetiZaIzmenu = new List<string>();
+                    foreach(Predmet p in racunarskiCentar.Predmeti.Values)
+                    {
+                        if(p.Softveri.Contains(staraOznaka))
+                        {
+                            if (promenilaSeOznaka)
+                            {
+                                // ukoliko se promenila oznaka softvera, uklanjamo staru iz odgovarajcue liste u predmetu
+                                // koji koristi ovaj softver i pamtimo oznaku predmeta u koji treba da dodamo promenjenu oznaku predmeta
+                                p.Softveri.Remove(staraOznaka);
+                                predmetiZaIzmenu.Add(p.Oznaka);
+                            }
+                        }
+                    }
+                    // idemo kroz sve predmete u kojima treba azurirati stanje softvera i menjamo staru oznaku novom (izbacili smo
+                    // staru i sad ubacujemo novu), azuriramo ispis
+                    foreach (string oznaka in predmetiZaIzmenu)
+                    {
+                        Predmet p = racunarskiCentar.Predmeti[oznaka];
+                        p.Softveri.Add(softverIzmena.Oznaka);
+
+                        foreach (string s in p.Softveri)
+                        {
+                            if (s.Equals(softverIzmena.Oznaka))
+                            {
+                                if (p.Softveri.IndexOf(s) != 0)
+                                    sb.Append("\n");
+                                sb.Append("Oznaka: " + softverIzmena.Oznaka);
+                                sb.Append("\nNaziv: " + softverIzmena.Naziv);
+                                sb.Append("\nOpis: " + softverIzmena.Opis + "\n");
+                            }
+                            else {
+                                Softver softver = racunarskiCentar.Softveri[s];
+                                if (p.Softveri.IndexOf(s) != 0)
+                                    sb.Append("\n");
+                                sb.Append("Oznaka: " + softver.Oznaka);
+                                sb.Append("\nNaziv: " + softver.Naziv);
+                                sb.Append("\nOpis: " + softver.Opis + "\n");
+                            }
+                        }
+                        p.SoftveriLista = sb.ToString();
+                        sb.Clear();
+                    }
                 }
-                */
+
+                if(promenilaSeOznaka)
+                {
+                    racunarskiCentar.Softveri.Remove(staraOznaka);
+                    racunarskiCentar.Softveri.Add(softverIzmena.Oznaka, softverIzmena);
+                }
 
                 tabelaSoftvera[indeks] = softverIzmena;
                 this.Close();

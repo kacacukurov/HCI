@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="Dodavanje smera" Height="500" Width="500" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen" Name="DodavanjeSmeraWindow">
+        Title="Dodavanje smera" Height="400" Width="600" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen" Name="DodavanjeSmeraWindow">
 
     <Window.Resources>
         <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
@@ -163,7 +163,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="16*"/>
+                                <ColumnDefinition Width="14*"/>
                                 <ColumnDefinition Width="27*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -190,16 +190,17 @@
                             </Grid>
                             <Grid Grid.Row="0" Grid.Column="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="9*"/>
-                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1.8*"/>
+                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="2*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <TextBox Name="OznakaSmera" Grid.Column="1" Grid.Row="1"/>
+                                <TextBox Name="OznakaSmera" Grid.Column="0" Grid.Row="1" TextChanged="UnetaOznakaSmera" LostFocus="proveraPraznogPolja"/>
+                                <TextBlock Grid.Column="2" Grid.Row="1" Name="GreskaOznakaSmera" FontSize="12" VerticalAlignment="Bottom" Foreground="Red"/>
                             </Grid>
                             <Grid Grid.Row="1" Grid.Column="0">
                                 <Grid.ColumnDefinitions>
@@ -218,16 +219,16 @@
                             </Grid>
                             <Grid Grid.Row="1" Grid.Column="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="9*"/>
-                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1.8*"/>
+                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="2*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <TextBox Grid.Row="1" Grid.Column="1" Name="NazivSmera" KeyDown="otvori"/>
+                                <TextBox Grid.Row="1" Grid.Column="0" Name="NazivSmera" KeyDown="otvori" LostFocus="proveraPraznogPolja"/>
                             </Grid>
                             <Grid Grid.Row="2" Grid.Column="0">
                                 <Grid.ColumnDefinitions>
@@ -246,16 +247,16 @@
                             </Grid>
                             <Grid Grid.Row="2" Grid.Column="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="9*"/>
-                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1.8*"/>
+                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="2*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <DatePicker Grid.Row="1" Grid.Column="1" Name="DatumUvodjenja" FirstDayOfWeek="Monday" AllowDrop="True"/>
+                                <DatePicker Grid.Row="1" Grid.Column="0" Name="DatumUvodjenja" FirstDayOfWeek="Monday" AllowDrop="True" LostFocus="proveraPraznogPolja"/>
                             </Grid>
                             <Grid Grid.Row="3" Grid.Column="0">
                                 <Grid.ColumnDefinitions>
@@ -275,8 +276,7 @@
                             </Grid>
                             <Grid Grid.Row="3" Grid.Column="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="9*"/>
+                                    <ColumnDefinition Width="10*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
@@ -284,7 +284,7 @@
                                     <RowDefinition Height="7*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <TextBox Grid.Row="1" Grid.Column="1" Name="OpisSmera" KeyDown="otvoriUnazad"/>
+                                <TextBox Grid.Row="1" Grid.Column="0" Name="OpisSmera" KeyDown="otvoriUnazad" LostFocus="proveraPraznogPolja"/>
                             </Grid>
                         </Grid>
                     </Grid>

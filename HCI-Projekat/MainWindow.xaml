@@ -27,6 +27,173 @@
         <RoutedUICommand x:Key="backToTabs" Text="tabs"></RoutedUICommand>
         <RoutedUICommand x:Key="filter" Text="filter"></RoutedUICommand>
         <RoutedUICommand x:Key="pretraga" Text="pretraga"></RoutedUICommand>
+
+        <Style x:Key="TabItem" TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="5,5,0,0"
+                        Padding="25,5,25,5" Margin="0,0,0,0" BorderBrush="Gainsboro">
+                            <ContentPresenter x:Name="ContentSite" ContentSource="Header" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="White"/>
+                                <Setter TargetName="Border" Property="Background" Value="#FFE6CCCC"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="Black"/>
+                                <Setter TargetName="Border" Property="Background" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="HighlightedBackgroundBrush" Color="#FF797878" />
+        <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#FF505050" />
+        <SolidColorBrush x:Key="NormalBorderBrush" Color="#FFFFFFFF" />
+        <SolidColorBrush x:Key="SolidMenuFontBrush" Color="#FFFFFFFF" />
+        <SolidColorBrush x:Key="HighlightedText" Color="#FFFFFFFF" />
+        <Style x:Key="{x:Type Menu}" TargetType="{x:Type Menu}">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Foreground" Value="{StaticResource SolidMenuFontBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Menu}">
+                        <Border
+            Background="{StaticResource MenuBackgroundBrush}"
+            BorderBrush="{StaticResource MenuBackgroundBrush}"
+            BorderThickness="1">
+                            <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="{x:Type MenuItem}" TargetType="{x:Type MenuItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="Border"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="Col0" MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuTextColumnGroup"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup"/>
+                                    <ColumnDefinition x:Name="Col3" Width="14"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- ContentPresenter to show an Icon if needed -->
+                                <ContentPresenter Grid.Column="0" Margin="4,0,6,0" x:Name="Icon" VerticalAlignment="Center" ContentSource="Icon"/>
+
+                                <!-- Glyph is a checkmark if needed for a checkable menu -->
+                                <Grid Grid.Column="0" Visibility="Hidden" Margin="4,0,6,0" x:Name="GlyphPanel" VerticalAlignment="Center">
+                                    <Path x:Name="GlyphPanelpath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z" FlowDirection="LeftToRight"/>
+                                </Grid>
+
+                                <!-- Content for the menu text etc -->
+                                <ContentPresenter Grid.Column="1"
+                                Margin="{TemplateBinding Padding}"
+                                x:Name="HeaderHost"
+                                RecognizesAccessKey="True"
+                                ContentSource="Header"/>
+
+                                <!-- Content for the menu IGT -->
+                                <ContentPresenter Grid.Column="2"
+                                Margin="8,1,8,1"
+                                x:Name="IGTHost"
+                                ContentSource="InputGestureText"
+                                VerticalAlignment="Center"/>
+
+                                <!-- Arrow drawn path which points to the next level of the menu -->
+                                <Grid Grid.Column="3" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center">
+                                    <Path x:Name="ArrowPanelPath" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z"/>
+                                </Grid>
+
+                                <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
+                                <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="SubMenuPopup" Focusable="false" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                                    <Border x:Name="SubMenuBorder" BorderBrush="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" BorderThickness="1" Padding="2,2,2,2">
+                                        <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
+                                            <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+
+                        <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
+                        <ControlTemplate.Triggers>
+                            <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
+                            <Trigger Property="Role" Value="TopLevelHeader">
+                                <Setter Property="Padding" Value="6,1,6,1"/>
+                                <Setter Property="Placement" Value="Bottom" TargetName="SubMenuPopup"/>
+                                <Setter Property="MinWidth" Value="0" TargetName="Col0"/>
+                                <Setter Property="Width" Value="Auto" TargetName="Col3"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="GlyphPanel"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="IGTHost"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+
+                            <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
+                            <Trigger Property="Role" Value="TopLevelItem">
+                                <Setter Property="Padding" Value="6,1,6,1"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+
+                            <!-- Role = SubMenuHeader : this is a child menu item which does not have children -->
+                            <Trigger Property="Role" Value="SubmenuHeader">
+                                <Setter Property="DockPanel.Dock" Value="Top"/>
+                                <Setter Property="Padding" Value="0,2,0,2"/>
+                            </Trigger>
+
+                            <!-- Role = SubMenuItem : this is a child menu item which has children-->
+                            <Trigger Property="Role" Value="SubmenuItem">
+                                <Setter Property="DockPanel.Dock" Value="Top"/>
+                                <Setter Property="Padding" Value="0,2,0,2"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+                            <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+                                <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup"/>
+                            </Trigger>
+
+                            <!-- If no Icon is present the we collapse the Icon Content -->
+                            <Trigger Property="Icon" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                            </Trigger>
+
+                            <!-- The GlyphPanel contains the CheckMark -->
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Visibility" Value="Visible" TargetName="GlyphPanel"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                            </Trigger>
+
+                            <!-- Using the system colors for the Menu Highlight and IsEnabled-->
+                            <Trigger Property="IsHighlighted" Value="true">
+                                <Setter Property="Background" Value="{StaticResource HighlightedBackgroundBrush}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{StaticResource HighlightedText}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource NormalBorderBrush}" TargetName="Border"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="false">
+                                <Setter Property="Background" Value="{StaticResource MenuBackgroundBrush}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{StaticResource SolidMenuFontBrush}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource MenuBackgroundBrush}" TargetName="Border"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="LightGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -73,18 +240,23 @@
 
     <Grid>
         <DockPanel>
-            <Menu DockPanel.Dock="Top" Name="FirstMenu" Margin="1">
+            <Menu DockPanel.Dock="Top" Name="FirstMenu" Margin="0,0,0,1" Height="30">
                 
                 <Menu.ItemsPanel>
                     <ItemsPanelTemplate>
                         <DockPanel HorizontalAlignment="Stretch"/>
                     </ItemsPanelTemplate>
                 </Menu.ItemsPanel>
-                
+
                 <Menu.Items>
-                   
-                    <MenuItem Header="_File" HorizontalAlignment="Left">
-                        <MenuItem Header="_Dodavanje">
+                    <MenuItem Header="_File" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <MenuItem.Style>
+                            <Style>
+                                <Setter Property="MenuItem.Foreground" Value="White"/>
+                                <Setter Property="MenuItem.FontSize" Value="14"></Setter>
+                            </Style>
+                        </MenuItem.Style>
+                        <MenuItem Header="_Dodavanje" Background="White">
                             <MenuItem Click="dodavanjeUcioniceClick" Header="_Učionica" InputGestureText="Ctrl+U">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="U" Modifiers="Ctrl" Command="{StaticResource novaUcionica}"></KeyBinding>
@@ -97,97 +269,95 @@
                                 </MenuItem.InputBindings>
                             </MenuItem>
 
-                            <MenuItem Click="dodavanjePredmetaClick" Header="_Predmet" InputGestureText="Ctrl+P">
+                            <MenuItem Click="dodavanjePredmetaClick" Header="_Predmet" InputGestureText="Ctrl+P" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="P" Modifiers="Ctrl" Command="{StaticResource noviPredmet}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
 
-                            <MenuItem Click="dodavanjeSoftveraClick" Header="_Softver" InputGestureText="Ctrl+T">
+                            <MenuItem Click="dodavanjeSoftveraClick" Header="_Softver" InputGestureText="Ctrl+T" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="T" Modifiers="Ctrl" Command="{StaticResource noviSoftver}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
                         </MenuItem>
 
-                        <MenuItem Header="_Pregled">
-                            <MenuItem Click="pregledKalendaraClick" Header="_Kalendar" InputGestureText="Ctrl+Alt+K">
+                        <MenuItem Header="_Pregled" Background="White">
+                            <MenuItem Click="pregledKalendaraClick" Header="_Kalendar" InputGestureText="Ctrl+Alt+K" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="K" Modifiers="Ctrl+Alt" Command="{StaticResource prikazKalendara}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
 
-                            <MenuItem Click="pregledUcionicaClick" Header="_Učionica" InputGestureText="Ctrl+Alt+U">
+                            <MenuItem Click="pregledUcionicaClick" Header="_Učionica" InputGestureText="Ctrl+Alt+U" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="U" Modifiers="Ctrl+Alt" Command="{StaticResource prikazUcionica}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
 
-                            <MenuItem Click="pregledSmerovaClick" Header="_Smer" InputGestureText="Ctrl+Alt+M">
+                            <MenuItem Click="pregledSmerovaClick" Header="_Smer" InputGestureText="Ctrl+Alt+M" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="M" Modifiers="Ctrl+Alt" Command="{StaticResource prikazSmerova}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
 
-                            <MenuItem Click="pregledPredmetaClick" Header="_Predmet" InputGestureText="Ctrl+Alt+P">
+                            <MenuItem Click="pregledPredmetaClick" Header="_Predmet" InputGestureText="Ctrl+Alt+P" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="P" Modifiers="Ctrl+Alt" Command="{StaticResource prikazPredmeta}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
 
-                            <MenuItem Click="pregledSoftveraClick" Header="_Softver" InputGestureText="Ctrl+Alt+T">
+                            <MenuItem Click="pregledSoftveraClick" Header="_Softver" InputGestureText="Ctrl+Alt+T" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="T" Modifiers="Ctrl+Alt" Command="{StaticResource prikazSoftvera}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
                         </MenuItem>
 
-                        <Separator></Separator>
-                        
-                        <MenuItem Click="saveClick" Header="_Sačuvaj" InputGestureText="Ctrl+S" Name="MenuItemSacuvaj">
+                        <MenuItem Click="saveClick" Header="_Sačuvaj" InputGestureText="Ctrl+S" Name="MenuItemSacuvaj" Background="White">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
-                        
-                        <Separator></Separator>
-                        
-                        <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q" Name="MenuItemUgasi">
+
+                        <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q" Name="MenuItemUgasi" Background="White">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                     </MenuItem>
                     
-                    <MenuItem Header="_Edit" HorizontalAlignment="Left">
-                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z" Name="MenuItemUndo" IsEnabled="False">
+                    <MenuItem Header="_Edit" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <MenuItem.Style>
+                            <Style>
+                                <Setter Property="MenuItem.Foreground" Value="White"/>
+                                <Setter Property="MenuItem.FontSize" Value="14"></Setter>
+                            </Style>
+                        </MenuItem.Style>
+                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z" Name="MenuItemUndo" IsEnabled="False" Background="White">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
-                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y" Name="MenuItemRedo" IsEnabled="False">
+                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y" Name="MenuItemRedo" IsEnabled="False" Background="White">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         
-                        <Separator></Separator>
 
-                        <MenuItem Click="izmeniElement" Header="_Izmeni element tabele" InputGestureText="Ctrl+I" Name="MenuItemIzmeni" IsEnabled="False">
+                        <MenuItem Click="izmeniElement" Header="_Izmeni element tabele" InputGestureText="Ctrl+I" Name="MenuItemIzmeni" IsEnabled="False" Background="White">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
-                        <MenuItem Click="obrisiElement" Header="_Obriši element tabele" InputGestureText="Ctrl+delete" Name="MenuItemObrisi" IsEnabled="False">
+                        <MenuItem Click="obrisiElement" Header="_Obriši element tabele" InputGestureText="Ctrl+delete" Name="MenuItemObrisi" IsEnabled="False" Background="White">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
-
-
-                        <Separator></Separator>
 
                         <MenuItem Click="otvoriKriterijumFilter" Header="_Filtriranje elemenata tabele" InputGestureText="Ctrl+Shift+F" Name="MenuItemIzborFiltera" IsEnabled="False">
                             <MenuItem.InputBindings>
@@ -201,8 +371,15 @@
                             </MenuItem.InputBindings>
                         </MenuItem>
                     </MenuItem>
-                    
-                    <MenuItem Header="_Help" HorizontalAlignment="Left"></MenuItem>
+
+                    <MenuItem Header="_Help" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <MenuItem.Style>
+                            <Style>
+                                <Setter Property="MenuItem.Foreground" Value="White"/>
+                                <Setter Property="MenuItem.FontSize" Value="14"></Setter>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
                 </Menu.Items>
             </Menu>
 
@@ -216,13 +393,13 @@
                 
                 <Menu.Items>
                     
-                    <MenuItem HorizontalAlignment="Left" Name="Undo" Width="27" Click="undoClick">
+                    <MenuItem HorizontalAlignment="Left" Name="Undo" Width="30" Margin="0,0,10,0" Click="undoClick">
                         <MenuItem.Icon>
                             <Image Source="picture/undo.png" Stretch="UniformToFill" ToolTip="Undo"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     
-                    <MenuItem HorizontalAlignment="Left" Name="Redo" Width="27" Click="redoClick">
+                    <MenuItem HorizontalAlignment="Left" Name="Redo" Width="30" Click="redoClick">
                         <MenuItem.Icon>
                             <Image Source="picture/redo.png" Stretch="UniformToFill" ToolTip="Redo"/>
                         </MenuItem.Icon>
@@ -232,12 +409,18 @@
             </Menu>
 
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl" SelectionChanged="tabChanged">
-                <TabItem Header="Kalendar" Name="KalendarTab" >
+                <TabItem Name="KalendarTab" Width="125" Style="{StaticResource TabItem}">
+                    <TabItem.Header>
+                        <TextBlock Text="Kalendar" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
+                    </TabItem.Header>
                     <Grid Name="BrowserGrid">
                     </Grid>
                 </TabItem>
                 
-                <TabItem Header="Učionica" Name="UcionicaTab">
+                <TabItem Name="UcionicaTab" Width="125" Style="{StaticResource TabItem}">
+                    <TabItem.Header>
+                        <TextBlock Text="Učionica" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
+                    </TabItem.Header>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
@@ -320,13 +503,55 @@
                         </Border>
                         <DataGrid Grid.Row="2" Name="tabelaUcionica" LostFocus="tabelaUcionicaIzgubilaFokus" GotFocus="tabelaUcionicaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = BrojRadnihMesta, FallbackValue='-'}" Header="Broj radnih mesta" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1.5*" MinWidth="50">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = BrojRadnihMesta, FallbackValue='-'}" Header="Broj radnih mesta" Width="1.5*" MinWidth="105">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="40">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="1.5*" MinWidth="85">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="3*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
 
@@ -441,7 +666,10 @@
                     </Grid>
                 </TabItem>
                 
-                <TabItem Header="Predmet" Name="PredmetTab">
+                <TabItem Name="PredmetTab" Width="125" Style="{StaticResource TabItem}">
+                    <TabItem.Header>
+                        <TextBlock Text="Predmet" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
+                    </TabItem.Header>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
@@ -527,22 +755,76 @@
                         </Border>
                         <DataGrid Grid.Row="2" Name="tabelaPredmeta" LostFocus="tabelaPredmetaIzgubilaFokus" GotFocus="tabelaPredmetaDobilaFokus" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="Auto">
-                                    <!--<DataGridTextColumn.ElementStyle>
+                                <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="50">
+                                    <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
-                                    </DataGridTextColumn.ElementStyle>-->
+                                    </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = VelicinaGrupe , FallbackValue='-'}" Header="Veličina grupe" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Min dužina termina" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Broj termina" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="Auto"/>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1*" MinWidth="50">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = VelicinaGrupe , FallbackValue='-'}" Header="Veličina grupe" Width="1.5*" MinWidth="90">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Min dužina termina" Width="2*" MinWidth="115">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Broj termina" Width="1.5*" MinWidth="80">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="50">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="2*" MinWidth="85">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="1.5*" MinWidth="70">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
 
@@ -666,7 +948,10 @@
                     </Grid>
                 </TabItem>
                 
-                <TabItem Header="Smer" Name="SmerTab">
+                <TabItem Name="SmerTab" Width="125" Style="{StaticResource TabItem}">
+                    <TabItem.Header>
+                        <TextBlock Text="Smer" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
+                    </TabItem.Header>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
@@ -850,7 +1135,10 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="Softver" Name="SoftverTab">
+                <TabItem Name="SoftverTab" Width="125" Style="{StaticResource TabItem}">
+                    <TabItem.Header>
+                        <TextBlock Text="Softver" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
+                    </TabItem.Header>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>

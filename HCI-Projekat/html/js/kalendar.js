@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (ucioniceLista[i].oznaka == oznakaUcionice)
                         odabranaUcionica = ucioniceLista[i];    //nadjemo ucionicu u koju ju uradio drop
                 }
-
                 if (predmet.tabla && !odabranaUcionica.tabla) {
                     $('#calendar').fullCalendar('removeEvents', event._id);
                     cefCustomObject.alert("Ne mozete dodati predmet u ovu ucionicu, nema tablu!");

@@ -389,7 +389,7 @@ namespace HCI_Projekat
         private void izmenaUcionice()
         {
             if (validacijaPodataka() && validacijaIzmeneSoftvera() && validacijaIzmeneTable() && validacijaIzmenePametneTable() &&
-                validacijaIzmeneProjektora())
+                validacijaIzmeneProjektora() && validacijaBrojaRadnihMesta())
             {
                 Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
                 string staraOznaka = ucionicaIzmena.Oznaka;
@@ -459,8 +459,9 @@ namespace HCI_Projekat
             }
 
             List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
-
-            foreach (string poz in predmetiUcionice)     // prolazim kroz sve predmete unutar ucionice
+            List<string> predmetiBezSoftvera = new List<string>();
+            
+            foreach(string poz in sviPredmetiUcionice)     // prolazim kroz sve predmete unutar ucionice
             {
                 Predmet predmet = racunarskiCentar.Predmeti[poz];
                 foreach (string soft in predmet.Softveri)       //prolazim kroz sve softvere jednog predmeta
@@ -477,10 +478,38 @@ namespace HCI_Projekat
                     }
                     if (!postoji)
                     {
-                        MessageBox.Show("Ne možete izmeniti softvere učionice, jer se oni potrebni predmetima koji se predaju u njoj!");
-                        return false;
+                        predmetiBezSoftvera.Add(poz);
                     }
                 }
+            }
+            
+            List<string> predmetiBezSoftBezDupl = predmetiBezSoftvera.Distinct().ToList();
+            if (predmetiBezSoftBezDupl.Count > 0)
+            {
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Nedostatak softvera";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nUkoliko potvrdite izmenu, sledeci predmeti ce se ukloniti iz rasporeda"
+                                               + " u ucionici zbog nedostatka softvera:\n";
+                List<string> kljuceviPolja = new List<string>();
+                for (int i = 0; i < predmetiBezSoftBezDupl.Count; i++)
+                {
+                    potvrda.PorukaBrisanja.Text += "\n" + (i+1) + ". " + predmetiBezSoftBezDupl[i];
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if (polje.NazivPolja.Split('-')[0].Trim().Equals(predmetiBezSoftBezDupl[i]) && polje.Ucionica.Equals(staraUcionica.Oznaka))
+                            kljuceviPolja.Add(polje.Id);
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in kljuceviPolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiBezSoftvera)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+                }
+                else
+                    return false;
             }
             return true;
         }
@@ -496,16 +525,41 @@ namespace HCI_Projekat
                 if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
                     sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
             }
-
-            List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
-            foreach (string poz in predmetiUcionice)
+            List<string> predmetiKojiZahtevajuTablu = new List<string>();
+            foreach(string poz in sviPredmetiUcionice)
             {
                 if (racunarskiCentar.Predmeti[poz].NeophodnaTabla)
                 {
-                    MessageBox.Show("Ne možete ukloniti tablu, postoje predmeti u učionici kojima je potrebna!");
-                    prisustvoTableUcionica.Focus();
-                    return false;
+                predmetiKojiZahtevajuTablu.Add(poz);
                 }
+            }
+            List<string> predmetiKojiZahtevajuTabluBezDupl = predmetiKojiZahtevajuTablu.Distinct().ToList();
+            if (predmetiKojiZahtevajuTabluBezDupl.Count > 0)
+            {
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Nedostatak table";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nUkoliko potvrdite izmenu, sledeci predmeti ce se ukloniti iz rasporeda"
+                                               + " u ucionici zbog nedostatka table:\n";
+                List<string> kljuceviPolja = new List<string>();
+                for (int i = 0; i < predmetiKojiZahtevajuTabluBezDupl.Count; i++)
+                {
+                    potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiKojiZahtevajuTabluBezDupl[i];
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if (polje.NazivPolja.Split('-')[0].Trim().Equals(predmetiKojiZahtevajuTabluBezDupl[i]) && polje.Ucionica.Equals(staraUcionica.Oznaka))
+                            kljuceviPolja.Add(polje.Id);
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in kljuceviPolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiKojiZahtevajuTablu)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+                }
+                else
+                    return false;
             }
             return true;
         }
@@ -521,16 +575,42 @@ namespace HCI_Projekat
                 if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
                     sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
             }
-
-            List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
-            foreach (string poz in predmetiUcionice)
+            List<string> predmetiKojiZahtevajuPametnuTablu = new List<string>();
+            foreach (string poz in sviPredmetiUcionice)
             {
                 if (racunarskiCentar.Predmeti[poz].NeophodnaPametnaTabla)
                 {
-                    MessageBox.Show("Ne možete ukloniti pametnu tablu, postoje predmeti u učionici kojima je potrebna!");
-                    prisustvoPametneTableUcionica.Focus();
-                    return false;
+                    predmetiKojiZahtevajuPametnuTablu.Add(poz);
                 }
+            }
+
+            List<string> predmetiKojiZahtevajuPametnuTabluBezDupl = predmetiKojiZahtevajuPametnuTablu.Distinct().ToList();
+            if (predmetiKojiZahtevajuPametnuTabluBezDupl.Count > 0)
+            {
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Nedostatak pametne table";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nUkoliko potvrdite izmenu, sledeci predmeti ce se ukloniti iz rasporeda"
+                                               + " u ucionici zbog nedostatka pametne table:\n";
+                List<string> kljuceviPolja = new List<string>();
+                for (int i = 0; i < predmetiKojiZahtevajuPametnuTabluBezDupl.Count; i++)
+                {
+                    potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiKojiZahtevajuPametnuTabluBezDupl[i];
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if (polje.NazivPolja.Split('-')[0].Trim().Equals(predmetiKojiZahtevajuPametnuTabluBezDupl[i]) && polje.Ucionica.Equals(staraUcionica.Oznaka))
+                            kljuceviPolja.Add(polje.Id);
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in kljuceviPolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiKojiZahtevajuPametnuTablu)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+                }
+                else
+                    return false;
             }
             return true;
         }
@@ -547,15 +627,95 @@ namespace HCI_Projekat
                     sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
             }
 
-            List<string> predmetiUcionice = sviPredmetiUcionice.Distinct().ToList(); //izbacimo duplikate
-            foreach (string poz in predmetiUcionice)
+            List<string> predmetiKojiZahtevajuProjektor = new List<string>();
+            foreach (string poz in sviPredmetiUcionice)
             {
                 if (racunarskiCentar.Predmeti[poz].NeophodanProjektor)
                 {
-                    MessageBox.Show("Ne možete ukloniti projektor, postoje predmeti u učionici kojima je potrebna!");
-                    prisustvoProjektoraUcionica.Focus();
-                    return false;
+                    predmetiKojiZahtevajuProjektor.Add(poz);
                 }
+            }
+
+            List<string> predmetiKojiZahtevajuProjektorBezDupl = predmetiKojiZahtevajuProjektor.Distinct().ToList();
+            if (predmetiKojiZahtevajuProjektorBezDupl.Count > 0)
+            {
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Nedostatak projektora";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nUkoliko potvrdite izmenu, sledeci predmeti ce se ukloniti iz rasporeda"
+                                               + " u ucionici zbog nedostatka projektora:\n";
+                List<string> kljuceviPolja = new List<string>();
+                for (int i = 0; i < predmetiKojiZahtevajuProjektorBezDupl.Count; i++)
+                {
+                    potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiKojiZahtevajuProjektorBezDupl[i];
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if (polje.NazivPolja.Split('-')[0].Trim().Equals(predmetiKojiZahtevajuProjektorBezDupl[i]) && polje.Ucionica.Equals(staraUcionica.Oznaka))
+                            kljuceviPolja.Add(polje.Id);
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in kljuceviPolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiKojiZahtevajuProjektor)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+                }
+                else
+                    return false;
+            }
+            return true;
+        }
+
+        private bool validacijaBrojaRadnihMesta()
+        {
+            Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
+            if (staraUcionica.BrojRadnihMesta == int.Parse(brojRadnihMestaUcionica.Text.Trim()))
+                return true;
+            int noviBrMesta = int.Parse(brojRadnihMestaUcionica.Text.Trim());
+            List<string> sviPredmetiUcionice = new List<string>();
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
+            {
+                if (polje.Ucionica.Trim().Equals(staraUcionica.Oznaka.Trim()))
+                    sviPredmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());
+            }
+
+            List<string> predmetiKojiZahtevajuBrojMesta = new List<string>();
+            foreach (string poz in sviPredmetiUcionice)
+            {
+                if (racunarskiCentar.Predmeti[poz].VelicinaGrupe > noviBrMesta)
+                {
+                    predmetiKojiZahtevajuBrojMesta.Add(poz);
+                }
+            }
+
+            List<string> predmetiKojiZahtevajuBrojMestaBezDupl = predmetiKojiZahtevajuBrojMesta.Distinct().ToList();
+            if (predmetiKojiZahtevajuBrojMestaBezDupl.Count > 0)
+            {
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Nedovoljno mesta";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nUkoliko potvrdite izmenu, sledeci predmeti ce se ukloniti iz rasporeda"
+                                               + " u ucionici zbog nedostatka mesta u ucionici:\n";
+                List<string> kljuceviPolja = new List<string>();
+                for (int i = 0; i < predmetiKojiZahtevajuBrojMestaBezDupl.Count; i++)
+                {
+                    potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiKojiZahtevajuBrojMestaBezDupl[i];
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if (polje.NazivPolja.Split('-')[0].Trim().Equals(predmetiKojiZahtevajuBrojMestaBezDupl[i]) && polje.Ucionica.Equals(staraUcionica.Oznaka))
+                            kljuceviPolja.Add(polje.Id);
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in kljuceviPolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiKojiZahtevajuBrojMesta)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+                }
+                else
+                    return false;
             }
             return true;
         }

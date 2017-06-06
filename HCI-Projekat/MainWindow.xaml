@@ -199,7 +199,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
+        </Style> 
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -415,7 +415,7 @@
             </Menu>
 
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl" SelectionChanged="tabChanged">
-                <TabItem Name="KalendarTab" Width="125" Style="{StaticResource TabItem}">
+                <TabItem Name="KalendarTab" Width="125" >
                     <TabItem.Header>
                         <TextBlock Text="Kalendar" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
                     </TabItem.Header>

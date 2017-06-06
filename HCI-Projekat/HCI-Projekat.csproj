@@ -152,6 +152,9 @@
     <Compile Include="PotvrdaBrisanja.xaml.cs">
       <DependentUpon>PotvrdaBrisanja.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PotvrdaIzmene.xaml.cs">
+      <DependentUpon>PotvrdaIzmene.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Predmet.cs" />
     <Compile Include="RacunarskiCentar.cs" />
     <Compile Include="Smer.cs" />
@@ -230,6 +233,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PotvrdaBrisanja.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PotvrdaIzmene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

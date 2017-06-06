@@ -400,7 +400,7 @@ namespace HCI_Projekat
 
                 ucionicaIzmena.Oznaka = oznakaUcionica.Text.Trim();
                 ucionicaIzmena.Opis = opisUcionica.Text.Trim();
-
+/*
                 ucionicaIzmena.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
                 ucionicaIzmena.PametnaTablaString = ucionicaIzmena.PrisustvoPametneTable ? "prisutna" : "nije prisutna";
                 ucionicaIzmena.PrisustvoTable = prisustvoTableUcionica.IsChecked;
@@ -435,7 +435,7 @@ namespace HCI_Projekat
                         softver.Instaliran = false;
                     }
                 }
-                ucionicaIzmena.SoftveriLista = sb.ToString();
+                ucionicaIzmena.SoftveriLista = sb.ToString();*/
 
                 if (oznakaIzmenjena)
                 {
@@ -511,14 +511,46 @@ namespace HCI_Projekat
                 else
                     return false;
             }
+            if ((bool)LinuxOSUcionica.IsChecked)
+                staraUcionica.OperativniSistem = "Linux";
+            else if ((bool)WindowsOSUcionica.IsChecked)
+                staraUcionica.OperativniSistem = "Windows";
+            else
+                staraUcionica.OperativniSistem = "Windows i Linux";
+
+            staraUcionica.InstaliraniSoftveri.Clear();
+            StringBuilder sb = new StringBuilder();
+            int brojSoftvera = 0;
+            for (int i = 0; i < softverTabela.Items.Count; i++)
+            {
+                Softver softver = (Softver)softverTabela.Items[i];
+                if (softver.Instaliran)
+                {
+                    brojSoftvera++;
+                    staraUcionica.InstaliraniSoftveri.Add(softver.Oznaka);
+
+                    if (brojSoftvera > 1)
+                        sb.Append("\n");
+                    sb.Append("Oznaka: " + softver.Oznaka);
+                    sb.Append("\nNaziv: " + softver.Naziv);
+                    sb.Append("\nOpis: " + softver.Opis + "\n");
+                    softver.Instaliran = false;
+                }
+            }
+            staraUcionica.SoftveriLista = sb.ToString();
             return true;
         }
 
         private bool validacijaIzmeneTable()
         {
-            if (prisustvoTableUcionica.IsChecked)
-                return true;
             Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
+            if (prisustvoTableUcionica.IsChecked)
+            {
+                staraUcionica.PrisustvoTable = prisustvoTableUcionica.IsChecked;
+                staraUcionica.TablaString = staraUcionica.PrisustvoTable ? "prisutna" : "nije prisutna";
+                return true;
+            }
+                
             List<string> sviPredmetiUcionice = new List<string>();
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {
@@ -557,18 +589,26 @@ namespace HCI_Projekat
                         racunarskiCentar.PoljaKalendara.Remove(id);
                     foreach (string poz in predmetiKojiZahtevajuTablu)
                         racunarskiCentar.Predmeti[poz].PreostaliTermini++;
-                }
+               }
                 else
+                {
                     return false;
+                }
             }
+            staraUcionica.PrisustvoTable = prisustvoTableUcionica.IsChecked;
+            staraUcionica.TablaString = staraUcionica.PrisustvoTable ? "prisutna" : "nije prisutna";
             return true;
         }
 
         private bool validacijaIzmenePametneTable()
         {
-            if (prisustvoPametneTableUcionica.IsChecked)
-                return true;
             Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
+            if (prisustvoPametneTableUcionica.IsChecked)
+            {
+                racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu].PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
+                racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu].PametnaTablaString = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu].PrisustvoPametneTable ? "prisutna" : "nije prisutna";
+                return true;
+            }
             List<string> sviPredmetiUcionice = new List<string>();
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {
@@ -610,16 +650,24 @@ namespace HCI_Projekat
                         racunarskiCentar.Predmeti[poz].PreostaliTermini++;
                 }
                 else
+                {
                     return false;
+                }
             }
+            racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu].PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
+            racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu].PametnaTablaString = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu].PrisustvoPametneTable ? "prisutna" : "nije prisutna";
             return true;
         }
 
         private bool validacijaIzmeneProjektora()
         {
-            if (prisustvoProjektoraUcionica.IsChecked)
-                return true;
             Ucionica staraUcionica = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
+            if (prisustvoProjektoraUcionica.IsChecked)
+            {
+                staraUcionica.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
+                staraUcionica.ProjektorString = staraUcionica.PrisustvoProjektora ? "prisutan" : "nije prisutan";
+                return true;
+            }
             List<string> sviPredmetiUcionice = new List<string>();
             foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //trazimo sve predmete koji se odrzavaju u datoj ucionici
             {
@@ -660,10 +708,14 @@ namespace HCI_Projekat
                         racunarskiCentar.PoljaKalendara.Remove(id);
                     foreach (string poz in predmetiKojiZahtevajuProjektor)
                         racunarskiCentar.Predmeti[poz].PreostaliTermini++;
-                }
+                  }
                 else
+                {
                     return false;
+                }
             }
+            staraUcionica.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
+            staraUcionica.ProjektorString = staraUcionica.PrisustvoProjektora ? "prisutan" : "nije prisutan";
             return true;
         }
 
@@ -717,6 +769,7 @@ namespace HCI_Projekat
                 else
                     return false;
             }
+            staraUcionica.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text.Trim());
             return true;
         }
     }

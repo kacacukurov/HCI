@@ -829,6 +829,12 @@ namespace HCI_Projekat
         {
             if (tabelaPredmeta.SelectedIndex != -1)
             {
+                List<string> oznakePolja = new List<string>();
+                List<string> predmetiUcionice = new List<string>(); //sadrzi duplikate
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Postoje predmeti";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nPostoje predmeti u rasporedu. \nUkoliko potvrdite brisanje, uklonicete predmete iz rasporeda.\n";
+
                 List<Predmet> removedItems = new List<Predmet>();
                 foreach (object o in tabelaPredmeta.SelectedItems)
                 {
@@ -837,19 +843,44 @@ namespace HCI_Projekat
                     TextBlock content = tabelaPredmeta.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaPredmeta = content.Text;
 
-                    if (racunarskiCentar.Predmeti[oznakaPredmeta].BrTermina != racunarskiCentar.Predmeti[oznakaPredmeta].PreostaliTermini)
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //za svako polje inace
                     {
-                        MessageBox.Show("Ne možete obrisati predmet, jer je već raspoređen u kalendaru!");
-                        return;
+                        if (polje.NazivPolja.Split('-')[0].Trim() == oznakaPredmeta)       //ako je u taj predmet
+                        {
+                            oznakePolja.Add(polje.Id);
+                            predmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());    //dodam ga u polja i u predmete
+                        }
                     }
-
-                    racunarskiCentar.Smerovi[racunarskiCentar.Predmeti[oznakaPredmeta].Smer].Predmeti.Remove(oznakaPredmeta);
                     removedItems.Add(racunarskiCentar.Predmeti[oznakaPredmeta]);
-                    racunarskiCentar.Predmeti[oznakaPredmeta].Obrisan = true;
+                    
                 }
+                List<string> predmetiUcioniceBezDupl = predmetiUcionice.Distinct().ToList();
+                if (oznakePolja.Count > 0)
+                {
+                    for (int i = 0; i < predmetiUcioniceBezDupl.Count; i++)
+                    {
+                        potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in oznakePolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiUcionice)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
 
-                foreach (Predmet predmet in removedItems)
-                    predmetiKolekcija.Remove(predmet);
+                    foreach (Predmet predmet in removedItems)
+                    {
+                        racunarskiCentar.Smerovi[racunarskiCentar.Predmeti[predmet.Oznaka].Smer].Predmeti.Remove(predmet.Oznaka);
+                        racunarskiCentar.Predmeti[predmet.Oznaka].Obrisan = true;
+                        predmetiKolekcija.Remove(predmet);
+                    }
+                }
+                else
+                {
+                    return;
+                }
             }
             else
                 return;
@@ -911,28 +942,55 @@ namespace HCI_Projekat
             if (tabelaUcionica.SelectedIndex != -1)
             {
                 List<Ucionica> removedItems = new List<Ucionica>();
-                foreach (object o in tabelaUcionica.SelectedItems)
+                List<string> oznakePolja = new List<string>();
+                List<string> predmetiUcionice = new List<string>(); //sadrzi duplikate
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Postoje predmeti";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nUkoliko potvrdite brisanje, sledeci predmeti ce se ukloniti iz rasporeda:\n";
+
+                foreach (object o in tabelaUcionica.SelectedItems)  //za svaku ucionicu
                 {
-                    int index = tabelaUcionica.Items.IndexOf(o);
+                   int index = tabelaUcionica.Items.IndexOf(o);
                     DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaUcionice = content.Text;
 
-                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //za svako polje inace
                     {
-                        if (polje.Ucionica == oznakaUcionice)
+                        if (polje.Ucionica == oznakaUcionice)       //ako je u toj ucionici
                         {
-                            MessageBox.Show("Ne možete da obrišete učionicu jer se neki predmeti održavaju u njoj!");
-                            return;
+                            oznakePolja.Add(polje.Id);
+                            predmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());    //dodam ga u polja i u predmete
                         }
                     }
-
                     removedItems.Add(racunarskiCentar.Ucionice[oznakaUcionice]);
-                    racunarskiCentar.Ucionice[oznakaUcionice].Obrisan = true;
                 }
+                List<string> predmetiUcioniceBezDupl = predmetiUcionice.Distinct().ToList();
+                if (oznakePolja.Count > 0)
+                {
+                    for(int i = 0; i < predmetiUcioniceBezDupl.Count; i++)
+                    {
+                        potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in oznakePolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiUcionice)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
 
-                foreach (Ucionica ucionica in removedItems)
-                    ucioniceKolekcija.Remove(ucionica);
+                    foreach (Ucionica ucionica in removedItems)
+                    {
+                        racunarskiCentar.Ucionice[ucionica.Oznaka].Obrisan = true;
+                        ucioniceKolekcija.Remove(ucionica);
+                    }
+                }
+                else
+                {
+                    return;
+                }
             }
             else
                 return;
@@ -942,6 +1000,12 @@ namespace HCI_Projekat
         {
             if (tabelaSmerova.SelectedIndex != -1)
             {
+                List<string> oznakePolja = new List<string>();
+                List<string> predmetiUcionice = new List<string>(); //sadrzi duplikate
+                PotvrdaIzmene potvrda = new PotvrdaIzmene();
+                potvrda.Title = "Postoje predmeti";
+                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nPostoje predmeti u rasporedu. \nUkoliko potvrdite brisanje, uklonicete predmete iz rasporeda.\n";
+
                 List<Smer> removedItems = new List<Smer>();
                 foreach (object o in tabelaSmerova.SelectedItems)
                 {
@@ -950,24 +1014,54 @@ namespace HCI_Projekat
                     TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaSmera = content.Text;
 
-                    //provera da li se nalazi u nekom predmetu, ako se nalazi, brise se i taj predmet kom pripada
-                    if (racunarskiCentar.Smerovi[oznakaSmera].Predmeti.Count > 0)
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)  //za svako polje inace
                     {
-                        foreach (string predmetOznaka in racunarskiCentar.Smerovi[oznakaSmera].Predmeti)
+                        if (polje.NazivPolja.Split('-')[1].Trim() == oznakaSmera)       //ako je u toj ucionici
                         {
-                            racunarskiCentar.Predmeti[predmetOznaka].Obrisan = true;
-                            predmetiKolekcija.Remove(racunarskiCentar.Predmeti[predmetOznaka]);
+                            oznakePolja.Add(polje.Id);
+                            predmetiUcionice.Add(polje.NazivPolja.Split('-')[0].Trim());    //dodam ga u polja i u predmete
                         }
                     }
 
                     removedItems.Add(racunarskiCentar.Smerovi[oznakaSmera]);
-                    racunarskiCentar.Smerovi[oznakaSmera].Obrisan = true;
+                    
                     // za svako logicko brisanje smera se smanjuje broj logicki aktivnih
                     brojAktivnihSmerova--;
                 }
+                List<string> predmetiUcioniceBezDupl = predmetiUcionice.Distinct().ToList();
+                if (oznakePolja.Count > 0)
+                {
+                    for (int i = 0; i < predmetiUcioniceBezDupl.Count; i++)
+                    {
+                        potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
+                    }
+                }
+                potvrda.ShowDialog();
+                if (potvrda.daKlik)
+                {
+                    foreach (string id in oznakePolja)
+                        racunarskiCentar.PoljaKalendara.Remove(id);
+                    foreach (string poz in predmetiUcionice)
+                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
 
-                foreach (Smer smer in removedItems)
-                    smeroviKolekcija.Remove(smer);
+                    foreach (Smer smer in removedItems)
+                    {//provera da li se nalazi u nekom predmetu, ako se nalazi, brise se i taj predmet kom pripada
+                        if (racunarskiCentar.Smerovi[smer.Oznaka].Predmeti.Count > 0)
+                        {
+                            foreach (string predmetOznaka in racunarskiCentar.Smerovi[smer.Oznaka].Predmeti)
+                            {
+                                racunarskiCentar.Predmeti[predmetOznaka].Obrisan = true;
+                                predmetiKolekcija.Remove(racunarskiCentar.Predmeti[predmetOznaka]);
+                            }
+                        }
+                        racunarskiCentar.Smerovi[smer.Oznaka].Obrisan = true;
+                        smeroviKolekcija.Remove(smer);
+                    }
+                }
+                else
+                {
+                    return;
+                }
             }
             else
                 return;

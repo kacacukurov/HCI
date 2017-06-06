@@ -216,7 +216,6 @@
         <CommandBinding Command="{StaticResource obrisi}" Executed="obrisiElement"></CommandBinding>
         <CommandBinding Command="{StaticResource undo}" Executed="undoClick"></CommandBinding>
         <CommandBinding Command="{StaticResource redo}" Executed="redoClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource save}" Executed="saveClick"></CommandBinding>
         <CommandBinding Command="{StaticResource exit}" Executed="exitClick"></CommandBinding>
         <CommandBinding Command="{StaticResource backToTabs}" Executed="tabsFocus"></CommandBinding>
         <CommandBinding Command="{StaticResource filter}" Executed="otvoriKriterijumFilter"></CommandBinding>
@@ -318,12 +317,6 @@
                                     <KeyBinding Key="T" Modifiers="Ctrl+Alt" Command="{StaticResource prikazSoftvera}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
-                        </MenuItem>
-
-                        <MenuItem Click="saveClick" Header="_Sačuvaj" InputGestureText="Ctrl+S" Name="MenuItemSacuvaj" Background="White">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
-                            </MenuItem.InputBindings>
                         </MenuItem>
 
                         <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q" Name="MenuItemUgasi" Background="White">
@@ -516,42 +509,42 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = BrojRadnihMesta, FallbackValue='-'}" Header="Broj radnih mesta" Width="1.5*" MinWidth="105" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = BrojRadnihMesta, FallbackValue='-'}" Header="Broj radnih mesta" Width="1.5*" MinWidth="105">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="40" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="40">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="1.5*" MinWidth="85" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="1.5*" MinWidth="85">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="3*" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="3*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -641,7 +634,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiUcionicuClick" Name="obrisiUcionicuButton" Background="DarkRed" Foreground="White">
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiElement" Name="obrisiUcionicuButton" Background="DarkRed" Foreground="White">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Obriši</TextBlock>
@@ -768,63 +761,63 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1*" MinWidth="50" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path= Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = VelicinaGrupe , FallbackValue='-'}" Header="Veličina grupe" Width="1.5*" MinWidth="90" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = VelicinaGrupe , FallbackValue='-'}" Header="Veličina grupe" Width="1.5*" MinWidth="90">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Min dužina termina" Width="2*" MinWidth="115" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Min dužina termina" Width="2*" MinWidth="115">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Broj termina" Width="1.5*" MinWidth="80" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Broj termina" Width="1.5*" MinWidth="80">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="50" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="2*" MinWidth="85" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="2*" MinWidth="85">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="1.5*" MinWidth="70" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="1.5*" MinWidth="70">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -923,7 +916,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiPredmetClick" Name="obrisiPredmetButton" Background="DarkRed" Foreground="White">
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiElement" Name="obrisiPredmetButton" Background="DarkRed" Foreground="White">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Obriši</TextBlock>
@@ -1044,21 +1037,21 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1*" MinWidth="80" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1*" MinWidth="80">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum uvođenja" Width="1*" MinWidth="80" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Datum, FallbackValue='-'}" Header="Datum uvođenja" Width="1*" MinWidth="80">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="1*" MinWidth="150" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="1*" MinWidth="150">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1134,7 +1127,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiSmerClick" Name="obrisiSmerButton" Background="DarkRed" Foreground="White">
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiElement" Name="obrisiSmerButton" Background="DarkRed" Foreground="White">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Obriši</TextBlock>
@@ -1250,7 +1243,7 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <DataGrid Grid.Row="2" Name="tabelaSoftvera" LostFocus="tabelaSoftveraIzgubilaFokus" GotFocus="tabelaSoftveraDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                        <DataGrid Grid.Row="2" Name="tabelaSoftvera" LostFocus="tabelaSoftveraIzgubilaFokus" GotFocus="tabelaSoftveraDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Margin="-1,0,1,0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
@@ -1259,49 +1252,49 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1*" MinWidth="60" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1*" MinWidth="60">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = OperativniSistem, FallbackValue='-'}" Header="Operativni sistem" Width="2*" MinWidth="105">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Proizvodjac, FallbackValue='-'}" Header="Proizvođač" Width="1*" MinWidth="70" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Proizvodjac, FallbackValue='-'}" Header="Proizvođač" Width="1*" MinWidth="70">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = GodIzdavanja, FallbackValue='-'}" Header="Godina izdavanja" Width="2*" MinWidth="100" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = GodIzdavanja, FallbackValue='-'}" Header="Godina izdavanja" Width="2*" MinWidth="100">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Cena, FallbackValue='-'}" Header="Cena" Width="0.5*" MinWidth="50" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Cena, FallbackValue='-'}" Header="Cena" Width="0.5*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Sajt , FallbackValue='-'}" Header="Sajt" Width="0.5*" MinWidth="50" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Sajt , FallbackValue='-'}" Header="Sajt" Width="0.5*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*" MinWidth="70" CellStyle="{StaticResource CellStyle}">
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*" MinWidth="70">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1313,7 +1306,7 @@
 
                         <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
                             <ScrollViewer>
-                                <Grid DataContext="{Binding ElementName=tabelaSoftvera,Path=SelectedItem}" Name="detaljanPrikazSoftver">
+                                <Grid GotFocus="AAA" DataContext="{Binding ElementName=tabelaSoftvera,Path=SelectedItem}" Name="detaljanPrikazSoftver">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -1391,7 +1384,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiSoftverClick" Name="obrisiSoftverButton" Background="DarkRed" Foreground="White">
+                                <Button Grid.Column="1" Grid.Row="1" Click="obrisiElement" Name="obrisiSoftverButton" Background="DarkRed" Foreground="White">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Obriši</TextBlock>

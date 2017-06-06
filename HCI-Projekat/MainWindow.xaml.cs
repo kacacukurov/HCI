@@ -48,7 +48,7 @@ namespace HCI_Projekat
                     predmetiKolekcija.Add(p);
             }
             tabelaPredmeta.ItemsSource = predmetiKolekcija;
-            tabelaPredmeta.IsSynchronizedWithCurrentItem = true;
+            //tabelaPredmeta.IsSynchronizedWithCurrentItem = true;
             tabelaPredmeta.IsReadOnly = true;
             tabelaPredmeta.UnselectAll();
             detaljanPrikazPredmet.Visibility = Visibility.Collapsed;
@@ -60,7 +60,7 @@ namespace HCI_Projekat
                     softveriKolekcija.Add(s);
             }
             tabelaSoftvera.ItemsSource = softveriKolekcija;
-            tabelaSoftvera.IsSynchronizedWithCurrentItem = true;
+            //tabelaSoftvera.IsSynchronizedWithCurrentItem = true;
             tabelaSoftvera.IsReadOnly = true;
             tabelaSoftvera.UnselectAll();
             detaljanPrikazSoftver.Visibility = Visibility.Hidden;
@@ -72,7 +72,7 @@ namespace HCI_Projekat
                     smeroviKolekcija.Add(s);
             }
             tabelaSmerova.ItemsSource = smeroviKolekcija;
-            tabelaSmerova.IsSynchronizedWithCurrentItem = true;
+            //tabelaSmerova.IsSynchronizedWithCurrentItem = true;
             tabelaSmerova.IsReadOnly = true;
             tabelaSmerova.UnselectAll();
             detaljanPrikazSmer.Visibility = Visibility.Hidden;
@@ -84,7 +84,7 @@ namespace HCI_Projekat
                     ucioniceKolekcija.Add(u);
             }
             tabelaUcionica.ItemsSource = ucioniceKolekcija;
-            tabelaUcionica.IsSynchronizedWithCurrentItem = true;
+            //tabelaUcionica.IsSynchronizedWithCurrentItem = true;
             tabelaUcionica.IsReadOnly = true;
             tabelaUcionica.UnselectAll();
             detaljanPrikazUcionica.Visibility = Visibility.Hidden;
@@ -110,6 +110,11 @@ namespace HCI_Projekat
             chromeBrowser.Address = page;
 
             BrowserGrid.Children.Add(chromeBrowser);
+        }
+
+        private void AAA(object sender, EventArgs e)
+        {
+            MessageBox.Show("aa");
         }
 
         private int brojLogickiAktivnihSoftvera()
@@ -228,11 +233,6 @@ namespace HCI_Projekat
                 tabControl.SelectedIndex = 4;
         }
 
-        private void saveClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Snimi");
-        }
-
         private void exitClick(object sender, RoutedEventArgs e)
         {
             mainWindow.Close();
@@ -326,26 +326,6 @@ namespace HCI_Projekat
                 SoftverFilterKriterijum.IsDropDownOpen = true;
                 SoftverFilterKriterijum.Focus();
             }
-        }
-
-        private void pretraziSmer(object sender, TextChangedEventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-        }
-
-        private void pretraziSoftver(object sender, TextChangedEventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-        }
-
-        private void pretraziPredmet(object sender, TextChangedEventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-        }
-
-        private void pretraziUcionicu(object sender, TextChangedEventArgs e)
-        {
-            TextBox t = (TextBox)sender;
         }
 
         private void ponudaOpcija(object sender, KeyEventArgs e)
@@ -1100,7 +1080,7 @@ namespace HCI_Projekat
             {
                 cef.posaljiPodatke();
                 MenuItemPretraga.IsEnabled = false;
-                MenuItemPretraga.IsEnabled = false;
+                MenuItemIzborFiltera.IsEnabled = false;
             }
             else if (tabControl.SelectedIndex == 1 || tabControl.SelectedIndex == 2 || tabControl.SelectedIndex == 3 || tabControl.SelectedIndex == 4)
             {

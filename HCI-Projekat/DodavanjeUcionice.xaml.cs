@@ -452,6 +452,7 @@ namespace HCI_Projekat
                 {
                     racunarskiCentar.Ucionice.Remove(staraOznaka);
                     racunarskiCentar.Ucionice.Add(ucionicaIzmena.Oznaka, ucionicaIzmena);
+                    izmenaUcioniceUPoljima(staraOznaka, oznakaUcionica.Text.Trim());
                 }
                 
                 tabelaUcionica[indeks] = ucionicaIzmena;
@@ -569,6 +570,15 @@ namespace HCI_Projekat
                 }
             }
             return true;
+        }
+
+        private void izmenaUcioniceUPoljima(string staraOznaka, string novaOznaka)
+        {
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                if (polje.Ucionica == staraOznaka)    //idem kroz sva polja i trazim ucionice
+                    polje.Ucionica = novaOznaka;
+            }
         }
     }
 }

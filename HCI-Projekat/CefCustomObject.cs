@@ -235,5 +235,10 @@ namespace HCI_Projekat
                 _instanceBrowser.ExecuteScriptAsync("ucitajPredmete('" + predmeti + "');");
             }
         }
+
+        public void alert(string tekst)
+        {
+            MessageBox.Show(tekst);
+        }
     }
 }

@@ -572,6 +572,7 @@ namespace HCI_Projekat
                 {
                     racunarskiCentar.Predmeti.Remove(staraOznaka);
                     racunarskiCentar.Predmeti.Add(predmetIzmena.Oznaka, predmetIzmena);
+                    promeniOznakuPredmetaUPoljima(staraOznaka, OznakaPredmeta.Text.Trim());
                 }
 
                 tabelaPredmeta[indeks] = predmetIzmena;
@@ -739,6 +740,15 @@ namespace HCI_Projekat
                 }
             }
             return true;
+        }
+
+        private void promeniOznakuPredmetaUPoljima(string staraOznaka, string novaOznaka)
+        {
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                if (polje.NazivPolja.Split('-')[0].Trim() == staraOznaka)    //idem kroz sva polja i trazim ucionice
+                    polje.NazivPolja = novaOznaka + '-' + polje.NazivPolja.Split('-')[1].Trim();
+            }
         }
     }
 }

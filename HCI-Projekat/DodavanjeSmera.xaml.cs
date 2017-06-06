@@ -210,6 +210,7 @@ namespace HCI_Projekat
                 {
                     racunarskiCentar.Smerovi.Remove(staraOznaka);
                     racunarskiCentar.Smerovi.Add(smerIzmena.Oznaka, smerIzmena);
+                    promeniOznakuSmeraUPoljima(staraOznaka, OznakaSmera.Text.Trim());
                 }
 
                 tabelaSmerova[indeks] = smerIzmena;
@@ -257,6 +258,15 @@ namespace HCI_Projekat
         {
             if(e.Key == Key.Tab && (Keyboard.Modifiers & ( ModifierKeys.Shift)) == ModifierKeys.Shift)
                 DatumUvodjenja.IsDropDownOpen = true;
+        }
+
+        private void promeniOznakuSmeraUPoljima(string staraOznaka, string novaOznaka)
+        {
+            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+            {
+                if (polje.NazivPolja.Split('-')[1].Trim() == staraOznaka)    //idem kroz sva polja i trazim ucionice
+                    polje.NazivPolja = polje.NazivPolja.Split('-')[0].Trim() + '-' + novaOznaka;
+            }
         }
     }
 }

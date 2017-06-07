@@ -335,9 +335,90 @@ namespace HCI_Projekat
             return true;
         }
 
+        private bool proveraIzmeneOS(string oznaka)
+        {
+            Softver softver = racunarskiCentar.Softveri[oznaka];
+            string zeljeniOS = "";
+            if ((bool)WindowsOSSoftver.IsChecked)
+                zeljeniOS = "Windows";
+            else if ((bool)LinuxOSSoftver.IsChecked)
+                zeljeniOS = "Linux";
+            else
+                zeljeniOS = "Windows i Linux";
+            
+            bool nadjenPredmetKomSmetaOS = false;
+            bool nadjenaUcionicaKojojSmetaOS = false;
+
+            foreach (Predmet p in racunarskiCentar.Predmeti.Values)
+            {
+                if(zeljeniOS == "Windows")
+                {
+                    if(p.OperativniSistem == "Linux" && p.Softveri.Contains(oznaka) && !p.Obrisan)
+                    {
+                        // nije dozvoljena promena OS softvera na windows, ako medju predmetima koji ga koriste
+                        // postoji neki koji ima OS linux
+                        nadjenPredmetKomSmetaOS = true;
+                        break;
+                    }
+                }
+                else if(zeljeniOS == "Linux")
+                {
+                    if (p.OperativniSistem == "Windows" && p.Softveri.Contains(oznaka) && !p.Obrisan)
+                    {
+                        // nije dozvoljena promena OS softvera na linux, ako medju predmetima koji ga koriste
+                        // postoji neki koji ima OS windows
+                        nadjenPredmetKomSmetaOS = true;
+                        break;
+                    }
+                }
+            }
+
+            if (nadjenPredmetKomSmetaOS)
+            {
+                MessageBox.Show("Ne možete promeniti operativni sistem softvera \njer se on koristi na predmetu gde nije podržan \nizabrani operativni sistem!");
+                return false;
+            }
+            else
+            {
+                // ukoliko ne postoji problem za izmenu OS softvera u pogledu sa poklapanjem OS na predmetima
+                // koji koriste taj softver, proveravamo poklapanje izmedju softvera i ucionica koje ga koriste
+                foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
+                {
+                    if (zeljeniOS == "Windows")
+                    {
+                        if (u.OperativniSistem == "Linux" && u.InstaliraniSoftveri.Contains(oznaka) && !u.Obrisan)
+                        {
+                            // nije dozvoljena promena OS softvera na windows, ako medju ucionicama u kojima se koristi
+                            // postoji neka koja ima OS linux
+                            nadjenaUcionicaKojojSmetaOS = true;
+                            break;
+                        }
+                    }
+                    else if (zeljeniOS == "Linux")
+                    {
+                        if (u.OperativniSistem == "Windows" && u.InstaliraniSoftveri.Contains(oznaka) && !u.Obrisan)
+                        {
+                            // nije dozvoljena promena OS softvera na linux, ako medju ucionicama u kojima se koristi
+                            // postoji neka koja ima OS windows
+                            nadjenaUcionicaKojojSmetaOS = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (nadjenaUcionicaKojojSmetaOS)
+                {
+                    MessageBox.Show("Ne možete promeniti operativni sistem softvera \njer se on koristi u učionici gde nije intaliran \nizabrani operativni sistem!");
+                    return false;
+                }
+                // ako nema ni predmeta ni ucionice kojoj smeta promenja OS softvera, onda je data dozvola za izmenu
+                return true;
+            }
+        }
+
         private void izmeniSoftver()
         {
-            if (validacijaPodataka())
+            if (validacijaPodataka() && proveraIzmeneOS(oznakaSoftveraZaIzmenu))
             {
                 Softver softverIzmena = racunarskiCentar.Softveri[oznakaSoftveraZaIzmenu];
                 bool promenilaSeOznaka = false;
@@ -345,6 +426,13 @@ namespace HCI_Projekat
                 bool promenioSeOpis = false;
                 string staraOznaka = softverIzmena.Oznaka;
 
+                if ((bool)WindowsOSSoftver.IsChecked)
+                    softverIzmena.OperativniSistem = "Windows";
+                else if ((bool)LinuxOSSoftver.IsChecked)
+                    softverIzmena.OperativniSistem = "Linux";
+                else
+                    softverIzmena.OperativniSistem = "Windows i Linux";
+                
                 if (!softverIzmena.Oznaka.Equals(oznakaSoftver.Text.Trim()))
                     promenilaSeOznaka = true;
                 softverIzmena.Oznaka = oznakaSoftver.Text.Trim();
@@ -359,13 +447,6 @@ namespace HCI_Projekat
 
                 softverIzmena.GodIzdavanja = int.Parse(godinaSoftver.Text.Trim());
                 softverIzmena.Cena = double.Parse(cenaSoftver.Text.Trim());
-
-                if ((bool)WindowsOSSoftver.IsChecked)
-                    softverIzmena.OperativniSistem = "Windows";
-                else if ((bool)LinuxOSSoftver.IsChecked)
-                    softverIzmena.OperativniSistem = "Linux";
-                else
-                    softverIzmena.OperativniSistem = "Windows i Linux";
 
                 softverIzmena.Proizvodjac = proizvodjacSoftver.Text.Trim();
                 softverIzmena.Sajt = sajtSoftver.Text.Trim();

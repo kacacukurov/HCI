@@ -323,6 +323,281 @@ namespace HCI_Projekat
             }
         }
 
+        public void proveriKriterijumFiltriranja(object sender, SelectionChangedEventArgs e)
+        {
+            // trenutno smo u tabu za ucionice
+            if (tabControl.SelectedIndex == 1)
+            {
+                int index = UcionicaFilterKriterijum.SelectedIndex;
+                if(index == 3 || index == 4)
+                {
+                    // kao kriterijum za filtriranje je izabrana tabla ili pametna tabla
+                    UcionicaFilterUnos.Visibility = Visibility.Hidden;
+                    UcionicaFilterTablaVrednost.Visibility = Visibility.Visible;
+                    UcionicaFilterTablaVrednost.Text = "";
+                    UcionicaFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                    UcionicaFilterOSVrednost.Visibility = Visibility.Hidden;
+                }
+                else if(index == 2)
+                {
+                    // kao kriterijum za filtriranje je izabran projektor
+                    UcionicaFilterUnos.Visibility = Visibility.Hidden;
+                    UcionicaFilterTablaVrednost.Visibility = Visibility.Hidden;
+                    UcionicaFilterProjektorVrednost.Visibility = Visibility.Visible;
+                    UcionicaFilterProjektorVrednost.Text = "";
+                    UcionicaFilterOSVrednost.Visibility = Visibility.Hidden;
+                }
+                else if (index == 5)
+                {
+                    // kao kriterijum za filtriranje je izabran operativni sistem
+                    UcionicaFilterUnos.Visibility = Visibility.Hidden;
+                    UcionicaFilterTablaVrednost.Visibility = Visibility.Hidden;
+                    UcionicaFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                    UcionicaFilterOSVrednost.Visibility = Visibility.Visible;
+                    UcionicaFilterOSVrednost.Text = "";
+                }
+                else
+                {
+                    UcionicaFilterTablaVrednost.Text = "";
+                    UcionicaFilterProjektorVrednost.Text = "";
+                    UcionicaFilterOSVrednost.Text = "";
+                    UcionicaFilterUnos.Visibility = Visibility.Visible;
+                    UcionicaFilterTablaVrednost.Visibility = Visibility.Hidden;
+                    UcionicaFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                    UcionicaFilterOSVrednost.Visibility = Visibility.Hidden;
+                }
+                ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
+                cv.Filter = null;
+            }
+            // trenutno smo u tabu za predmete
+            else if (tabControl.SelectedIndex == 2)
+            {
+                int index = PredmetFilterKriterijum.SelectedIndex;
+                if (index == 7 || index == 8)
+                {
+                    // kao kriterijum za filtriranje je izabrana tabla ili pametna tabla
+                    PredmetFilterUnos.Visibility = Visibility.Hidden;
+                    PredmetFilterTablaVrednost.Visibility = Visibility.Visible;
+                    PredmetFilterTablaVrednost.Text = "";
+                    PredmetFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                    PredmetFilterOSVrednost.Visibility = Visibility.Hidden;
+                }
+                else if (index == 6)
+                {
+                    // kao kriterijum za filtriranje je izabran projektor
+                    PredmetFilterUnos.Visibility = Visibility.Hidden;
+                    PredmetFilterTablaVrednost.Visibility = Visibility.Hidden;
+                    PredmetFilterProjektorVrednost.Visibility = Visibility.Visible;
+                    PredmetFilterProjektorVrednost.Text = "";
+                    PredmetFilterOSVrednost.Visibility = Visibility.Hidden;
+                }
+                else if (index == 9)
+                {
+                    // kao kriterijum za filtriranje je izabran operativni sistem
+                    PredmetFilterUnos.Visibility = Visibility.Hidden;
+                    PredmetFilterTablaVrednost.Visibility = Visibility.Hidden;
+                    PredmetFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                    PredmetFilterOSVrednost.Visibility = Visibility.Visible;
+                    PredmetFilterOSVrednost.Text = "";
+                }
+                else
+                {
+                    PredmetFilterTablaVrednost.Text = "";
+                    PredmetFilterProjektorVrednost.Text = "";
+                    PredmetFilterOSVrednost.Text = "";
+                    PredmetFilterUnos.Visibility = Visibility.Visible;
+                    PredmetFilterTablaVrednost.Visibility = Visibility.Hidden;
+                    PredmetFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                    PredmetFilterOSVrednost.Visibility = Visibility.Hidden;
+                }
+                ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+                cv.Filter = null;
+            }
+            // trenutno smo u tabu za smerove
+            else if (tabControl.SelectedIndex == 3)
+            {
+                
+            }
+            // trenutno smo u tabu za softvere
+            else if (tabControl.SelectedIndex == 4)
+            {
+                int index = SoftverFilterKriterijum.SelectedIndex;
+                if (index == 2)
+                {
+                    // kao kriterijum za filtriranje je izabran operativni sistem
+                    PredmetFilterUnos.Visibility = Visibility.Hidden;
+                    PredmetFilterOSVrednost.Visibility = Visibility.Visible;
+                    PredmetFilterOSVrednost.Text = "";
+                }
+                else
+                {
+                    PredmetFilterOSVrednost.Text = "";
+                    PredmetFilterUnos.Visibility = Visibility.Visible;
+                    PredmetFilterOSVrednost.Visibility = Visibility.Hidden;
+                }
+                ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
+                cv.Filter = null;
+            }
+        }
+
+        private void filtrirajPoVrednosti(object sender, TextChangedEventArgs e)
+        {
+            // trenutno smo u tabu za ucionice
+            if (tabControl.SelectedIndex == 1)
+            {
+                int indexKriterijuma = UcionicaFilterKriterijum.SelectedIndex;
+                if (indexKriterijuma == 3 || indexKriterijuma == 4)
+                {
+                    // izabrano filtriranje po tabli ili pametnoj tabli
+                    string vrednost = UcionicaFilterTablaVrednost.Text.Trim();
+
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Ucionica u = o as Ucionica;
+                            if (indexKriterijuma == 3)
+                            {
+                                return (u.TablaString.ToUpper().StartsWith(vrednost.ToUpper()));
+                            }
+                            else
+                            {
+                                return (u.PametnaTablaString.ToUpper().StartsWith(vrednost.ToUpper()));
+                            }
+                        };
+                    }
+                }
+                else if (indexKriterijuma == 2)
+                {
+                    // izabrano je filtriranje po projektoru
+                    string vrednost = UcionicaFilterProjektorVrednost.Text.Trim();
+                    
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Ucionica u = o as Ucionica;
+                            return (u.ProjektorString.ToUpper().StartsWith(vrednost.ToUpper()));
+                        };
+                    }
+                }
+                else if (indexKriterijuma == 5)
+                {
+                    // izabrano je filtriranje po operativnom sistemu
+                    string vrednost = UcionicaFilterOSVrednost.Text.Trim();
+
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Ucionica u = o as Ucionica;
+                            if(vrednost.ToLower() == "linux" || vrednost.ToLower() == "windows" || vrednost.ToLower() == "windows i linux")
+                                return (u.OperativniSistem.ToUpper().Contains(vrednost.ToUpper()));
+                            else
+                                return (u.OperativniSistem.ToUpper().StartsWith(vrednost.ToUpper()));
+                        };
+                    }
+                }
+            }
+            // trenutno smo u tabu za predmete
+            if (tabControl.SelectedIndex == 2)
+            {
+                int indexKriterijuma = PredmetFilterKriterijum.SelectedIndex;
+                if (indexKriterijuma == 7 || indexKriterijuma == 8)
+                {
+                    // izabrano filtriranje po tabli ili pametnoj tabli
+                    string vrednost = PredmetFilterTablaVrednost.Text.Trim();
+
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Predmet p = o as Predmet;
+                            if (indexKriterijuma == 3)
+                            {
+                                return (p.TablaString.ToUpper().StartsWith(vrednost.ToUpper()));
+                            }
+                            else
+                            {
+                                return (p.PametnaTablaString.ToUpper().StartsWith(vrednost.ToUpper()));
+                            }
+                        };
+                    }
+                }
+                else if (indexKriterijuma == 6)
+                {
+                    // izabrano je filtriranje po projektoru
+                    string vrednost = PredmetFilterProjektorVrednost.Text.Trim();
+
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Predmet p = o as Predmet;
+                            return (p.ProjektorString.ToUpper().StartsWith(vrednost.ToUpper()));
+                        };
+                    }
+                }
+                else if (indexKriterijuma == 9)
+                {
+                    // izabrano je filtriranje po operativnom sistemu
+                    string vrednost = PredmetFilterOSVrednost.Text.Trim();
+
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Predmet p = o as Predmet;
+                            return (p.OperativniSistem.ToUpper().StartsWith(vrednost.ToUpper()));
+                        };
+                    }
+                }
+            }
+            if (tabControl.SelectedIndex == 4)
+            {
+                // trenutno smo u tabu za softvere
+                int indexKriterijuma = SoftverFilterKriterijum.SelectedIndex;
+                if (indexKriterijuma == 2)
+                {
+                    // izabrano je filtriranje po operativnom sistemu
+                    string vrednost = UcionicaFilterOSVrednost.Text.Trim();
+
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Softver s = o as Softver;
+                            if (vrednost.ToLower() == "linux" || vrednost.ToLower() == "windows" || vrednost.ToLower() == "linux i windows")
+                                return (s.OperativniSistem.ToUpper().Contains(vrednost.ToUpper()));
+                            else
+                                return (s.OperativniSistem.ToUpper().StartsWith(vrednost.ToUpper()));
+                        };
+                    }
+                }
+            }
+        }
+
         private void ponudaOpcija(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Down && e.Key == Key.LeftAlt)

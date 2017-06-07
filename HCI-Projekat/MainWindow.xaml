@@ -408,7 +408,7 @@
             </Menu>
 
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl" SelectionChanged="tabChanged">
-                <TabItem Name="KalendarTab" Width="125" >
+                <TabItem Name="KalendarTab" Width="125" Style="{StaticResource TabItem}">
                     <TabItem.Header>
                         <TextBlock Text="Kalendar" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
                     </TabItem.Header>
@@ -454,7 +454,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="UcionicaFilterKriterijum" KeyUp="ponudaOpcija">
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="UcionicaFilterKriterijum" KeyUp="ponudaOpcija" SelectionChanged="proveriKriterijumFiltriranja">
                                             <ComboBoxItem Content="Oznaka"/>
                                             <ComboBoxItem Content="Broj radnih mesta"/>
                                             <ComboBoxItem Content="Projektor"/>
@@ -475,6 +475,19 @@
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="0" Grid.Row="1" Name="UcionicaFilterUnos" TextChanged="filtrirajUcionicu"/>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="UcionicaFilterTablaVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
+                                            <ComboBoxItem Content="prisutna"/>
+                                            <ComboBoxItem Content="nije prisutna"/>
+                                        </ComboBox>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="UcionicaFilterProjektorVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
+                                            <ComboBoxItem Content="prisutan"/>
+                                            <ComboBoxItem Content="nije prisutan"/>
+                                        </ComboBox>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="UcionicaFilterOSVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
+                                            <ComboBoxItem Content="Linux"/>
+                                            <ComboBoxItem Content="Windows"/>
+                                            <ComboBoxItem Content="Windows i Linux"/>
+                                        </ComboBox>
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Column="1">
@@ -703,7 +716,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="PredmetFilterKriterijum" KeyUp="ponudaOpcija">
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="PredmetFilterKriterijum" KeyUp="ponudaOpcija" SelectionChanged="proveriKriterijumFiltriranja">
                                             <ComboBoxItem Content="Naziv"/>
                                             <ComboBoxItem Content="Oznaka"/>
                                             <ComboBoxItem Content="Veličina grupe"/>
@@ -727,6 +740,19 @@
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="0" Grid.Row="1" Name="PredmetFilterUnos" TextChanged="filtrirajPredmet"/>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="PredmetFilterTablaVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
+                                            <ComboBoxItem Content="neophodna"/>
+                                            <ComboBoxItem Content="nije neophodna"/>
+                                        </ComboBox>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="PredmetFilterProjektorVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
+                                            <ComboBoxItem Content="neophodan"/>
+                                            <ComboBoxItem Content="nije neophodan"/>
+                                        </ComboBox>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="PredmetFilterOSVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
+                                            <ComboBoxItem Content="Linux"/>
+                                            <ComboBoxItem Content="Windows"/>
+                                            <ComboBoxItem Content="Svejedno"/>
+                                        </ComboBox>
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Column="1">
@@ -1196,7 +1222,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SoftverFilterKriterijum" KeyUp="ponudaOpcija">
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SoftverFilterKriterijum" KeyUp="ponudaOpcija" SelectionChanged="proveriKriterijumFiltriranja">
                                             <ComboBoxItem Content="Naziv"/>
                                             <ComboBoxItem Content="Oznaka"/>
                                             <ComboBoxItem Content="Operativni sistem"/>
@@ -1218,6 +1244,11 @@
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="0" Grid.Row="1" Name="SoftverFilterUnos" TextChanged="filtrirajSoftver"/>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="SoftverFilterOSVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
+                                            <ComboBoxItem Content="Linux"/>
+                                            <ComboBoxItem Content="Windows"/>
+                                            <ComboBoxItem Content="Linux i Windows"/>
+                                        </ComboBox>
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Column="1">

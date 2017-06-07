@@ -111,12 +111,7 @@ namespace HCI_Projekat
 
             BrowserGrid.Children.Add(chromeBrowser);
         }
-
-        private void AAA(object sender, EventArgs e)
-        {
-            MessageBox.Show("aa");
-        }
-
+        
         private int brojLogickiAktivnihSoftvera()
         {
             int brojLogickiAktivnih = 0;
@@ -618,7 +613,7 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex == 1)
             {
                 if (tabelaUcionica.SelectedItems.Count > 1)
-                    izmeniUcioniceClick(sender, e);
+                    MessageBox.Show("Nije moguće izmeniti više učionica odjednom!");
                 else
                     izmeniUcionicuClick(sender, e);
             }
@@ -626,7 +621,7 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 2)
             {
                 if (tabelaPredmeta.SelectedItems.Count > 1)
-                    izmeniPredmeteClick(sender, e);
+                    MessageBox.Show("Nije moguće izmeniti više predmeta odjednom!");
                 else
                     izmeniPredmetClick(sender, e);
             }
@@ -648,40 +643,40 @@ namespace HCI_Projekat
             }
         }
 
-        private void izmeniUcioniceClick(object sender, RoutedEventArgs e)
-        {
-            var izmenaUcionica = new IzmenaUcionica();
-            if (izmenaUcionica.potvrdaIzmena)
-            {
-
-            }
-        }
-
-        private void izmeniPredmeteClick(object sender, RoutedEventArgs e)
-        {
-            var izmenaPredmeta = new IzmenaPredmeta();
-            if (izmenaPredmeta.potvrdaIzmena)
-            {
-
-            }
-        }
-
         private void izmeniSmeroveClick(object sender, RoutedEventArgs e)
         {
-            var izmenaSmerova = new IzmenaSmerova();
-            if (izmenaSmerova.potvrdaIzmena)
+            if (tabelaSmerova.SelectedIndex != -1)
             {
+                List<int> indeksi = new List<int>();
+                foreach (object o in tabelaSmerova.SelectedItems)
+                {
+                    indeksi.Add(tabelaSmerova.Items.IndexOf(o));
+                }
 
+                IzmenaSmerova izmenaSmerova = new IzmenaSmerova(racunarskiCentar, smeroviKolekcija, indeksi);
+                izmenaSmerova.ShowDialog();
+                tabelaSmerova.Items.Refresh();
             }
+            else
+                return;
         }
 
         private void izmeniSoftvereClick(object sender, RoutedEventArgs e)
         {
-            var izmenaSoftvera = new IzmenaSoftvera();
-            if (izmenaSoftvera.potvrdaIzmena)
+            if (tabelaSoftvera.SelectedIndex != -1)
             {
+                List<int> indeksi = new List<int>();
+                foreach (object o in tabelaSoftvera.SelectedItems)
+                {
+                    indeksi.Add(tabelaSoftvera.Items.IndexOf(o));
+                }
 
+                IzmenaSoftvera izmenaSoftvera = new IzmenaSoftvera(racunarskiCentar, softveriKolekcija, indeksi);
+                izmenaSoftvera.ShowDialog();
+                tabelaSoftvera.Items.Refresh();
             }
+            else
+                return;
         }
 
         private void izmeniPredmetClick(object sender, RoutedEventArgs e)

@@ -1306,7 +1306,7 @@
 
                         <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" Margin="0,1,0,0">
                             <ScrollViewer>
-                                <Grid GotFocus="AAA" DataContext="{Binding ElementName=tabelaSoftvera,Path=SelectedItem}" Name="detaljanPrikazSoftver">
+                                <Grid DataContext="{Binding ElementName=tabelaSoftvera,Path=SelectedItem}" Name="detaljanPrikazSoftver">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />

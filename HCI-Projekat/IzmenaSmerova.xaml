@@ -5,8 +5,326 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="IzmenaSmerova" Height="300" Width="300">
+        Title="Izmena više smerova" Height="500" Width="400" MinHeight="500" MinWidth="400" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
+        <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
+        <RoutedUICommand x:Key="otvoriDatum" Text="otvoriDatum"></RoutedUICommand>
+        <RoutedUICommand x:Key="undo" Text="undo"></RoutedUICommand>
+        <RoutedUICommand x:Key="redo" Text="redo"></RoutedUICommand>
+        <ContextMenu x:Key="TextBoxContextMenu" Background="White">
+            <MenuItem Command="ApplicationCommands.Copy" />
+            <MenuItem Command="ApplicationCommands.Cut" />
+            <MenuItem Command="ApplicationCommands.Paste" />
+        </ContextMenu>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
+        </Style>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource odustani}" Executed="cancelClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource otvoriDatum}" Executed="otvoriDatum"></CommandBinding>
+        <CommandBinding Command="{StaticResource undo}" Executed="undoClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource redo}" Executed="redoClick"></CommandBinding>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+        <KeyBinding Key="Down" Modifiers="" Command="{StaticResource otvoriDatum}"></KeyBinding>
+        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
+        <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
+    </Window.InputBindings>
+
     <Grid>
-        
+        <DockPanel>
+            <Menu DockPanel.Dock="Top" Name="FirstMenu" Margin="1">
+
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+
+                <Menu.Items>
+
+                    <MenuItem Header="_File" HorizontalAlignment="Left">
+                        <MenuItem Click="finishClick" Header="_Sačuvaj" InputGestureText="Ctrl+S">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="cancelClick" Header="_Ugasi" InputGestureText="Ctrl+Q">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="_Edit" HorizontalAlignment="Left">
+                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <Separator></Separator>
+
+                        <MenuItem Header="_Cut" InputGestureText="Ctrl+X" Command="ApplicationCommands.Cut">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Header="_Copy" InputGestureText="Ctrl+C" Command="ApplicationCommands.Copy">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Header="_Paste" InputGestureText="Ctrl+V" Command="ApplicationCommands.Paste">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                    </MenuItem>
+
+                    <MenuItem Header="_Help" HorizontalAlignment="Left"></MenuItem>
+                </Menu.Items>
+            </Menu>
+
+            <Menu DockPanel.Dock="Top" Name="SecondMenu">
+
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+
+                <Menu.Items>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Undo" Width="27" Click="undoClick">
+                        <MenuItem.Icon>
+                            <Image Source="picture/undo.png" Stretch="UniformToFill" ToolTip="Undo"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Redo" Width="27" Click="redoClick">
+                        <MenuItem.Icon>
+                            <Image Source="picture/redo.png" Stretch="UniformToFill" ToolTip="Redo"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Cut" Width="27" Command="ApplicationCommands.Cut">
+                        <MenuItem.Icon>
+                            <Image Source="picture/cut.png" Stretch="UniformToFill" ToolTip="Cut"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Copy" Width="27" Command="ApplicationCommands.Copy">
+                        <MenuItem.Icon>
+                            <Image Source="picture/copy.png" Stretch="UniformToFill" ToolTip="Copy"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Paste" Width="27" Command="ApplicationCommands.Paste">
+                        <MenuItem.Icon>
+                            <Image Source="picture/paste.png" Stretch="UniformToFill" ToolTip="Paste"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                </Menu.Items>
+            </Menu>
+
+            <DockPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.5*" />
+                        <RowDefinition Height="2.5*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="0.9*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="10*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Viewbox Grid.Column="1">
+                            <TextBlock HorizontalAlignment="Center" TextAlignment="Center">Izmena većeg broja smerova podrazumeva izmenu samo<LineBreak/>osnovnih podataka.<LineBreak/> Izmenu osetljivih podataka izvršite nad konkretnim smerom.</TextBlock>
+                        </Viewbox>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="27*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="18*"/>
+                                <ColumnDefinition Width="27*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="0.5*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="9*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition Height="3.5*"/>
+                                    <RowDefinition Height="5*"/>
+                                </Grid.RowDefinitions>
+                                <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                    <TextBlock>Naziv:</TextBlock>
+                                </Viewbox>
+                            </Grid>
+                            <Grid Grid.Row="0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <TextBox Grid.Row="1" Grid.Column="0" Name="NazivSmera" KeyDown="otvori" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                            </Grid>
+                            <Grid Grid.Row="1" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="9*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition Height="3.5*"/>
+                                    <RowDefinition Height="5*"/>
+                                </Grid.RowDefinitions>
+                                <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                    <TextBlock>Datum uvođenja:</TextBlock>
+                                </Viewbox>
+                            </Grid>
+                            <Grid Grid.Row="1" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="0.1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <DatePicker Grid.Row="1" Grid.Column="0" Name="DatumUvodjenja" FirstDayOfWeek="Monday" AllowDrop="True"/>
+                            </Grid>
+                            <Grid Grid.Row="2" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="9*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="4*"/>
+                                    <RowDefinition Height="2.7*"/>
+                                    <RowDefinition Height="4*"/>
+                                    <RowDefinition Height="4*"/>
+                                </Grid.RowDefinitions>
+                                <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                    <TextBlock>Opis:</TextBlock>
+                                </Viewbox>
+                            </Grid>
+                            <Grid Grid.Row="2" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="10*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <TextBox Grid.Row="1" Grid.Column="0" Name="OpisSmera" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Visible" KeyDown="otvoriUnazad" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="6*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="quitButtonTab" Background="DarkRed" Foreground="White">
+                                <Button.Content>
+                                    <Viewbox Margin="5,0,5,0">
+                                        <TextBlock> Odustani</TextBlock>
+                                    </Viewbox>
+                                </Button.Content>
+                                <Button.InputBindings>
+                                    <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                        </Grid>
+                        <Grid Grid.Column="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="6*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Column="1" Grid.Row="1" Click="finishClick" Name="finishButton" Background="DarkGreen" Foreground="White">
+                                <Button.Content>
+                                    <Viewbox Margin="5,0,5,0">
+                                        <TextBlock> Završi</TextBlock>
+                                    </Viewbox>
+                                </Button.Content>
+                                <Button.InputBindings>
+                                    <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                                </Button.InputBindings>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+        </DockPanel>
     </Grid>
 </Window>

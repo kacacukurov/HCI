@@ -307,6 +307,11 @@ function ucitajPredmete(predmetiString) {   //ucitavanje predmeta smera, postavl
         }
         $('#predmeti').append('<option id=' + predmetiListaSmera[i].oznaka + '>' + predmetiListaSmera[i].oznaka + '</option>');
     }
+    if (predmetiListaSmera.length == 0) {
+        $('#poljeKalendara').text("");
+        $('#duzina').text("");
+        $('#termini').text("");
+    }
     $('#poljeKalendara').data('event', {
         title: $('#poljeKalendara').text()
     });

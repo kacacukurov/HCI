@@ -12,6 +12,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Data;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace HCI_Projekat
 {
@@ -30,9 +34,41 @@ namespace HCI_Projekat
         CefCustomObject cef;
         private int brojAktivnihSmerova;
         private int brojAktivnihSoftvera;
+        private Notifier notifierSucces;
+        private Notifier notifierError;
 
         public MainWindow()
         {
+            notifierError = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: Application.Current.MainWindow,
+                    corner: Corner.TopRight,
+                    offsetX: 30,
+                    offsetY: 30);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(10),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
+            notifierSucces = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: Application.Current.MainWindow,
+                    corner: Corner.TopRight,
+                    offsetX: 10,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(3),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
             InitializeComponent();
             KalendarTab.Focus();
 
@@ -90,7 +126,7 @@ namespace HCI_Projekat
             detaljanPrikazUcionica.Visibility = Visibility.Hidden;
 
             InitializeChromium();
-            cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar);
+            cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError);
             chromeBrowser.RegisterJsObject("cefCustomObject", cef);
         }
 
@@ -1451,6 +1487,12 @@ namespace HCI_Projekat
                 MenuItemIzborFiltera.IsEnabled = true;
                 MenuItemPretraga.IsEnabled = true;
             }
+        }
+
+        public Notifier Notifier
+        {
+            get;
+            set;
         }
     }
 }

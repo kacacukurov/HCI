@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace HCI_Projekat
 {
@@ -28,9 +23,25 @@ namespace HCI_Projekat
         private string oznakaSmeraZaIzmenu;
         public int indeks;
         private bool dodavanjeSmeraIzborStarogUnosa;
+        private Notifier notifierError;
 
         public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena, string oznaka)
         {
+            notifierError = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: this,
+                    corner: Corner.TopRight,
+                    offsetX: 20,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(1));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
             smer = new Smer();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -152,7 +163,10 @@ namespace HCI_Projekat
                 }
                 else
                 {
-                    MessageBox.Show("Smer sa unetom oznakom već postoji!");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Smer sa unetom oznakom već postoji!");
+                    });
                     OznakaSmera.Focus();
                     return false;
                 }
@@ -210,8 +224,11 @@ namespace HCI_Projekat
                 if (DatumUvodjenja.Text.Trim() == "")
                     DatumUvodjenja.BorderBrush = System.Windows.Media.Brushes.Red;
 
-
-                MessageBox.Show("Niste popunili sva polja!");
+                
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste popunili sva polja!!");
+                });
                 if (OznakaSmera.Text.Trim() == "")
                     OznakaSmera.Focus();
                 else if (NazivSmera.Text.Trim() == "")

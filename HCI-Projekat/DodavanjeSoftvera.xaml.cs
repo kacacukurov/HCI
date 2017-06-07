@@ -5,6 +5,10 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace HCI_Projekat
 {
@@ -21,9 +25,25 @@ namespace HCI_Projekat
         private string oznakaSoftveraZaIzmenu;
         public int indeks;
         private bool dodavanjeSoftveraIzborStarogUnosa;
+        private Notifier notifierError;
 
         public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena, string oznaka)
         {
+            notifierError = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: this,
+                    corner: Corner.TopRight,
+                    offsetX: 20,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(1));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -213,7 +233,10 @@ namespace HCI_Projekat
                 }
                 else
                 {
-                    MessageBox.Show("Softver sa unetom oznakom već postoji!");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Softver sa unetom oznakom već postoji!");
+                    });
                     vratiNaKorak1();
                     UpdateLayout();
                     oznakaSoftver.Focus();
@@ -263,7 +286,10 @@ namespace HCI_Projekat
                     opisSoftver.BorderBrush = System.Windows.Media.Brushes.Red;
 
 
-                MessageBox.Show("Niste popunili sva polja!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste popunili sva polja!");
+                });
                 if (oznakaSoftver.Text.Trim() == "")
                 {
                     vratiNaKorak1();
@@ -313,7 +339,10 @@ namespace HCI_Projekat
             int godina;
             if (!int.TryParse(godinaSoftver.Text.Trim(), out godina))
             {
-                MessageBox.Show("Godina nije dobro unesena, unesite broj!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Godina nije dobro unesena, unesite broj!");
+                });
                 godinaSoftver.Text = "";
                 vratiNaKorak2();
                 UpdateLayout();
@@ -324,7 +353,10 @@ namespace HCI_Projekat
             double cena;
             if (!double.TryParse(cenaSoftver.Text.Trim(), out cena))
             {
-                MessageBox.Show("Cena nije dobro unesena, unesite broj!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Cena nije dobro unesena, unesite broj!");
+                });
                 cenaSoftver.Text = "";
                 vratiNaKorak2();
                 UpdateLayout();
@@ -375,7 +407,10 @@ namespace HCI_Projekat
 
             if (nadjenPredmetKomSmetaOS)
             {
-                MessageBox.Show("Ne možete promeniti operativni sistem softvera \njer se on koristi na predmetu gde nije podržan \nizabrani operativni sistem!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Ne možete promeniti operativni sistem softvera \njer se on koristi na predmetu gde nije podržan \nizabrani operativni sistem!");
+                });
                 return false;
             }
             else
@@ -408,7 +443,10 @@ namespace HCI_Projekat
 
                 if (nadjenaUcionicaKojojSmetaOS)
                 {
-                    MessageBox.Show("Ne možete promeniti operativni sistem softvera \njer se on koristi u učionici gde nije intaliran \nizabrani operativni sistem!");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Ne možete promeniti operativni sistem softvera \njer se on koristi u učionici gde nije intaliran \nizabrani operativni sistem!");
+                    });
                     return false;
                 }
                 // ako nema ni predmeta ni ucionice kojoj smeta promenja OS softvera, onda je data dozvola za izmenu

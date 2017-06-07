@@ -2,6 +2,11 @@
 using CefSharp.Wpf;
 using System.Collections.Generic;
 using System.Windows;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
+using System.Windows.Threading;
 
 namespace HCI_Projekat
 {
@@ -10,12 +15,15 @@ namespace HCI_Projekat
         private static ChromiumWebBrowser _instanceBrowser = null;
         private static Window _instanceWindow = null;
         private RacunarskiCentar racunarskiCentar = null;
+        private Notifier not;
+        Dispatcher disp;
 
-        public CefCustomObject(ChromiumWebBrowser originalBrowser, Window mainWindow, RacunarskiCentar racunarskiCentar)
+        public CefCustomObject(ChromiumWebBrowser originalBrowser, Window mainWindow, RacunarskiCentar racunarskiCentar, Notifier not)
         {
             _instanceBrowser = originalBrowser;
             _instanceWindow = mainWindow;
             this.racunarskiCentar = racunarskiCentar;
+            this.not = not;
         }
 
         public void showDevTools()
@@ -239,7 +247,12 @@ namespace HCI_Projekat
 
         public void alert(string tekst)
         {
-            MessageBox.Show(tekst);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                not.ShowError(tekst);
+            });
+            
         }
     }
 }

@@ -8,6 +8,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace HCI_Projekat
 {
@@ -25,9 +29,25 @@ namespace HCI_Projekat
         public bool inicijalizacija;
         private bool dodavanjePredmetaIzborStarogUnosa;
         private string oznakaPredmetaZaIzmenu;
+        private Notifier notifierError;
 
         public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti, bool izmena, string oznaka)
         {
+            notifierError = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: this,
+                    corner: Corner.TopRight,
+                    offsetX: 20,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(1));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
             predmet = new Predmet();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -343,7 +363,10 @@ namespace HCI_Projekat
                 }
                 else
                 {
-                    MessageBox.Show("Predmet sa unetom oznakom već postoji!");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Predmet sa unetom oznakom već postoji!");
+                    });
                     vratiNaKorak1();
                     UpdateLayout();
                     OznakaPredmeta.Focus();
@@ -380,8 +403,10 @@ namespace HCI_Projekat
                     NazivPredmeta.BorderBrush = System.Windows.Media.Brushes.Red;
                 if (OpisPredmeta.Text.Trim() == "")
                     OpisPredmeta.BorderBrush = System.Windows.Media.Brushes.Red;
-
-                MessageBox.Show("Niste popunili sva polja!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste popunili sva polja!");
+                });
                 if (OznakaPredmeta.Text.Trim() == "")
                 {
                     vratiNaKorak1();
@@ -413,7 +438,10 @@ namespace HCI_Projekat
             }
             if (!postojiSmer)
             {
-                MessageBox.Show("Niste označili smer na kom se održava predmet!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste označili smer na kom se održava predmet!");
+                });
                 if (tabControlPredmet.SelectedIndex != 0)
                 {
                     vratiNaKorak1();
@@ -429,7 +457,10 @@ namespace HCI_Projekat
 
             if (BrojTerminaPredmet.Text.Trim() == "" || VelicinaGrupePredmet.Text.Trim() == "" || DuzinaTerminaPredmet.Text.Trim() == "")
             {
-                MessageBox.Show("Niste popunili sva polja!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste popunili sva polja!");
+                });
                 if (VelicinaGrupePredmet.Text.Trim() == "")
                 {
                     vratiNaKorak1();
@@ -461,7 +492,10 @@ namespace HCI_Projekat
             }
             if (!postojiSoftver)
             {
-                MessageBox.Show("Niste označili potreban softver/softvere!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste označili potreban softver/softvere!");
+                });
                 if (tabControlPredmet.SelectedIndex != 1)
                 {
                     vratiNaKorak2();
@@ -617,7 +651,10 @@ namespace HCI_Projekat
                     }
                     if(brojObrisanih < visak)
                     {
-                        MessageBox.Show("Niste odabrali dovoljno stavki za brisanje!");
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            notifierError.ShowError("Niste odabrali dovoljno stavki za brisanje!");
+                        });
                         return false;
                     }
                     else
@@ -654,7 +691,10 @@ namespace HCI_Projekat
                 if (racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].PreostaliTermini !=
                     racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu].BrTermina)
                 {
-                    MessageBox.Show("Ne možete promeniti dužinu trajanja jednog termina, jer je predmet već raspoređen u kalendaru!");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Ne možete promeniti dužinu trajanja jednog termina, jer je predmet već raspoređen u kalendaru!");
+                    });
                     return false;
                 }
             }

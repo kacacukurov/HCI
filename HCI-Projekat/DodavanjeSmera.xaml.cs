@@ -116,7 +116,7 @@ namespace HCI_Projekat
                 smer.Oznaka = OznakaSmera.Text.Trim();
                 smer.Opis = OpisSmera.Text.Trim();
                 string datum = DateTime.Parse(DatumUvodjenja.Text.Trim()).ToString("dd/MM/yyyy");
-                smer.Datum = DateTime.Parse(datum);
+                smer.Datum = datum;
 
                 tabelaSmerova.Add(smer);
                 racunarskiCentar.DodajSmer(smer);
@@ -188,7 +188,8 @@ namespace HCI_Projekat
                 smerIzmena.Oznaka = OznakaSmera.Text.Trim();
                 smerIzmena.Naziv = NazivSmera.Text.Trim();
                 smerIzmena.Opis = OpisSmera.Text.Trim();
-                smerIzmena.Datum = DateTime.Parse(DatumUvodjenja.Text.Trim());
+                string datum = DateTime.Parse(DatumUvodjenja.Text.Trim()).ToString("dd/MM/yyyy");
+                smerIzmena.Datum = datum;
 
                 if (smerIzmena.Predmeti.Count > 0)
                 {

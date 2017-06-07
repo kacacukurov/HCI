@@ -86,7 +86,7 @@ namespace HCI_Projekat
                         opisPromenjen = true;
                     }
                     if(DatumUvodjenja.Text.Trim() != "")
-                        smerIzmena.Datum = DateTime.Parse(DatumUvodjenja.Text.Trim());
+                        smerIzmena.Datum = DateTime.Parse(DatumUvodjenja.Text.Trim()).ToString("dd/MM/yyyy");
 
                     if (smerIzmena.Predmeti.Count > 0 && nazivPromenjen)
                     {

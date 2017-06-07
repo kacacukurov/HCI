@@ -11,7 +11,7 @@ namespace HCI_Projekat
     {
         private string oznaka;
         private string naziv;
-        private DateTime datum;
+        private string datum;
         private string opis;
 
         private bool obrisan;
@@ -24,7 +24,7 @@ namespace HCI_Projekat
             this.predmeti = new List<string>();
         }
 
-        public Smer(string oznaka, string naziv, DateTime datum, string opis)
+        public Smer(string oznaka, string naziv, string datum, string opis)
         {
             this.oznaka = oznaka;
             this.naziv = naziv;
@@ -47,7 +47,7 @@ namespace HCI_Projekat
             set { this.naziv = value; }
         }
 
-        public DateTime Datum
+        public string Datum
         {
             get { return datum; }
             set { this.datum = value; }

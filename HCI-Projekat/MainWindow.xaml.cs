@@ -452,7 +452,22 @@ namespace HCI_Projekat
             // trenutno smo u tabu za smerove
             else if (tabControl.SelectedIndex == 3)
             {
-                
+                int index = SmerFilterKriterijum.SelectedIndex;
+                if (index == 2)
+                {
+                    // kao kriterijum za filtriranje je izabran datum uvođenja
+                    SmerFilterUnos.Visibility = Visibility.Hidden;
+                    SmerFilterDatumVrednost.Visibility = Visibility.Visible;
+                    SmerFilterDatumVrednost.Text = "";
+                }
+                else
+                {
+                    SmerFilterUnos.Visibility = Visibility.Visible;
+                    SmerFilterDatumVrednost.Visibility = Visibility.Hidden;
+                    SmerFilterDatumVrednost.Text = "";
+                }
+                ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
+                cv.Filter = null;
             }
             // trenutno smo u tabu za softvere
             else if (tabControl.SelectedIndex == 4)
@@ -603,6 +618,28 @@ namespace HCI_Projekat
                         {
                             Predmet p = o as Predmet;
                             return (p.OperativniSistem.ToUpper().StartsWith(vrednost.ToUpper()));
+                        };
+                    }
+                }
+            }
+            if (tabControl.SelectedIndex == 3)
+            {
+                // trenutno smo u tabu za smerove
+                int indexKriterijuma = SmerFilterKriterijum.SelectedIndex;
+                if (indexKriterijuma == 2)
+                {
+                    // izabrano je filtriranje po datumu uvodjenja
+                    string vrednost = SmerFilterDatumVrednost.Text.Trim();
+
+                    ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
+                    if (vrednost == "")
+                        cv.Filter = null;
+                    else
+                    {
+                        cv.Filter = o =>
+                        {
+                            Smer s = o as Smer;
+                            return (s.Datum.Equals(DateTime.Parse(vrednost).ToString("dd/MM/yyyy")));
                         };
                     }
                 }

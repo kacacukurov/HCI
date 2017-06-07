@@ -1011,7 +1011,7 @@
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SmerFilterKriterijum" KeyUp="ponudaOpcija">
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SmerFilterKriterijum" KeyUp="ponudaOpcija" SelectionChanged="proveriKriterijumFiltriranja">
                                             <ComboBoxItem Content="Naziv"/>
                                             <ComboBoxItem Content="Oznaka"/>
                                             <ComboBoxItem Content="Datum uvođenja"/>
@@ -1029,6 +1029,7 @@
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="0" Grid.Row="1" Name="SmerFilterUnos" TextChanged="filtrirajSmer"/>
+                                        <DatePicker Grid.Column="0" Grid.Row="1" Name="SmerFilterDatumVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden"/>
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Column="1">

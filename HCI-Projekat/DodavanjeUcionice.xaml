@@ -532,7 +532,7 @@
                                     </Viewbox>
                                 </Grid>
                                 <Grid Grid.Row="2">
-                                    <DataGrid Name="softverTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                                    <DataGrid Name="softverTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource CellStyle}">
                                                 <DataGridTextColumn.ElementStyle>

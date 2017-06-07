@@ -1183,7 +1183,7 @@ namespace HCI_Projekat
                 List<string> predmetiUcionice = new List<string>(); //sadrzi duplikate
                 PotvrdaIzmene potvrda = new PotvrdaIzmene();
                 potvrda.Title = "Postoje predmeti";
-                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nPostoje predmeti u rasporedu. \nUkoliko potvrdite brisanje, uklonicete predmete iz rasporeda.\n";
+                //potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nPostoje predmeti u rasporedu. \nUkoliko potvrdite brisanje, uklonicete predmete iz rasporeda.\n";
 
                 List<Predmet> removedItems = new List<Predmet>();
                 foreach (object o in tabelaPredmeta.SelectedItems)

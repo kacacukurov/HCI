@@ -5,14 +5,72 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="PotvrdaIzmene" Height="300" Width="300">
+        Title="Potvrda izmene" Height="500" Width="400" MinWidth="400" MinHeight="500" WindowStartupLocation="CenterScreen">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+        <Viewbox Grid.Column="1" Grid.Row="1">
+            <TextBlock Margin="0,0,0,10" VerticalAlignment="Bottom" TextAlignment="Center" TextWrapping="Wrap">Da li ste sigurni da želite da izvršite brisanje?<LineBreak/><LineBreak/>Ukoliko potvrdite, obrisaće se svi termini u kalendaru<LineBreak/> vezani da izabrani predmet!</TextBlock>
+        </Viewbox>
+
+        <TextBlock Grid.Column="1" Grid.Row="2" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" TextWrapping="Wrap" Name="PorukaBrisanja" TextAlignment="Center" FontSize="17"/>
         
-        <TextBlock Width="250" Height="200" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" Margin="0,20,0,0" Name="PorukaBrisanja"/>
-        
-        <Button Width="60" Height="20" Content="Odustani" Click="cancelClick" Name="noDeleteButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,80,80,10" Background="DarkRed" Foreground="White">
-        </Button>
-        <Button Width="60" Height="20" Content="Potvrdi" Click="finishClick" Name="yesDeleteButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,80,10,10" Background="DarkGreen" Foreground="White">
-        </Button>
+        <Grid Grid.Row="4" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1.4*"/>
+                <ColumnDefinition Width="1.1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="noDeleteButton" Background="DarkRed" Foreground="White">
+                    <Button.Content>
+                        <Viewbox>
+                            <TextBlock> Odustani</TextBlock>
+                        </Viewbox>
+                    </Button.Content>
+                </Button>
+            </Grid>
+            <Grid Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="1" Grid.Row="1" Click="finishClick" Name="yesDeleteButton" Background="DarkGreen" Foreground="White">
+                    <Button.Content>
+                        <Viewbox>
+                            <TextBlock> Potvrdi</TextBlock>
+                        </Viewbox>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

@@ -312,7 +312,7 @@
                                 </Grid>
                                 <Grid Grid.Row="2">
 
-                                    <DataGrid Name="smeroviTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" SelectionMode="Single" SelectionUnit="FullRow" TargetUpdated="izabranSmerPripadnostiPredmeta" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                                    <DataGrid Name="smeroviTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="Single" SelectionUnit="FullRow" TargetUpdated="izabranSmerPripadnostiPredmeta" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="2*" MinWidth="150" IsReadOnly="True" CellStyle="{StaticResource CellStyle}">
                                                 <DataGridTextColumn.ElementStyle>
@@ -665,7 +665,7 @@
                                     </Viewbox>
                                 </Grid>
                                 <Grid Grid.Row="2">
-                                    <DataGrid SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" Name="softverTabela" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
+                                    <DataGrid SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Name="softverTabela" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource CellStyle}">
                                                 <DataGridTextColumn.ElementStyle>

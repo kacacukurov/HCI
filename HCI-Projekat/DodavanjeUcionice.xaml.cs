@@ -562,7 +562,7 @@ namespace HCI_Projekat
             {
                 if (racunarskiCentar.Predmeti[poz].NeophodnaTabla)
                 {
-                predmetiKojiZahtevajuTablu.Add(poz);
+                    predmetiKojiZahtevajuTablu.Add(poz);
                 }
             }
             List<string> predmetiKojiZahtevajuTabluBezDupl = predmetiKojiZahtevajuTablu.Distinct().ToList();

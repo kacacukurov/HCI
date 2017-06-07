@@ -123,6 +123,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BrisanjePoljaKalendara.xaml.cs">
+      <DependentUpon>BrisanjePoljaKalendara.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CefCustomObject.cs" />
     <Compile Include="IzmenaSmerova.xaml.cs">
       <DependentUpon>IzmenaSmerova.xaml</DependentUpon>
@@ -143,6 +146,7 @@
     <Compile Include="OdlukaDodavanjePredmet.xaml.cs">
       <DependentUpon>OdlukaDodavanjePredmet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PoljaKalendaraBrisanje.cs" />
     <Compile Include="PotvrdaBrisanja.xaml.cs">
       <DependentUpon>PotvrdaBrisanja.xaml</DependentUpon>
     </Compile>
@@ -154,6 +158,10 @@
     <Compile Include="Smer.cs" />
     <Compile Include="Softver.cs" />
     <Compile Include="Ucionica.cs" />
+    <Page Include="BrisanjePoljaKalendara.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DodavanjePredmeta.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

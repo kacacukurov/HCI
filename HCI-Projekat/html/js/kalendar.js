@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         columnFormat: 'dddd',
         groupByDateAndResource: true,
         resources: [],
-        drop: function (date, jsEvent, ui, resourceId) {
+        drop: function (date, resourceId) {
             console.log('drop', date.format(), resourceId);
         },
         eventReceive: function (event) { // poziva se kada se uradi drop novog elementa

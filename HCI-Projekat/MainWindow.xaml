@@ -378,6 +378,8 @@
                                 <Setter Property="MenuItem.FontSize" Value="14"></Setter>
                             </Style>
                         </MenuItem.Style>
+                        <MenuItem Click="pokreniTutorijal" Header="_Tutorijal"  Name="MenuItemTutorijal">
+                        </MenuItem>
                     </MenuItem>
                 </Menu.Items>
             </Menu>
@@ -392,13 +394,13 @@
 
                 <Menu.Items>
 
-                    <MenuItem HorizontalAlignment="Left" Name="Undo" Width="30" Margin="0,0,10,0" Click="undoClick">
+                    <MenuItem Name="MenuItemUndoPicture" HorizontalAlignment="Left" Width="30" Margin="0,0,10,0" Click="undoClick" IsEnabled="False">
                         <MenuItem.Icon>
                             <Image Source="picture/undo.png" Stretch="UniformToFill" ToolTip="Undo"/>
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem HorizontalAlignment="Left" Name="Redo" Width="30" Click="redoClick">
+                    <MenuItem HorizontalAlignment="Left" Name="MenuItemRedoPicture" Width="30" Click="redoClick" IsEnabled="False">
                         <MenuItem.Icon>
                             <Image Source="picture/redo.png" Stretch="UniformToFill" ToolTip="Redo"/>
                         </MenuItem.Icon>

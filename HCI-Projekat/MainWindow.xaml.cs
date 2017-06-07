@@ -16,6 +16,8 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Specialized;
 
 namespace HCI_Projekat
 {
@@ -24,6 +26,8 @@ namespace HCI_Projekat
     /// </summary>
     public partial class MainWindow : Window
     {
+        private UndoRedoStack stack;
+        OrderedDictionary sviRacunarskiCentri = new OrderedDictionary();
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Predmet> predmetiKolekcija;
         ObservableCollection<Softver> softveriKolekcija;
@@ -69,6 +73,7 @@ namespace HCI_Projekat
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
 
+            stack = new UndoRedoStack();
             InitializeComponent();
             KalendarTab.Focus();
 
@@ -243,8 +248,13 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex != 4)
                 tabControl.SelectedIndex = 4;
             int stariBrojSoftvera = racunarskiCentar.Softveri.Count;
-            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false, "", notifierSucces);
+            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false, "", notifierSucces, stack, sviRacunarskiCentri);
             softverWindow.ShowDialog();
+            if (softverWindow.potvrdio)
+            {
+                MenuItemUndo.IsEnabled = true;
+                MenuItemUndoPicture.IsEnabled = true;
+            }
 
             if (racunarskiCentar.Softveri.Count - stariBrojSoftvera == 1)
                 // uspesno je dodat novi softver (logicki je aktivan)
@@ -291,12 +301,35 @@ namespace HCI_Projekat
 
         private void undoClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Undo");
+            string kljuc = stack.Undo();
+            if((kljuc != "") && sviRacunarskiCentri.Contains(kljuc))
+            {
+                racunarskiCentar = (RacunarskiCentar)sviRacunarskiCentri[kljuc];
+                refreshCollections();
+                MenuItemRedo.IsEnabled = true;
+                MenuItemRedoPicture.IsEnabled = true;
+            }
+            if (stack.UndoCount == 0 || !sviRacunarskiCentri.Contains(stack.GetUndo().Peek()))
+            {
+                MenuItemUndo.IsEnabled = false;
+                MenuItemUndoPicture.IsEnabled = false;
+            }
         }
 
         private void redoClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Redo");
+            string kljuc = stack.Redo();
+            if(kljuc != "" && sviRacunarskiCentri.Contains(kljuc))
+            {
+                MessageBox.Show("REODO");
+                racunarskiCentar = (RacunarskiCentar)sviRacunarskiCentri[kljuc];
+                refreshCollections();
+            }
+            if (stack.RedoCount == 0 || !sviRacunarskiCentri.Contains(stack.GetRedo().Peek()))
+            {
+                MenuItemRedo.IsEnabled = true;
+                MenuItemRedoPicture.IsEnabled = true;
+            }
         }
 
         private void tabsFocus(object sender, RoutedEventArgs e)
@@ -1092,7 +1125,7 @@ namespace HCI_Projekat
             if (tabelaSoftvera.SelectedIndex != -1)
             {
                 Softver red = (Softver)tabelaSoftvera.SelectedItem;
-                var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, true, red.Oznaka, notifierSucces);
+                var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, true, red.Oznaka, notifierSucces, stack, sviRacunarskiCentri);
                 softverWindow.nazivSoftver.Text = red.Naziv;
                 softverWindow.oznakaSoftver.Focus();
                 softverWindow.proizvodjacSoftver.Text = red.Proizvodjac;
@@ -1111,6 +1144,11 @@ namespace HCI_Projekat
 
                 softverWindow.indeks = tabelaSoftvera.SelectedIndex;
                 softverWindow.ShowDialog();
+                if (softverWindow.potvrdio)
+                {
+                    MenuItemUndo.IsEnabled = true;
+                    MenuItemUndoPicture.IsEnabled = true;
+                }
                 tabelaSoftvera.Items.Refresh();
             }
             else
@@ -1576,6 +1614,58 @@ namespace HCI_Projekat
         {
             get;
             set;
+        }
+
+        private void pokreniTutorijal(object sender, EventArgs e)
+        {
+            notifierError.ShowInformation("pokrenut tutorijal!");
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
+        }
+
+        private void refreshCollections()
+        {
+            predmetiKolekcija = new ObservableCollection<Predmet>();
+            foreach (Predmet p in racunarskiCentar.Predmeti.Values)
+            {
+                if (!p.Obrisan)
+                    predmetiKolekcija.Add(p);
+            }
+            tabelaPredmeta.ItemsSource = predmetiKolekcija;
+
+            softveriKolekcija = new ObservableCollection<Softver>();
+            foreach (Softver s in racunarskiCentar.Softveri.Values)
+            {
+                if (!s.Obrisan)
+                    softveriKolekcija.Add(s);
+            }
+            tabelaSoftvera.ItemsSource = softveriKolekcija;
+
+            smeroviKolekcija = new ObservableCollection<Smer>();
+            foreach (Smer s in racunarskiCentar.Smerovi.Values)
+            {
+                if (!s.Obrisan)
+                    smeroviKolekcija.Add(s);
+            }
+            tabelaSmerova.ItemsSource = smeroviKolekcija;
+
+            ucioniceKolekcija = new ObservableCollection<Ucionica>();
+            foreach (Ucionica u in racunarskiCentar.Ucionice.Values)
+            {
+                if (!u.Obrisan)
+                    ucioniceKolekcija.Add(u);
+            }
+            tabelaUcionica.ItemsSource = ucioniceKolekcija;
         }
     }
 }

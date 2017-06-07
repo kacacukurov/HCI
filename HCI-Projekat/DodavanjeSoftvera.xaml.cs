@@ -9,6 +9,10 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using System.Runtime.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Specialized;
 
 namespace HCI_Projekat
 {
@@ -27,9 +31,12 @@ namespace HCI_Projekat
         private bool dodavanjeSoftveraIzborStarogUnosa;
         private Notifier notifierError;
         private Notifier notifierMainWindow;
+        private UndoRedoStack stack;
+        OrderedDictionary sviRacunarskiCentri;
+        public bool potvrdio;
 
         public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena, string oznaka,
-            Notifier notifierMainWindow)
+            Notifier notifierMainWindow, UndoRedoStack stack, OrderedDictionary sviRacunarskiCentri)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -45,7 +52,8 @@ namespace HCI_Projekat
 
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
-
+            this.potvrdio = false;
+            this.stack = stack;
             this.notifierMainWindow = notifierMainWindow;
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
@@ -58,6 +66,7 @@ namespace HCI_Projekat
             if (!izmena)
                 oznakaSoftver.Focus();
             BackStepMenuItem.IsEnabled = false;
+            this.sviRacunarskiCentri = sviRacunarskiCentri;
         }
 
         private void undoClick(object sender, RoutedEventArgs e)
@@ -178,6 +187,15 @@ namespace HCI_Projekat
             }
             if (validacijaNovogSoftvera() && !dodavanjeSoftveraIzborStarogUnosa)
             {
+
+                //dodavanje na stek
+                string kljuc = Guid.NewGuid().ToString();
+                if (sviRacunarskiCentri.Count >= 2)
+                    sviRacunarskiCentri.RemoveAt(0);
+                sviRacunarskiCentri.Add(kljuc, DeepClone(racunarskiCentar));
+                stack.Do(kljuc);
+                potvrdio = true;
+
                 noviSoftver.Oznaka = oznakaSoftver.Text.Trim();
                 noviSoftver.Naziv = nazivSoftver.Text.Trim();
                 noviSoftver.Opis = opisSoftver.Text.Trim();
@@ -191,6 +209,7 @@ namespace HCI_Projekat
                     noviSoftver.OperativniSistem = "Windows i Linux";
                 noviSoftver.Proizvodjac = proizvodjacSoftver.Text.Trim();
                 noviSoftver.Sajt = sajtSoftver.Text.Trim();
+
 
                 tabelaSoftvera.Add(noviSoftver);
                 racunarskiCentar.DodajSoftver(noviSoftver);
@@ -207,8 +226,9 @@ namespace HCI_Projekat
                 tabelaSoftvera.Add(racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()]);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    notifierMainWindow.ShowSuccess("Uspešno ste dodali aktivirali softver!");
+                    notifierMainWindow.ShowSuccess("Uspešno ste aktivirali softver!");
                 });
+                
                 this.Close();
             }
         }
@@ -232,6 +252,15 @@ namespace HCI_Projekat
                     odluka.Sajt.Text = "Sajt: " + softver.Sajt;
                     odluka.Cena.Text = "Cena: " + softver.Cena.ToString();
                     odluka.ShowDialog();
+
+
+                    //dodavanje na stek
+                    string kljuc = Guid.NewGuid().ToString();
+                    if (sviRacunarskiCentri.Count >= 2)
+                        sviRacunarskiCentri.RemoveAt(0);
+                    sviRacunarskiCentri.Add(kljuc, DeepClone(racunarskiCentar));
+                    stack.Do(kljuc);
+                    potvrdio = true;
 
                     if (odluka.potvrdaNovogUnosa)
                         // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan softver
@@ -469,6 +498,13 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka() && proveraIzmeneOS(oznakaSoftveraZaIzmenu))
             {
+                string kljuc = Guid.NewGuid().ToString();
+                if (sviRacunarskiCentri.Count >= 2)
+                    sviRacunarskiCentri.RemoveAt(0);
+                sviRacunarskiCentri.Add(kljuc, DeepClone(racunarskiCentar));
+                stack.Do(kljuc);
+                potvrdio = true;
+
                 Softver softverIzmena = racunarskiCentar.Softveri[oznakaSoftveraZaIzmenu];
                 bool promenilaSeOznaka = false;
                 bool promenioSeNaziv = false;
@@ -608,6 +644,18 @@ namespace HCI_Projekat
                     notifierMainWindow.ShowSuccess("Uspešno ste dodali izmenili softver!");
                 });
                 this.Close();
+            }
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
             }
         }
     }

@@ -16,7 +16,6 @@ namespace HCI_Projekat
         private static Window _instanceWindow = null;
         private RacunarskiCentar racunarskiCentar = null;
         private Notifier not;
-        Dispatcher disp;
 
         public CefCustomObject(ChromiumWebBrowser originalBrowser, Window mainWindow, RacunarskiCentar racunarskiCentar, Notifier not)
         {

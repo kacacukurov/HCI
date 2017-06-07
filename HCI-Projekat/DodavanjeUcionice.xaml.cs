@@ -8,6 +8,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace HCI_Projekat
 {
@@ -25,9 +29,28 @@ namespace HCI_Projekat
         public int indeks;
         public bool inicijalizacija;
         private bool dodavanjeUcioniceIzborStarogUnosa;
+        private Notifier notifierError;
+        private Notifier notifierMainWindow;
 
-        public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena, string oznaka)
+        public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena, string oznaka,
+            Notifier notifierMainWindow)
         {
+            notifierError = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: this,
+                    corner: Corner.TopRight,
+                    offsetX: 20,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(1));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
+            this.notifierMainWindow = notifierMainWindow;
             this.inicijalizacija = false;
             InitializeComponent();
             this.inicijalizacija = true;
@@ -243,6 +266,10 @@ namespace HCI_Projekat
 
                 tabelaUcionica.Add(novaUcionica);
                 racunarskiCentar.DodajUcionicu(novaUcionica);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste dodali novu učionicu!");
+                });
                 this.Close();
             }
             else if (dodavanjeUcioniceIzborStarogUnosa)
@@ -250,6 +277,10 @@ namespace HCI_Projekat
                 // ukoliko postoji predmet (logicki neaktivan) sa istom oznakom
                 // kao sto je uneta, ponovo aktiviramo taj predmet (postaje logicki aktivan)
                 tabelaUcionica.Add(racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()]);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste dodali novu učionicu!");
+                });
                 this.Close();
             }
         }
@@ -284,7 +315,10 @@ namespace HCI_Projekat
                 }
                 else
                 {
-                    MessageBox.Show("Učionica sa unetom oznakom već postoji!");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Učionica sa unetom oznakom već postoji!");
+                    });
                     vratiNaKorak1();
                     UpdateLayout();
                     oznakaUcionica.Focus();
@@ -323,7 +357,10 @@ namespace HCI_Projekat
                     opisUcionica.BorderBrush = System.Windows.Media.Brushes.Red;
 
 
-                MessageBox.Show("Niste popunili sva polja!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste popunili sva polja!");
+                });
                 if (oznakaUcionica.Text.Trim() == "")
                 {
                     vratiNaKorak1();
@@ -348,7 +385,10 @@ namespace HCI_Projekat
             int brMesta;
             if (!int.TryParse(brojRadnihMestaUcionica.Text.Trim(), out brMesta))
             {
-                MessageBox.Show("Broj radnih mesta nije dobro unesen, unesite broj!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Broj radnih mesta nije dobro unesen, unesite broj!");
+                });
                 brojRadnihMestaUcionica.Text = "";
                 brojRadnihMestaUcionica.Focus();
                 return false;
@@ -365,7 +405,10 @@ namespace HCI_Projekat
                 }
                 if (!postojiSoftver)
                 {
-                    MessageBox.Show("Niste označili potreban softver/softvere!");
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Niste označili potreban softver/softvere!");
+                    });
                     if (tabControlUcionica.SelectedIndex != 1)
                     {
                         vratiNaKorak2();
@@ -380,7 +423,10 @@ namespace HCI_Projekat
                 }
             }
             else {
-                MessageBox.Show("Morate prvo uneti softver da biste mogli da unesete učionicu!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Morate prvo uneti softver da biste mogli da unesete učionicu!");
+                });
                 return false;
             }
             return true;
@@ -444,6 +490,10 @@ namespace HCI_Projekat
                 }
 
                 tabelaUcionica[indeks] = ucionicaIzmena;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili učionicu!");
+                });
                 this.Close();
             }
         }

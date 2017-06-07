@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace HCI_Projekat
 {
@@ -24,9 +20,25 @@ namespace HCI_Projekat
         private ObservableCollection<Smer> tabelaSmerova;
         private List<int> indeksi;
         public bool potvrdaIzmena;
+        private Notifier notifierError;
 
         public IzmenaSmerova(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, List<int> indeksi)
         {
+            notifierError = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: this,
+                    corner: Corner.TopRight,
+                    offsetX: 20,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(1));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
             InitializeComponent();
             this.potvrdaIzmena = false;
             this.racunarskiCentar = racunarskiCentar;
@@ -106,7 +118,10 @@ namespace HCI_Projekat
         {
             if (NazivSmera.Text.Trim() == "" && OpisSmera.Text.Trim() == "" && DatumUvodjenja.Text.Trim() == "")
             {
-                MessageBox.Show("Niste popunili nijedno polje!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste popunili nijedno polje!");
+                });
                 if (NazivSmera.Text.Trim() == "")
                     NazivSmera.Focus();
                 else if (DatumUvodjenja.Text.Trim() == "")

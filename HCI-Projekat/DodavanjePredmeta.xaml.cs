@@ -30,8 +30,10 @@ namespace HCI_Projekat
         private bool dodavanjePredmetaIzborStarogUnosa;
         private string oznakaPredmetaZaIzmenu;
         private Notifier notifierError;
+        private Notifier notifierMainWindow;
 
-        public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti, bool izmena, string oznaka)
+        public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti, bool izmena, string oznaka,
+            Notifier notifierMainWindow)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -47,6 +49,7 @@ namespace HCI_Projekat
 
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
+            this.notifierMainWindow = notifierMainWindow;
 
             predmet = new Predmet();
             this.racunarskiCentar = racunarskiCentar;
@@ -312,6 +315,10 @@ namespace HCI_Projekat
 
                 tabelaPredmeta.Add(predmet);
                 racunarskiCentar.DodajPredmet(predmet);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste dodali novi predmet!");
+                });
                 this.Close();
             }
             else if (dodavanjePredmetaIzborStarogUnosa)
@@ -319,6 +326,10 @@ namespace HCI_Projekat
                 // ukoliko postoji predmet (logicki neaktivan) sa istom oznakom
                 // kao sto je uneta, ponovo aktiviramo taj predmet (postaje logicki aktivan)
                 tabelaPredmeta.Add(racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()]);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste aktivirali predmet!");
+                });
                 this.Close();
             }
         }
@@ -604,6 +615,10 @@ namespace HCI_Projekat
                 }
 
                 tabelaPredmeta[indeks] = predmetIzmena;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili predmet!");
+                });
                 this.Close();
             }
         }

@@ -26,8 +26,10 @@ namespace HCI_Projekat
         public int indeks;
         private bool dodavanjeSoftveraIzborStarogUnosa;
         private Notifier notifierError;
+        private Notifier notifierMainWindow;
 
-        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena, string oznaka)
+        public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena, string oznaka,
+            Notifier notifierMainWindow)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -44,6 +46,7 @@ namespace HCI_Projekat
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
 
+            this.notifierMainWindow = notifierMainWindow;
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -191,6 +194,10 @@ namespace HCI_Projekat
 
                 tabelaSoftvera.Add(noviSoftver);
                 racunarskiCentar.DodajSoftver(noviSoftver);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste dodali novi softver!");
+                });
                 this.Close();
             }
             else if (dodavanjeSoftveraIzborStarogUnosa)
@@ -198,6 +205,10 @@ namespace HCI_Projekat
                 // ukoliko postoji softver (logicki neaktivan) sa istom oznakom
                 // kao sto je uneta, ponovo aktiviramo taj softver (postaje logicki aktivan)
                 tabelaSoftvera.Add(racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()]);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste dodali aktivirali softver!");
+                });
                 this.Close();
             }
         }
@@ -592,6 +603,10 @@ namespace HCI_Projekat
                 }
 
                 tabelaSoftvera[indeks] = softverIzmena;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste dodali izmenili softver!");
+                });
                 this.Close();
             }
         }

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
 
 namespace HCI_Projekat
 {
@@ -23,9 +19,25 @@ namespace HCI_Projekat
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Softver> tabelaSoftvera;
         private List<int> indeksiZaIzmenu;
+        private Notifier notifierError;
 
         public IzmenaSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, List<int> indeksi)
         {
+            notifierError = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: this,
+                    corner: Corner.TopRight,
+                    offsetX: 20,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(1));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
             this.indeksiZaIzmenu = indeksi;
@@ -192,7 +204,10 @@ namespace HCI_Projekat
             if (nazivSoftver.Text.Trim() == "" && proizvodjacSoftver.Text.Trim() == "" && opisSoftver.Text.Trim() == ""
                 && godinaSoftver.Text.Trim() == "" && cenaSoftver.Text.Trim() == "" && sajtSoftver.Text.Trim() == "")
             {
-                MessageBox.Show("Niste popunili nijedno polje!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Niste popunili nijedno polje!");
+                });
                 if (nazivSoftver.Text.Trim() == "")
                     nazivSoftver.Focus();
 
@@ -202,7 +217,10 @@ namespace HCI_Projekat
             int godina;
             if (godinaSoftver.Text.Trim() != "" && !int.TryParse(godinaSoftver.Text.Trim(), out godina))
             {
-                MessageBox.Show("Godina nije dobro unesena, unesite broj!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Godina nije dobro unesena, unesite broj!");
+                });
                 godinaSoftver.Text = "";
                 godinaSoftver.Focus();
                 return false;
@@ -211,7 +229,10 @@ namespace HCI_Projekat
             double cena;
             if (cenaSoftver.Text.Trim() != "" && !double.TryParse(cenaSoftver.Text.Trim(), out cena))
             {
-                MessageBox.Show("Cena nije dobro unesena, unesite broj!");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Cena nije dobro unesena, unesite broj!");
+                });
                 cenaSoftver.Text = "";
                 cenaSoftver.Focus();
                 return false;

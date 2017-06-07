@@ -24,8 +24,10 @@ namespace HCI_Projekat
         public int indeks;
         private bool dodavanjeSmeraIzborStarogUnosa;
         private Notifier notifierError;
+        private Notifier notifierMainWindow;
 
-        public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena, string oznaka)
+        public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena, string oznaka, 
+            Notifier notifierMainWindow)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -41,7 +43,7 @@ namespace HCI_Projekat
 
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
-
+            this.notifierMainWindow = notifierMainWindow;
             smer = new Smer();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -120,6 +122,10 @@ namespace HCI_Projekat
 
                 tabelaSmerova.Add(smer);
                 racunarskiCentar.DodajSmer(smer);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste dodali novi smer!");
+                });
                 this.Close();
             }
             else if (dodavanjeSmeraIzborStarogUnosa)
@@ -127,6 +133,10 @@ namespace HCI_Projekat
                 // ukoliko postoji smer (logicki neaktivan) sa istom oznakom
                 // kao sto je uneta, ponovo aktiviramo taj smer (postaje logicki aktivan)
                 tabelaSmerova.Add(racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()]);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste aktivirali smer!");
+                });
                 this.Close();
             }
         }
@@ -207,7 +217,10 @@ namespace HCI_Projekat
                 }
 
                 tabelaSmerova[indeks] = smerIzmena;
-                this.Close();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili smer!");
+                });
             }
         }
 

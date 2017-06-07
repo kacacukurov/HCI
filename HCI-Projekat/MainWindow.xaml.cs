@@ -59,8 +59,8 @@ namespace HCI_Projekat
                 cfg.PositionProvider = new WindowPositionProvider(
                     parentWindow: Application.Current.MainWindow,
                     corner: Corner.TopRight,
-                    offsetX: 10,
-                    offsetY: 10);
+                    offsetX: 30,
+                    offsetY: 30);
 
                 cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
                     notificationLifetime: System.TimeSpan.FromSeconds(3),
@@ -177,11 +177,16 @@ namespace HCI_Projekat
                 // dodavanje nove ucionice je moguce samo ako postoji neki logicki aktivan softver
                 if (tabControl.SelectedIndex != 1)
                     tabControl.SelectedIndex = 1;
-                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false, "");
+                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, false, "", notifierSucces);
                 ucionicaWindow.ShowDialog();
             }
             else
-                MessageBox.Show("Ne možete uneti učionicu dok god ne unesete bar jedan softver!");
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Ne možete uneti učionicu dok god ne unesete bar jedan softver!");
+                });
+            }
         }
 
         private void dodavanjePredmetaClick(object sender, RoutedEventArgs e)
@@ -191,15 +196,30 @@ namespace HCI_Projekat
                 // dodavanje novog predmeta je moguce samo ako postoji neki logicki aktivan softver i neki logicki aktivan smer
                 if (tabControl.SelectedIndex != 2)
                     tabControl.SelectedIndex = 2;
-                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false, "");
+                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, false, "", notifierSucces);
                 predmetWindow.ShowDialog();
             }
             else if ((racunarskiCentar.Smerovi.Count == 0 && racunarskiCentar.Softveri.Count == 0) || (brojAktivnihSoftvera == 0 && brojAktivnihSmerova == 0))
-                MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan smer i bar jedan softver!");
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Ne možete uneti predmet dok god ne unesete bar jedan smer i bar jedan softver!");
+                });
+            }
             else if (racunarskiCentar.Smerovi.Count == 0 || brojAktivnihSmerova == 0)
-                MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan smer!");
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Ne možete uneti predmet dok god ne unesete bar jedan smer!");
+                });
+            }
             else if (racunarskiCentar.Softveri.Count == 0 || brojAktivnihSoftvera == 0)
-                MessageBox.Show("Ne možete uneti predmet dok god ne unesete bar jedan softver!");
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Ne možete uneti predmet dok god ne unesete bar jedan softver!");
+                });
+            }
         }
 
         private void dodavanjeSmeraClick(object sender, RoutedEventArgs e)
@@ -207,7 +227,7 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex != 3)
                 tabControl.SelectedIndex = 3;
             int stariBrojSmerova = racunarskiCentar.Smerovi.Count;
-            var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, false, "");
+            var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, false, "", notifierSucces);
             smerWindow.ShowDialog();
 
             if (racunarskiCentar.Smerovi.Count - stariBrojSmerova == 1)
@@ -223,7 +243,7 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex != 4)
                 tabControl.SelectedIndex = 4;
             int stariBrojSoftvera = racunarskiCentar.Softveri.Count;
-            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false, "");
+            var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, false, "", notifierSucces);
             softverWindow.ShowDialog();
 
             if (racunarskiCentar.Softveri.Count - stariBrojSoftvera == 1)
@@ -938,7 +958,12 @@ namespace HCI_Projekat
             if (tabControl.SelectedIndex == 1)
             {
                 if (tabelaUcionica.SelectedItems.Count > 1)
-                    MessageBox.Show("Nije moguće izmeniti više učionica odjednom!");
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Nije moguće izmeniti više učionica odjednom!");
+                    });
+                }
                 else
                     izmeniUcionicuClick(sender, e);
             }
@@ -946,7 +971,12 @@ namespace HCI_Projekat
             else if (tabControl.SelectedIndex == 2)
             {
                 if (tabelaPredmeta.SelectedItems.Count > 1)
-                    MessageBox.Show("Nije moguće izmeniti više predmeta odjednom!");
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierError.ShowError("Nije moguće izmeniti više predmeta odjednom!");
+                    });
+                }
                 else
                     izmeniPredmetClick(sender, e);
             }
@@ -1009,7 +1039,7 @@ namespace HCI_Projekat
             if (tabelaPredmeta.SelectedIndex != -1)
             {
                 Predmet pre = (Predmet)tabelaPredmeta.SelectedItem;
-                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, true, pre.Oznaka);
+                var predmetWindow = new DodavanjePredmeta(racunarskiCentar, predmetiKolekcija, true, pre.Oznaka, notifierSucces);
                 predmetWindow.NazivPredmeta.Text = pre.Naziv;
                 predmetWindow.OznakaPredmeta.Focus();
                 predmetWindow.OznakaPredmeta.Text = pre.Oznaka;
@@ -1062,7 +1092,7 @@ namespace HCI_Projekat
             if (tabelaSoftvera.SelectedIndex != -1)
             {
                 Softver red = (Softver)tabelaSoftvera.SelectedItem;
-                var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, true, red.Oznaka);
+                var softverWindow = new DodavanjeSoftvera(racunarskiCentar, softveriKolekcija, true, red.Oznaka, notifierSucces);
                 softverWindow.nazivSoftver.Text = red.Naziv;
                 softverWindow.oznakaSoftver.Focus();
                 softverWindow.proizvodjacSoftver.Text = red.Proizvodjac;
@@ -1092,7 +1122,7 @@ namespace HCI_Projekat
             if (tabelaUcionica.SelectedIndex != -1)
             {
                 Ucionica red = (Ucionica)tabelaUcionica.SelectedItem;
-                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, true, red.Oznaka);
+                var ucionicaWindow = new DodavanjeUcionice(racunarskiCentar, ucioniceKolekcija, true, red.Oznaka, notifierSucces);
                 ucionicaWindow.oznakaUcionica.Text = red.Oznaka;
                 ucionicaWindow.brojRadnihMestaUcionica.Text = red.BrojRadnihMesta.ToString();
                 ucionicaWindow.oznakaUcionica.Focus();
@@ -1130,7 +1160,7 @@ namespace HCI_Projekat
             if (tabelaSmerova.SelectedIndex != -1)
             {
                 Smer row = (Smer)tabelaSmerova.SelectedItem;
-                var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, true, row.Oznaka);
+                var smerWindow = new DodavanjeSmera(racunarskiCentar, smeroviKolekcija, true, row.Oznaka, notifierSucces);
                 smerWindow.NazivSmera.Text = row.Naziv;
                 smerWindow.OznakaSmera.Focus();
                 smerWindow.OznakaSmera.Text = row.Oznaka;
@@ -1172,7 +1202,6 @@ namespace HCI_Projekat
                         }
                     }
                     removedItems.Add(racunarskiCentar.Predmeti[oznakaPredmeta]);
-                    
                 }
                 List<string> predmetiUcioniceBezDupl = predmetiUcionice.Distinct().ToList();
                 if (oznakePolja.Count > 0)
@@ -1181,26 +1210,37 @@ namespace HCI_Projekat
                     {
                         potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
                     }
-                }
-                potvrda.ShowDialog();
-                if (potvrda.daKlik)
-                {
-                    foreach (string id in oznakePolja)
-                        racunarskiCentar.PoljaKalendara.Remove(id);
-                    foreach (string poz in predmetiUcionice)
-                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
-
-                    foreach (Predmet predmet in removedItems)
+                    potvrda.ShowDialog();
+                    if (potvrda.daKlik)
                     {
-                        racunarskiCentar.Smerovi[racunarskiCentar.Predmeti[predmet.Oznaka].Smer].Predmeti.Remove(predmet.Oznaka);
-                        racunarskiCentar.Predmeti[predmet.Oznaka].Obrisan = true;
-                        predmetiKolekcija.Remove(predmet);
+                        foreach (string id in oznakePolja)
+                            racunarskiCentar.PoljaKalendara.Remove(id);
+                        foreach (string poz in predmetiUcionice)
+                            racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+
+                        foreach (Predmet predmet in removedItems)
+                        {
+                            racunarskiCentar.Smerovi[racunarskiCentar.Predmeti[predmet.Oznaka].Smer].Predmeti.Remove(predmet.Oznaka);
+                            racunarskiCentar.Predmeti[predmet.Oznaka].Obrisan = true;
+                            predmetiKolekcija.Remove(predmet);
+                        }
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
-                else
+                foreach (Predmet predmet in removedItems)
                 {
-                    return;
+                    racunarskiCentar.Smerovi[racunarskiCentar.Predmeti[predmet.Oznaka].Smer].Predmeti.Remove(predmet.Oznaka);
+                    racunarskiCentar.Predmeti[predmet.Oznaka].Obrisan = true;
+                    predmetiKolekcija.Remove(predmet);
                 }
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierSucces.ShowSuccess("Brisanje predmeta uspešno izvršeno!");
+                });
+
             }
             else
                 return;
@@ -1227,7 +1267,10 @@ namespace HCI_Projekat
                     }
                     if (koristiSeUPredmetu)
                     {
-                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer ga koristi neki od predmeta!");
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            notifierError.ShowError("Ne možete obrisati softver " + oznakaSoftvera + ", jer ga koristi neki od predmeta!");
+                        });
                         continue;
                     }
 
@@ -1240,7 +1283,10 @@ namespace HCI_Projekat
                     }
                     if (koristiSeUucionici)
                     {
-                        MessageBox.Show("Ne možete obrisati softver " + oznakaSoftvera + ", jer se koristi u nekoj od učionica!");
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            notifierError.ShowError("Ne možete obrisati softver " + oznakaSoftvera + ", jer se koristi u nekoj od učionica!");
+                        });
                         continue;
                     }
 
@@ -1252,6 +1298,13 @@ namespace HCI_Projekat
 
                 foreach (Softver softver in removedItems)
                     softveriKolekcija.Remove(softver);
+                if(removedItems.Count != 0)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        notifierSucces.ShowSuccess("Brisanje softvera uspešno izvršeno!");
+                    });
+                }
             }
             else
                 return;
@@ -1292,25 +1345,37 @@ namespace HCI_Projekat
                     {
                         potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
                     }
-                }
-                potvrda.ShowDialog();
-                if (potvrda.daKlik)
-                {
-                    foreach (string id in oznakePolja)
-                        racunarskiCentar.PoljaKalendara.Remove(id);
-                    foreach (string poz in predmetiUcionice)
-                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
-
-                    foreach (Ucionica ucionica in removedItems)
+                    potvrda.ShowDialog();
+                    if (potvrda.daKlik)
                     {
-                        racunarskiCentar.Ucionice[ucionica.Oznaka].Obrisan = true;
-                        ucioniceKolekcija.Remove(ucionica);
+                        foreach (string id in oznakePolja)
+                            racunarskiCentar.PoljaKalendara.Remove(id);
+                        foreach (string poz in predmetiUcionice)
+                            racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+
+                        foreach (Ucionica ucionica in removedItems)
+                        {
+                            racunarskiCentar.Ucionice[ucionica.Oznaka].Obrisan = true;
+                            ucioniceKolekcija.Remove(ucionica);
+                        }
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
-                else
+                foreach (Ucionica ucionica in removedItems)
                 {
-                    return;
+                    racunarskiCentar.Ucionice[ucionica.Oznaka].Obrisan = true;
+                    ucioniceKolekcija.Remove(ucionica);
                 }
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if(removedItems.Count == 1)
+                        notifierSucces.ShowSuccess("Brisanje učionice uspešno izvršeno!");
+                    else
+                        notifierSucces.ShowSuccess("Brisanje učionica uspešno izvršeno!");
+                });
             }
             else
                 return;
@@ -1355,33 +1420,37 @@ namespace HCI_Projekat
                     {
                         potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
                     }
-                }
-                potvrda.ShowDialog();
-                if (potvrda.daKlik)
-                {
-                    foreach (string id in oznakePolja)
-                        racunarskiCentar.PoljaKalendara.Remove(id);
-                    foreach (string poz in predmetiUcionice)
-                        racunarskiCentar.Predmeti[poz].PreostaliTermini++;
-
-                    foreach (Smer smer in removedItems)
-                    {//provera da li se nalazi u nekom predmetu, ako se nalazi, brise se i taj predmet kom pripada
-                        if (racunarskiCentar.Smerovi[smer.Oznaka].Predmeti.Count > 0)
-                        {
-                            foreach (string predmetOznaka in racunarskiCentar.Smerovi[smer.Oznaka].Predmeti)
-                            {
-                                racunarskiCentar.Predmeti[predmetOznaka].Obrisan = true;
-                                predmetiKolekcija.Remove(racunarskiCentar.Predmeti[predmetOznaka]);
-                            }
-                        }
-                        racunarskiCentar.Smerovi[smer.Oznaka].Obrisan = true;
-                        smeroviKolekcija.Remove(smer);
+                    potvrda.ShowDialog();
+                    if (potvrda.daKlik)
+                    {
+                        foreach (string id in oznakePolja)
+                            racunarskiCentar.PoljaKalendara.Remove(id);
+                        foreach (string poz in predmetiUcionice)
+                            racunarskiCentar.Predmeti[poz].PreostaliTermini++;
                     }
+                    else
+                        return;
                 }
-                else
+                foreach (Smer smer in removedItems)
+                {//provera da li se nalazi u nekom predmetu, ako se nalazi, brise se i taj predmet kom pripada
+                    if (racunarskiCentar.Smerovi[smer.Oznaka].Predmeti.Count > 0)
+                    {
+                        foreach (string predmetOznaka in racunarskiCentar.Smerovi[smer.Oznaka].Predmeti)
+                        {
+                            racunarskiCentar.Predmeti[predmetOznaka].Obrisan = true;
+                            predmetiKolekcija.Remove(racunarskiCentar.Predmeti[predmetOznaka]);
+                        }
+                    }
+                    racunarskiCentar.Smerovi[smer.Oznaka].Obrisan = true;
+                    smeroviKolekcija.Remove(smer);
+                }
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    return;
-                }
+                    if (removedItems.Count == 1)
+                        notifierSucces.ShowSuccess("Brisanje smera uspešno izvršeno!");
+                    else
+                        notifierSucces.ShowSuccess("Brisanje smerova uspešno izvršeno!");
+                });
             }
             else
                 return;

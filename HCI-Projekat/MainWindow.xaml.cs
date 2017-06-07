@@ -736,14 +736,6 @@ namespace HCI_Projekat
                         return (u.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
                     else if (parametar == "Broj radnih mesta")
                         return (u.BrojRadnihMesta.ToString().StartsWith(filter));
-                    else if (parametar == "Projektor")
-                        return (u.ProjektorString.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Tabla")
-                        return (u.TablaString.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Pametna tabla")
-                        return (u.PametnaTablaString.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Operativni sistem")
-                        return (u.OperativniSistem.ToUpper().StartsWith(filter.ToUpper()));
                     else
                         return (u.Opis.ToUpper().StartsWith(filter.ToUpper()));
                 };
@@ -796,16 +788,8 @@ namespace HCI_Projekat
                         return (p.Opis.ToUpper().StartsWith(filter.ToUpper()));
                     else if (parametar == "Minimalna dužina termina")
                         return (p.MinDuzinaTermina.ToString().StartsWith(filter));
-                    else if (parametar == "Broj termina")
-                        return (p.BrTermina.ToString().StartsWith(filter));
-                    else if (parametar == "Projektor")
-                        return (p.ProjektorString.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Tabla")
-                        return (p.TablaString.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Pametna tabla")
-                        return (p.PametnaTablaString.ToUpper().StartsWith(filter.ToUpper()));
                     else
-                        return (p.OperativniSistem.ToUpper().StartsWith(filter.ToUpper()));
+                        return (p.BrTermina.ToString().StartsWith(filter));
                 };
             }
         }
@@ -849,8 +833,6 @@ namespace HCI_Projekat
                         return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
                     else if (parametar == "Oznaka")
                         return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Operativni sistem")
-                        return (s.OperativniSistem.ToUpper().StartsWith(filter.ToUpper()));
                     else if (parametar == "Proizvođač")
                         return (s.Proizvodjac.ToUpper().StartsWith(filter.ToUpper()));
                     else if (parametar == "Godina izdavanja")
@@ -902,11 +884,6 @@ namespace HCI_Projekat
                         return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
                     else if (parametar == "Oznaka")
                         return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Datum uvođenja")
-                    {
-                        MessageBox.Show(s.Datum.ToString());
-                        return (s.Datum.ToString().StartsWith(filter));
-                    }
                     else
                         return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));
                 };

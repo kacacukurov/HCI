@@ -26,8 +26,10 @@ namespace HCI_Projekat
         private UndoRedoStack stekStanja;
         OrderedDictionary prethodnaStanjaAplikacije;
         private Notifier notifierError;
+        private Notifier notifierMainWindow;
 
-        public IzmenaSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, List<int> indeksi, UndoRedoStack stek, OrderedDictionary prethodnaStanja)
+        public IzmenaSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, List<int> indeksi,
+            UndoRedoStack stek, OrderedDictionary prethodnaStanja, Notifier notifierMainWindow)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -50,6 +52,7 @@ namespace HCI_Projekat
             this.prethodnaStanjaAplikacije = prethodnaStanja;
             this.racunarskiCentar = racunarskiCentar;
             this.indeksiZaIzmenu = indeksi;
+            this.notifierMainWindow = notifierMainWindow;
             tabelaSoftvera = softveri;
             nazivSoftver.Focus();
         }
@@ -211,6 +214,10 @@ namespace HCI_Projekat
                         }
                     }
                 }
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili softvere!");
+                });
 
                 // na undo stek treba da upisemo staro stanje aplikacije
                 // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku

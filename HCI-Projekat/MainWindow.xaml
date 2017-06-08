@@ -27,6 +27,7 @@
         <RoutedUICommand x:Key="backToTabs" Text="tabs"></RoutedUICommand>
         <RoutedUICommand x:Key="filter" Text="filter"></RoutedUICommand>
         <RoutedUICommand x:Key="pretraga" Text="pretraga"></RoutedUICommand>
+        <RoutedUICommand x:Key="open" Text="open"></RoutedUICommand>
 
         <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}">
             <Setter Property="Focusable" Value="False"/>
@@ -220,6 +221,8 @@
         <CommandBinding Command="{StaticResource backToTabs}" Executed="tabsFocus"></CommandBinding>
         <CommandBinding Command="{StaticResource filter}" Executed="otvoriKriterijumFilter"></CommandBinding>
         <CommandBinding Command="{StaticResource pretraga}" Executed="pretragaFokus"></CommandBinding>
+        <CommandBinding Command="{StaticResource save}" Executed="sacuvajKalendar"></CommandBinding>
+        <CommandBinding Command="{StaticResource open}" Executed="otvoriKalendar"></CommandBinding>
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -241,6 +244,8 @@
         <KeyBinding Key="Tab" Modifiers="Ctrl" Command="{StaticResource backToTabs}"></KeyBinding>
         <KeyBinding Key="F" Modifiers="Ctrl + Shift" Command="{StaticResource filter}"></KeyBinding>
         <KeyBinding Key="P" Modifiers="Ctrl + Shift" Command="{StaticResource pretraga}"></KeyBinding>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{StaticResource open}"></KeyBinding>
     </Window.InputBindings>
 
     <Grid>
@@ -317,6 +322,18 @@
                                     <KeyBinding Key="T" Modifiers="Ctrl+Alt" Command="{StaticResource prikazSoftvera}"></KeyBinding>
                                 </MenuItem.InputBindings>
                             </MenuItem>
+                        </MenuItem>
+
+                        <MenuItem Click="sacuvajKalendar" Header="_Sačuvaj" InputGestureText="Ctrl+S">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="otvoriKalendar" Header="_Otvori" InputGestureText="Ctrl+O">
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="O" Modifiers="Ctrl" Command="{StaticResource open}"></KeyBinding>
+                            </MenuItem.InputBindings>
                         </MenuItem>
 
                         <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q" Name="MenuItemUgasi" Background="White">

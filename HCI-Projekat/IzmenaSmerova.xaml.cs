@@ -29,7 +29,7 @@ namespace HCI_Projekat
         private Notifier notifierMainWindow;
 
         public IzmenaSmerova(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, List<int> indeksi,
-            UndoRedoStack stek, OrderedDictionary prethodnaStanja)
+            UndoRedoStack stek, OrderedDictionary prethodnaStanja, Notifier mainWindowNotifier)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -52,6 +52,7 @@ namespace HCI_Projekat
             this.prethodnaStanjaAplikacije = prethodnaStanja;
             this.racunarskiCentar = racunarskiCentar;
             this.indeksi = indeksi;
+            this.notifierMainWindow = mainWindowNotifier;
             tabelaSmerova = smerovi;
             InitializeComponent();
             NazivSmera.Focus();
@@ -131,7 +132,7 @@ namespace HCI_Projekat
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili predmet!");
+                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili smerove!");
                 });
 
                 // na undo stek treba da upisemo staro stanje aplikacije

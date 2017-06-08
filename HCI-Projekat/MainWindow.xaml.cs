@@ -18,6 +18,7 @@ using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Specialized;
+using Microsoft.Win32;
 using System.Text;
 
 namespace HCI_Projekat
@@ -98,6 +99,14 @@ namespace HCI_Projekat
 
             racunarskiCentar = new RacunarskiCentar();
             DeserijalizacijaPodataka();
+            inicijalizujPodatke();
+            InitializeChromium();
+            cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError, stekStanja, prethodnaStanjaAplikacije);
+            chromeBrowser.RegisterJsObject("cefCustomObject", cef);
+        }
+
+        private void inicijalizujPodatke()
+        {
             brojAktivnihSmerova = brojLogickiAktivnihSmerova();
             brojAktivnihSoftvera = brojLogickiAktivnihSoftvera();
 
@@ -148,9 +157,6 @@ namespace HCI_Projekat
             tabelaUcionica.UnselectAll();
             detaljanPrikazUcionica.Visibility = Visibility.Hidden;
 
-            InitializeChromium();
-            cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError, stekStanja, prethodnaStanjaAplikacije);
-            chromeBrowser.RegisterJsObject("cefCustomObject", cef);
         }
 
         private void InitializeChromium()
@@ -1364,7 +1370,8 @@ namespace HCI_Projekat
                     indeksi.Add(tabelaSmerova.Items.IndexOf(o));
                 }
 
-                IzmenaSmerova izmenaSmerova = new IzmenaSmerova(racunarskiCentar, smeroviKolekcija, indeksi, stekStanja, prethodnaStanjaAplikacije);
+                IzmenaSmerova izmenaSmerova = new IzmenaSmerova(racunarskiCentar, smeroviKolekcija, indeksi, stekStanja, 
+                    prethodnaStanjaAplikacije, notifierSucces);
                 izmenaSmerova.ShowDialog();
                 if (izmenaSmerova.potvrdaIzmena)
                     omoguciUndo();
@@ -1384,7 +1391,8 @@ namespace HCI_Projekat
                     indeksi.Add(tabelaSoftvera.Items.IndexOf(o));
                 }
 
-                IzmenaSoftvera izmenaSoftvera = new IzmenaSoftvera(racunarskiCentar, softveriKolekcija, indeksi, stekStanja, prethodnaStanjaAplikacije);
+                IzmenaSoftvera izmenaSoftvera = new IzmenaSoftvera(racunarskiCentar, softveriKolekcija, indeksi, stekStanja, 
+                    prethodnaStanjaAplikacije, notifierSucces);
                 izmenaSoftvera.ShowDialog();
                 if (izmenaSoftvera.potvrdaIzmena)
                     omoguciUndo();
@@ -1999,11 +2007,6 @@ namespace HCI_Projekat
 
             sw.Close();
             fs.Close();
-            Console.WriteLine("Serijalizacija uspesno izvrsena!\n");
-            foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
-            {
-                Console.WriteLine(polje.Id + "|" + polje.Pocetak + "|" + polje.Kraj + "|" + polje.Dan + "|" + polje.NazivPolja);
-            }
         }
 
         private void DeserijalizacijaPodataka()
@@ -2105,6 +2108,55 @@ namespace HCI_Projekat
                     ucioniceKolekcija.Add(u);
             }
             tabelaUcionica.ItemsSource = ucioniceKolekcija;
+        }
+
+        private void sacuvajKalendar(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Xml file (*.xml)|*.xml";
+
+            Nullable<bool> result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                serijalizacijaPosleSave(saveFileDialog.FileName);
+                notifierSucces.ShowSuccess("Uspesno ste zapamtili raspored!  ");
+            }
+
+        }
+
+        private void serijalizacijaPosleSave(string imeKorisnikovogFajla)
+        {
+            FileStream fs = new FileStream(imeKorisnikovogFajla, FileMode.Create, FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fs);
+
+            DataContractSerializer serializer = new DataContractSerializer(typeof(RacunarskiCentar));
+
+            using (XmlTextWriter writer = new XmlTextWriter(sw))
+            {
+                writer.Formatting = Formatting.Indented;
+
+                serializer.WriteObject(writer, racunarskiCentar);
+
+                writer.Flush();
+                writer.Close();
+            }
+            sw.Close();
+            fs.Close();
+        }
+
+        private void otvoriKalendar(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            Nullable<bool> result =  openFileDialog.ShowDialog();
+            if(result == true)
+            {
+                serijalizacijaPosleSave(imeFajla);
+                imeFajla = openFileDialog.FileName;
+                DeserijalizacijaPodataka();
+                inicijalizujPodatke();
+                cef.RacunarskiCentar = racunarskiCentar;
+                cef.posaljiPodatke();
+            }
         }
     }
 }

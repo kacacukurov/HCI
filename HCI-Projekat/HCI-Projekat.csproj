@@ -135,10 +135,6 @@
       <DependentUpon>BrisanjePoljaKalendara.xaml</DependentUpon>
     </Compile>
     <Compile Include="CefCustomObject.cs" />
-    <Compile Include="CustomDisplayPart.xaml.cs">
-      <DependentUpon>CustomDisplayPart.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CustomNotification.cs" />
     <Compile Include="HelpProvider.cs" />
     <Compile Include="HelpViewer.xaml.cs">
       <DependentUpon>HelpViewer.xaml</DependentUpon>
@@ -178,10 +174,6 @@
     <Compile Include="Ucionica.cs" />
     <Compile Include="UndoRedoStack.cs" />
     <Page Include="BrisanjePoljaKalendara.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CustomDisplayPart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

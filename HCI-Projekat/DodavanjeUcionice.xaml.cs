@@ -160,16 +160,6 @@ namespace HCI_Projekat
             }
         }
 
-        private void undoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Undo");
-        }
-
-        private void redoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Redo");
-        }
-
         public void nextStep(object sender, RoutedEventArgs e)
         {
             Keyboard.ClearFocus();
@@ -212,7 +202,7 @@ namespace HCI_Projekat
             TextBox t = (TextBox)sender;
             if (!izmena)
             {
-                if (racunarskiCentar.Ucionice.ContainsKey(t.Text.Trim()))
+                if (racunarskiCentar.Ucionice.ContainsKey(t.Text.Trim()) && !racunarskiCentar.Ucionice[t.Text.Trim()].Obrisan)
                     GreskaOznakaUcionice.Text = "Oznaka zauzeta!";
                 else
                     GreskaOznakaUcionice.Text = "";
@@ -332,7 +322,9 @@ namespace HCI_Projekat
 
         private bool validacijaNoveUcionice()
         {
-            if (racunarskiCentar.Ucionice.ContainsKey(oznakaUcionica.Text.Trim()))
+            if (!validacijaPodataka())
+                return false;
+            else if (racunarskiCentar.Ucionice.ContainsKey(oznakaUcionica.Text.Trim()))
             {
                 if (racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()].Obrisan)
                 {
@@ -378,8 +370,6 @@ namespace HCI_Projekat
                     return false;
                 }
             }
-            if (!validacijaPodataka())
-                return false;
             return true;
         }
 
@@ -487,6 +477,14 @@ namespace HCI_Projekat
 
         private void izmenaUcionice()
         {
+            string novaOznaka = oznakaUcionica.Text.Trim();
+            if (novaOznaka != oznakaUcioniceZaIzmenu && racunarskiCentar.Ucionice.ContainsKey(novaOznaka))
+            {
+                notifierError.ShowError("Učionica sa unetom oznakom već postoji u bazi!");
+                oznakaUcionica.Focus();
+                return;
+            }
+
             if (validacijaPodataka() && validacijaIzmeneSoftvera() && validacijaIzmeneTable() && validacijaIzmenePametneTable() &&
                 validacijaIzmeneProjektora() && validacijaBrojaRadnihMesta())
             {

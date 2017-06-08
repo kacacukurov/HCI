@@ -2146,6 +2146,12 @@ namespace HCI_Projekat
 
         private void otvoriKalendar(object sender, RoutedEventArgs e)
         {
+            MenuItemRedo.IsEnabled = false;
+            MenuItemUndo.IsEnabled = false;
+            MenuItemUndoPicture.IsEnabled = false;
+            MenuItemRedoPicture.IsEnabled = false;
+            stekStanja.GetUndo().Clear();
+            stekStanja.GetRedo().Clear();
             OpenFileDialog openFileDialog = new OpenFileDialog();
             Nullable<bool> result =  openFileDialog.ShowDialog();
             if(result == true)

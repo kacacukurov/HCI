@@ -188,16 +188,6 @@ namespace HCI_Projekat
             }
         }
 
-        private void undoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Undo");
-        }
-
-        private void redoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Redo");
-        }
-
         public void nextStep(object sender, RoutedEventArgs e)
         {
             Keyboard.ClearFocus();
@@ -240,7 +230,7 @@ namespace HCI_Projekat
             TextBox t = (TextBox)sender;
             if (!izmena)
             {
-                if (racunarskiCentar.Predmeti.ContainsKey(t.Text.Trim()))
+                if (racunarskiCentar.Predmeti.ContainsKey(t.Text.Trim()) && !racunarskiCentar.Predmeti[t.Text.Trim()].Obrisan)
                     GreskaOznakaPredmeta.Text = "Oznaka zauzeta!";
                 else
                     GreskaOznakaPredmeta.Text = "";
@@ -382,9 +372,7 @@ namespace HCI_Projekat
         private bool validacijaNovogPredmeta()
         {
             if (!validacijaPodataka())
-            {
                 return false;
-            }
             else if (racunarskiCentar.Predmeti.ContainsKey(OznakaPredmeta.Text.Trim()))
             {
                 if (racunarskiCentar.Predmeti[OznakaPredmeta.Text.Trim()].Obrisan)
@@ -578,6 +566,14 @@ namespace HCI_Projekat
 
         private void izmenaPredmeta()
         {
+            string novaOznaka = OznakaPredmeta.Text.Trim();
+            if (novaOznaka != oznakaPredmetaZaIzmenu && racunarskiCentar.Predmeti.ContainsKey(novaOznaka))
+            {
+                notifierError.ShowError("Predmet sa unetom oznakom već postoji u bazi!");
+                OznakaPredmeta.Focus();
+                return;
+            }
+
             if (validacijaPodataka() && validacijeIzmeneBrojaTermina() && validacijaIzmeneDuzineTermina() && validacijaIzmeneSoftvera()
                 && validacijaIzmeneTable() && validacijaIzmenePametneTable() && validacijaIzmeneProjektora() && validacijaIzmeneVelicineGrupe())
             {

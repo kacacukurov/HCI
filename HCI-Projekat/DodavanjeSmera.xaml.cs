@@ -68,16 +68,6 @@ namespace HCI_Projekat
                 OznakaSmera.Focus();
         }
 
-        private void undoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Undo");
-        }
-
-        private void redoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Redo");
-        }
-
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -102,7 +92,7 @@ namespace HCI_Projekat
             TextBox t = (TextBox)sender;
             if (!izmena)
             {
-                if (racunarskiCentar.Smerovi.ContainsKey(t.Text.Trim()))
+                if (racunarskiCentar.Smerovi.ContainsKey(t.Text.Trim()) && !racunarskiCentar.Smerovi[t.Text.Trim()].Obrisan)
                     GreskaOznakaSmera.Text = "Oznaka zauzeta!";
                 else
                     GreskaOznakaSmera.Text = "";
@@ -190,12 +180,9 @@ namespace HCI_Projekat
         private bool validacijaDodavanjaSmera()
         {
             if (!validacijaPraznihPolja())
-            {
                 return false;
-            }
             else if (racunarskiCentar.Smerovi.ContainsKey(OznakaSmera.Text.Trim()))
             {
-
                 if (racunarskiCentar.Smerovi[OznakaSmera.Text.Trim()].Obrisan)
                 {
                     dodavanjeSmeraIzborStarogUnosa = false;
@@ -240,6 +227,14 @@ namespace HCI_Projekat
 
         private void izmeniSmer()
         {
+            string novaOznaka = OznakaSmera.Text.Trim();
+            if (novaOznaka != oznakaSmeraZaIzmenu && racunarskiCentar.Smerovi.ContainsKey(novaOznaka))
+            {
+                notifierError.ShowError("Smer sa unetom oznakom već postoji u bazi!");
+                OznakaSmera.Focus();
+                return;
+            }
+
             if (validacijaPraznihPolja())
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog

@@ -57,17 +57,7 @@ namespace HCI_Projekat
             tabelaSoftvera = softveri;
             nazivSoftver.Focus();
         }
-
-        private void undoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Undo");
-        }
-
-        private void redoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Redo");
-        }
-
+        
         private void cancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();

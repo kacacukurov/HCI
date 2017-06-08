@@ -70,16 +70,6 @@ namespace HCI_Projekat
             this.staroStanje = null;
         }
 
-        private void undoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Undo");
-        }
-
-        private void redoClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Redo");
-        }
-
         public void nextStep(object sender, RoutedEventArgs e)
         {
             Keyboard.ClearFocus();
@@ -122,7 +112,7 @@ namespace HCI_Projekat
             TextBox t = (TextBox)sender;
             if (!izmena)
             {
-                if (racunarskiCentar.Softveri.ContainsKey(t.Text.Trim()))
+                if (racunarskiCentar.Softveri.ContainsKey(t.Text.Trim()) && !racunarskiCentar.Softveri[t.Text.Trim()].Obrisan)
                     GreskaOznakaSoftvera.Text = "Oznaka zauzeta!";
                 else
                     GreskaOznakaSoftvera.Text = "";
@@ -259,7 +249,9 @@ namespace HCI_Projekat
 
         private bool validacijaNovogSoftvera()
         {
-            if (racunarskiCentar.Softveri.ContainsKey(oznakaSoftver.Text.Trim()))
+            if (!validacijaPodataka())
+                return false;
+            else if (racunarskiCentar.Softveri.ContainsKey(oznakaSoftver.Text.Trim()))
             {
                 if (racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()].Obrisan)
                 {
@@ -306,8 +298,6 @@ namespace HCI_Projekat
                     return false;
                 }
             }
-            if (!validacijaPodataka())
-                return false;
             return true;
         }
 
@@ -519,6 +509,14 @@ namespace HCI_Projekat
 
         private void izmeniSoftver()
         {
+            string novaOznaka = oznakaSoftver.Text.Trim();
+            if (novaOznaka != oznakaSoftveraZaIzmenu && racunarskiCentar.Softveri.ContainsKey(novaOznaka))
+            {
+                notifierError.ShowError("Softver sa unetom oznakom već postoji u bazi!");
+                oznakaSoftver.Focus();
+                return;
+            }
+
             if (validacijaPodataka() && proveraIzmeneOS(oznakaSoftveraZaIzmenu))
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog

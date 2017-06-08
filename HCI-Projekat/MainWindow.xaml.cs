@@ -2158,5 +2158,15 @@ namespace HCI_Projekat
                 cef.posaljiPodatke();
             }
         }
+
+        private void otvoriHelp(object sender, RoutedEventArgs e)
+        {
+            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
+            if (focusedControl is DependencyObject)
+            {
+                string str = HelpProvider.GetHelpKey((DependencyObject)focusedControl);
+                HelpProvider.ShowHelp("mainWindow", this);
+            }
+        }
     }
 }

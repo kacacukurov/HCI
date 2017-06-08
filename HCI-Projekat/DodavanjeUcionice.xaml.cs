@@ -872,5 +872,15 @@ namespace HCI_Projekat
                 return (T)formatter.Deserialize(ms);
             }
         }
+
+        private void otvoriHelp(object sender, RoutedEventArgs e)
+        {
+            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
+            if (focusedControl is DependencyObject)
+            {
+                string str = HelpProvider.GetHelpKey((DependencyObject)focusedControl);
+                HelpProvider.ShowHelp("dodavanjeUcionice", this);
+            }
+        }
     }
 }

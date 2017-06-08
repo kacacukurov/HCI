@@ -223,6 +223,7 @@
         <CommandBinding Command="{StaticResource pretraga}" Executed="pretragaFokus"></CommandBinding>
         <CommandBinding Command="{StaticResource save}" Executed="sacuvajKalendar"></CommandBinding>
         <CommandBinding Command="{StaticResource open}" Executed="otvoriKalendar"></CommandBinding>
+        <CommandBinding Command="ApplicationCommands.Help" Executed="otvoriHelp"/>
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -395,8 +396,8 @@
                                 <Setter Property="MenuItem.FontSize" Value="14"></Setter>
                             </Style>
                         </MenuItem.Style>
-                        <MenuItem Click="pokreniTutorijal" Header="_Tutorijal"  Name="MenuItemTutorijal">
-                        </MenuItem>
+                        <MenuItem Click="otvoriHelp" Header="_Help" InputGestureText="F1" Name="MenuItemHelp" />
+
                     </MenuItem>
                 </Menu.Items>
             </Menu>

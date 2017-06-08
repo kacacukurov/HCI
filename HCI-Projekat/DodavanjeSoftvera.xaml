@@ -31,6 +31,7 @@
         <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClick"></CommandBinding>
         <CommandBinding Command="{StaticResource sledeciDeo}" Executed="nextStep"></CommandBinding>
         <CommandBinding Command="{StaticResource prethodniDeo}" Executed="backStep"></CommandBinding>
+        <CommandBinding Command="ApplicationCommands.Help" Executed="otvoriHelp"/>
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -97,7 +98,9 @@
 
                     </MenuItem>
 
-                    <MenuItem Header="_Help" HorizontalAlignment="Left"></MenuItem>
+                    <MenuItem Header="_Help" HorizontalAlignment="Left">
+                        <MenuItem Click="otvoriHelp" Header="_Help" InputGestureText="F1" Name="MenuItemHelp" />
+                    </MenuItem>
                 </Menu.Items>
             </Menu>
 

@@ -11,6 +11,7 @@ using ToastNotifications.Messages;
 using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Input;
 
 namespace HCI_Projekat
 {
@@ -286,6 +287,16 @@ namespace HCI_Projekat
                 ms.Position = 0;
 
                 return (T)formatter.Deserialize(ms);
+            }
+        }
+
+        private void otvoriHelp(object sender, RoutedEventArgs e)
+        {
+            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
+            if (focusedControl is DependencyObject)
+            {
+                string str = HelpProvider.GetHelpKey((DependencyObject)focusedControl);
+                HelpProvider.ShowHelp("izmenaSoftvera", this);
             }
         }
     }

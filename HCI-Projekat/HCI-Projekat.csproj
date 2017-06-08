@@ -139,12 +139,17 @@
       <DependentUpon>CustomDisplayPart.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomNotification.cs" />
+    <Compile Include="HelpProvider.cs" />
+    <Compile Include="HelpViewer.xaml.cs">
+      <DependentUpon>HelpViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IzmenaSmerova.xaml.cs">
       <DependentUpon>IzmenaSmerova.xaml</DependentUpon>
     </Compile>
     <Compile Include="IzmenaSoftvera.xaml.cs">
       <DependentUpon>IzmenaSoftvera.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JavaScriptControlHelper.cs" />
     <Compile Include="KalendarPolje.cs" />
     <Compile Include="OdlukaDodavanjaSmer.xaml.cs">
       <DependentUpon>OdlukaDodavanjaSmer.xaml</DependentUpon>
@@ -193,6 +198,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DodavanjeUcionice.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="HelpViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -282,6 +291,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="help\dodavanjePredmeta.html" />
+    <Content Include="help\dodavanjeSmera.html" />
+    <Content Include="help\dodavanjeSoftvera.html" />
+    <Content Include="help\dodavanjeUcionice.html" />
+    <Content Include="help\izmenaSmerova.html" />
+    <Content Include="help\izmenaSoftvera.html" />
     <Content Include="html\css\bootstrap.min.css" />
     <Content Include="html\css\fullcalendar.css" />
     <Content Include="html\css\fullcalendar.min.css" />
@@ -289,6 +304,7 @@
     <Content Include="html\css\fullcalendar.print.min.css" />
     <Content Include="html\css\jquery.qtip.min.css" />
     <Content Include="html\css\scheduler.min.css" />
+    <Content Include="help\mainWindow.html" />
     <Content Include="html\html\kalendar.html" />
     <Content Include="html\js\bootstrap.min.js" />
     <Content Include="html\js\fullcalendar.js" />
@@ -311,6 +327,7 @@
     <Resource Include="picture\redo.png" />
     <Resource Include="picture\undo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

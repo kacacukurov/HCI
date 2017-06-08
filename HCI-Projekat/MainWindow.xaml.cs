@@ -20,6 +20,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Specialized;
 using Microsoft.Win32;
 using System.Text;
+using System.Windows.Media.Imaging;
 
 namespace HCI_Projekat
 {
@@ -212,6 +213,7 @@ namespace HCI_Projekat
                 {
                     MenuItemUndo.IsEnabled = true;
                     MenuItemUndoPicture.IsEnabled = true;
+                    MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
                 }
             }
             else
@@ -236,6 +238,7 @@ namespace HCI_Projekat
                 {
                     MenuItemUndo.IsEnabled = true;
                     MenuItemUndoPicture.IsEnabled = true;
+                    MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
                 }
             }
             else if ((racunarskiCentar.Smerovi.Count == 0 && racunarskiCentar.Softveri.Count == 0) || (brojAktivnihSoftvera == 0 && brojAktivnihSmerova == 0))
@@ -272,6 +275,7 @@ namespace HCI_Projekat
             {
                 MenuItemUndo.IsEnabled = true;
                 MenuItemUndoPicture.IsEnabled = true;
+                MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
             }
 
             if (racunarskiCentar.Smerovi.Count - stariBrojSmerova == 1)
@@ -293,6 +297,7 @@ namespace HCI_Projekat
             {
                 MenuItemUndo.IsEnabled = true;
                 MenuItemUndoPicture.IsEnabled = true;
+                MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
             }
 
             if (racunarskiCentar.Softveri.Count - stariBrojSoftvera == 1)
@@ -395,6 +400,7 @@ namespace HCI_Projekat
                 // omogucavamo klik na dugme za redo operaciju
                 MenuItemRedo.IsEnabled = true;
                 MenuItemRedoPicture.IsEnabled = true;
+                MenuItemRedoPictureImg.Source = new BitmapImage(new Uri(@"/picture/redo.png", UriKind.Relative));
 
                 // prebacujemo fokus na tabelu u kojoj se odslikala promena stanja i ispisujemo poruku o promeni
                 string poruka = generisiPoruku(staroStanje.TipPodataka, staroStanje.TipPromene, staroStanje.Kolicina, staroStanje.Oznake);
@@ -406,6 +412,7 @@ namespace HCI_Projekat
                 // onemogucavamo poziv ove operacije
                 MenuItemUndo.IsEnabled = false;
                 MenuItemUndoPicture.IsEnabled = false;
+                MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo1.png", UriKind.Relative));
             }
         }
 
@@ -466,6 +473,7 @@ namespace HCI_Projekat
                 // omogucavamo klik na dugme za undo operaciju
                 MenuItemUndo.IsEnabled = true;
                 MenuItemUndoPicture.IsEnabled = true;
+                MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
 
                 // prebacujemo fokus na tabelu u kojoj se odslikala promena stanja i ispisujemo poruku o promeni
                 string poruka = generisiPoruku(novoStanje.TipPodataka, novoStanje.TipPromene, novoStanje.Kolicina, novoStanje.Oznake);
@@ -477,6 +485,7 @@ namespace HCI_Projekat
                 // onemogucavamo poziv ove operacije
                 MenuItemRedo.IsEnabled = false;
                 MenuItemRedoPicture.IsEnabled = false;
+                MenuItemRedoPictureImg.Source = new BitmapImage(new Uri(@"/picture/redo1.png", UriKind.Relative));
             }
         }
 
@@ -2035,6 +2044,7 @@ namespace HCI_Projekat
         {
             MenuItemUndo.IsEnabled = true;
             MenuItemUndoPicture.IsEnabled = true;
+            MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
         }
 
         private void tabChanged(object sender, SelectionChangedEventArgs e)
@@ -2149,7 +2159,9 @@ namespace HCI_Projekat
             MenuItemRedo.IsEnabled = false;
             MenuItemUndo.IsEnabled = false;
             MenuItemUndoPicture.IsEnabled = false;
+            MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo1.png", UriKind.Relative));
             MenuItemRedoPicture.IsEnabled = false;
+            MenuItemRedoPictureImg.Source = new BitmapImage(new Uri(@"/picture/redo1.png", UriKind.Relative));
             stekStanja.GetUndo().Clear();
             stekStanja.GetRedo().Clear();
             OpenFileDialog openFileDialog = new OpenFileDialog();

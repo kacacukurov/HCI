@@ -60,7 +60,10 @@ namespace HCI_Projekat
         
         private void cancelClick(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            PotvrdaOdustajanja potvrda = new PotvrdaOdustajanja();
+            potvrda.ShowDialog();
+            if (potvrda.daKlik)
+                this.Close();
         }
 
         private void proveriUnetuGodinu(object sender, TextChangedEventArgs e)

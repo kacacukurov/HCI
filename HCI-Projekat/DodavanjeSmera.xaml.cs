@@ -70,7 +70,10 @@ namespace HCI_Projekat
 
         private void cancelClick(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            PotvrdaOdustajanja potvrda = new PotvrdaOdustajanja();
+            potvrda.ShowDialog();
+            if (potvrda.daKlik)
+                this.Close();
         }
 
         private void resetujBojuOkvira(object sender, EventArgs e)
@@ -308,7 +311,6 @@ namespace HCI_Projekat
                     OpisSmera.BorderBrush = System.Windows.Media.Brushes.Red;
                 if (DatumUvodjenja.Text.Trim() == "")
                     DatumUvodjenja.BorderBrush = System.Windows.Media.Brushes.Red;
-
                 
                 Application.Current.Dispatcher.Invoke(() =>
                 {

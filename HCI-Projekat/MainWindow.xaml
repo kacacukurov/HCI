@@ -44,7 +44,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="TextElement.Foreground" Value="Black"/>
-                                <Setter TargetName="Border" Property="Background" Value="#FFCCC7F9"/>
+                                <Setter TargetName="Border" Property="Background" Value="#FFB8C6F5"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="False">
                                 <Setter Property="TextElement.Foreground" Value="#FF303030"/>
@@ -442,6 +442,9 @@
                             </Style>
                         </MenuItem.Style>
                         <MenuItem Header="_Dodavanje" Background="White">
+                            <MenuItem.Icon>
+                                <Image Source="picture/plus.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem Click="dodavanjeUcioniceClick" Header="_Učionica" InputGestureText="Ctrl+U">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="U" Modifiers="Ctrl" Command="{StaticResource novaUcionica}"></KeyBinding>
@@ -468,6 +471,9 @@
                         </MenuItem>
 
                         <MenuItem Header="_Pregled" Background="White">
+                            <MenuItem.Icon>
+                                <Image Source="picture/view.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem Click="pregledKalendaraClick" Header="_Kalendar" InputGestureText="Ctrl+Alt+K" Background="White">
                                 <MenuItem.InputBindings>
                                     <KeyBinding Key="K" Modifiers="Ctrl+Alt" Command="{StaticResource prikazKalendara}"></KeyBinding>
@@ -499,19 +505,32 @@
                             </MenuItem>
                         </MenuItem>
 
+                        <Separator></Separator>
+                        
                         <MenuItem Click="sacuvajKalendar" Header="_Sačuvaj" InputGestureText="Ctrl+S">
+                            <MenuItem.Icon>
+                                <Image Source="picture/save.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
                         <MenuItem Click="otvoriKalendar" Header="_Otvori" InputGestureText="Ctrl+O">
+                            <MenuItem.Icon>
+                                <Image Source="picture/open.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="O" Modifiers="Ctrl" Command="{StaticResource open}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
+                        <Separator></Separator>
+
                         <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q" Name="MenuItemUgasi" Background="White">
+                            <MenuItem.Icon>
+                                <Image Source="picture/power.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -526,37 +545,58 @@
                             </Style>
                         </MenuItem.Style>
                         <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z" Name="MenuItemUndo" IsEnabled="False" Background="White">
+                            <MenuItem.Icon>
+                                <Image Source="picture/undo.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
                         <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y" Name="MenuItemRedo" IsEnabled="False" Background="White">
+                            <MenuItem.Icon>
+                                <Image Source="picture/redo.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
+                        <Separator></Separator>
 
                         <MenuItem Click="izmeniElement" Header="_Izmeni element tabele" InputGestureText="Ctrl+I" Name="MenuItemIzmeni" IsEnabled="False" Background="White">
+                            <MenuItem.Icon>
+                                <Image Source="picture/edit.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
                         <MenuItem Click="obrisiElement" Header="_Obriši element tabele" InputGestureText="Ctrl+delete" Name="MenuItemObrisi" IsEnabled="False" Background="White">
+                            <MenuItem.Icon>
+                                <Image Source="picture/delete.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
+                        <Separator></Separator>
+                        
                         <MenuItem Click="otvoriKriterijumFilter" Header="_Filtriranje elemenata tabele" InputGestureText="Ctrl+Shift+F" Name="MenuItemIzborFiltera" IsEnabled="False">
+                            <MenuItem.Icon>
+                                <Image Source="picture/filter.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{StaticResource filter}"></KeyBinding>
                             </MenuItem.InputBindings>
                         </MenuItem>
 
                         <MenuItem Click="pretragaFokus" Header="_Pretraga elemenata tabele" InputGestureText="Ctrl+Shift+P" Name="MenuItemPretraga" IsEnabled="False">
+                            <MenuItem.Icon>
+                                <Image Source="picture/find.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="P" Modifiers="Ctrl+Shift" Command="{StaticResource pretraga}"></KeyBinding>
                             </MenuItem.InputBindings>
@@ -570,7 +610,11 @@
                                 <Setter Property="MenuItem.FontSize" Value="14"></Setter>
                             </Style>
                         </MenuItem.Style>
-                        <MenuItem Click="otvoriHelp" Header="_Help" InputGestureText="F1" Name="MenuItemHelp" />
+                        <MenuItem Click="otvoriHelp" Header="_Help" InputGestureText="F1" Name="MenuItemHelp">
+                            <MenuItem.Icon>
+                                <Image Source="picture/help.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
 
                     </MenuItem>
                 </Menu.Items>
@@ -588,13 +632,13 @@
 
                     <MenuItem Name="MenuItemUndoPicture" HorizontalAlignment="Left" Width="30" Margin="0,0,10,0" Click="undoClick" IsEnabled="False">
                         <MenuItem.Icon>
-                            <Image Source="picture/undo.png" Stretch="UniformToFill" ToolTip="Undo"/>
+                            <Image Name="MenuItemUndoPictureImg" Source="picture/undo1.png" Stretch="UniformToFill" ToolTip="Undo"/>
                         </MenuItem.Icon>
                     </MenuItem>
 
                     <MenuItem HorizontalAlignment="Left" Name="MenuItemRedoPicture" Width="30" Click="redoClick" IsEnabled="False">
                         <MenuItem.Icon>
-                            <Image Source="picture/redo.png" Stretch="UniformToFill" ToolTip="Redo"/>
+                            <Image Name="MenuItemRedoPictureImg" Source="picture/redo1.png" Stretch="UniformToFill" ToolTip="Redo"/>
                         </MenuItem.Icon>
                     </MenuItem>
 

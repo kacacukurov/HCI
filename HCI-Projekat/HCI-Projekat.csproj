@@ -166,6 +166,9 @@
     <Compile Include="PotvrdaIzmene.xaml.cs">
       <DependentUpon>PotvrdaIzmene.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PotvrdaOdustajanja.xaml.cs">
+      <DependentUpon>PotvrdaOdustajanja.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Predmet.cs" />
     <Compile Include="RacunarskiCentar.cs" />
     <Compile Include="Smer.cs" />
@@ -253,6 +256,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PotvrdaOdustajanja.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -311,11 +318,26 @@
     <Content Include="html\js\moment.min.js" />
     <Content Include="html\js\kalendar.js" />
     <Content Include="html\js\scheduler.min.js" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="picture\redo1.png" />
+    <Resource Include="picture\undo1.png" />
+    <Resource Include="picture\help.png" />
+    <Resource Include="picture\leave.png" />
+    <Resource Include="picture\backStep.png" />
+    <Resource Include="picture\nextStep.png" />
     <Resource Include="picture\copy.png" />
     <Resource Include="picture\cut.png" />
     <Resource Include="picture\paste.png" />
+    <Resource Include="picture\save.png" />
+    <Resource Include="picture\delete.png" />
+    <Resource Include="picture\filter.png" />
+    <Resource Include="picture\open.png" />
+    <Resource Include="picture\find.png" />
+    <Resource Include="picture\plus.png" />
+    <Resource Include="picture\power.png" />
+    <Resource Include="picture\edit.png" />
+    <Resource Include="picture\view.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="picture\redo.png" />
     <Resource Include="picture\undo.png" />
   </ItemGroup>

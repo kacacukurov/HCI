@@ -26,8 +26,10 @@ namespace HCI_Projekat
         private UndoRedoStack stekStanja;
         OrderedDictionary prethodnaStanjaAplikacije;
         private Notifier notifierError;
+        private Notifier notifierMainWindow;
 
-        public IzmenaSmerova(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, List<int> indeksi, UndoRedoStack stek, OrderedDictionary prethodnaStanja)
+        public IzmenaSmerova(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, List<int> indeksi,
+            UndoRedoStack stek, OrderedDictionary prethodnaStanja)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -88,14 +90,21 @@ namespace HCI_Projekat
         {
             if (validacijaPraznihPolja())
             {
-                // pamtimo stanje alikacije pre nego sto uradimo izmenu smerova
-                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjena grupa smerova", "smer");
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "smer";
+                staroStanje.Kolicina = indeksi.Count;
+                staroStanje.TipPromene = "izmena";
+                foreach(int index in indeksi)
+                {
+                    staroStanje.Oznake.Add(tabelaSmerova[index].Oznaka);
+                }
 
                 foreach (int index in indeksi)
                 {
                     Smer smerIzmena = racunarskiCentar.Smerovi[tabelaSmerova[index].Oznaka];
                     bool nazivPromenjen = false;
-                    bool opisPromenjen = false;
 
                     if(NazivSmera.Text.Trim() != "")
                     {
@@ -105,7 +114,6 @@ namespace HCI_Projekat
                     if (OpisSmera.Text.Trim() != "")
                     {
                         smerIzmena.Opis = OpisSmera.Text.Trim();
-                        opisPromenjen = true;
                     }
                     if(DatumUvodjenja.Text.Trim() != "")
                         smerIzmena.Datum = DateTime.Parse(DatumUvodjenja.Text.Trim()).ToString("dd/MM/yyyy");
@@ -120,6 +128,11 @@ namespace HCI_Projekat
 
                     tabelaSmerova[index] = smerIzmena;
                 }
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili predmet!");
+                });
 
                 // na undo stek treba da upisemo staro stanje aplikacije
                 // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku

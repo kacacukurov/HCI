@@ -198,14 +198,19 @@ namespace HCI_Projekat
         public void getEvent(string id, string naziv, string pocetak, string kraj, string dan, string ucionica, bool dodat)
         {
             // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-            StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodat novi termin na kalendar", "kalendar");
+            StanjeAplikacije staroStanje = new StanjeAplikacije();
+            staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+            staroStanje.TipPodataka = "kalendar";
+            staroStanje.Kolicina = 1;
 
             if (!racunarskiCentar.PoljaKalendara.ContainsKey(id))
             {
+                staroStanje.TipPromene = "brisanje";
                 racunarskiCentar.PoljaKalendara.Add(id, new KalendarPolje(id, naziv, pocetak, kraj, dan, ucionica));
             }
             else
             {
+                staroStanje.TipPromene = "pomeranje";
                 KalendarPolje polje = racunarskiCentar.PoljaKalendara[id];
                 polje.Pocetak = pocetak;
                 polje.Kraj = kraj;
@@ -228,15 +233,21 @@ namespace HCI_Projekat
             prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
             stekStanja.GetUndo().Push(kljuc);
 
-            MessageBox.Show("Br el na steku za undo: " + stekStanja.GetUndo().Count.ToString());
             // omogucavamo pozivanje opcije undo
-            _instanceWindow.omoguciUndo();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _instanceWindow.omoguciUndo();
+            });
         }
 
         public void obrisiPolje(string id, string oznakaPredmeta)
         {
             // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-            StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Obrisan termin sa kalendara", "kalendar");
+            StanjeAplikacije staroStanje = new StanjeAplikacije();
+            staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+            staroStanje.TipPodataka = "kalendar";
+            staroStanje.Kolicina = 1;
+            staroStanje.TipPromene = "dodavanje";
 
             racunarskiCentar.Predmeti[oznakaPredmeta].PreostaliTermini++;
             racunarskiCentar.PoljaKalendara.Remove(id);
@@ -251,9 +262,11 @@ namespace HCI_Projekat
             prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
             stekStanja.GetUndo().Push(kljuc);
 
-            MessageBox.Show("Br el na steku za undo: " + stekStanja.GetUndo().Count.ToString());
             // omogucavamo pozivanje opcije undo
-            _instanceWindow.omoguciUndo();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _instanceWindow.omoguciUndo();
+            });
         }
 
         public void dobaviPredmeteSmera(string smer)

@@ -21,7 +21,8 @@
             <RowDefinition Height="0.2*"/>
         </Grid.RowDefinitions>
         <Viewbox Grid.Column="1" Grid.Row="1">
-            <TextBlock Margin="0,0,0,10" VerticalAlignment="Bottom" TextAlignment="Center" TextWrapping="Wrap">Da li ste sigurni da želite da izvršite brisanje?<LineBreak/><LineBreak/>Ukoliko potvrdite, obrisaće se svi termini u kalendaru<LineBreak/> vezani da izabrani predmet!</TextBlock>
+            <TextBlock Name="porukaUpozorenja" Margin="0,0,0,10" VerticalAlignment="Bottom" TextAlignment="Center" TextWrapping="Wrap" Text="Upozorenje!!&#10;&#13;Ukoliko potvrdite, obrisaće se svi termini&#10; vezani za ">
+            </TextBlock>
         </Viewbox>
 
         <TextBlock Grid.Column="1" Grid.Row="2" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" TextWrapping="Wrap" Name="PorukaBrisanja" TextAlignment="Center" FontSize="17"/>

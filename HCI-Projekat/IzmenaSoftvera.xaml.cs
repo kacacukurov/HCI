@@ -115,8 +115,16 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka())
             {
-                // pamtimo stanje alikacije pre nego sto uradimo izmenu smerova
-                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjena grupa softvera", "softver");
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "softver";
+                staroStanje.Kolicina = indeksiZaIzmenu.Count;
+                staroStanje.TipPromene = "izmena";
+                foreach (int index in indeksiZaIzmenu)
+                {
+                    staroStanje.Oznake.Add(tabelaSoftvera[index].Oznaka);
+                }
 
                 List<string> softveriIzmenjenogNazivaIliOpisa = new List<string>();
                 foreach (int index in indeksiZaIzmenu)

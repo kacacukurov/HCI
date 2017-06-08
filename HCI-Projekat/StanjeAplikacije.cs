@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HCI_Projekat
 {
     public class StanjeAplikacije
     {
         private RacunarskiCentar racunarskiCentar;
-        private string porukaOPromeni;
         private string tipPodatka;
+        private string tipPromene;
+        private int kolicina;
+        private List<string> oznake;
 
-        public StanjeAplikacije(RacunarskiCentar r, string p, string t)
+        public StanjeAplikacije()
         {
-            this.racunarskiCentar = r;
-            this.porukaOPromeni = p;
-            this.tipPodatka = t;
+            this.oznake = new List<string>();
+        }
+
+        public StanjeAplikacije(RacunarskiCentar racunarskiCentar, string tipPodatka, string tipPromene, int kolicina, List<string> oznake)
+        {
+            this.racunarskiCentar = racunarskiCentar;
+            this.tipPodatka = tipPodatka;
+            this.tipPromene = tipPromene;
+            this.kolicina = kolicina;
+            this.oznake = oznake;
         }
 
         public RacunarskiCentar RacunarskiCentar
@@ -25,16 +31,28 @@ namespace HCI_Projekat
             set { this.racunarskiCentar = value; }
         }
 
-        public string PorukaOPromeni
-        {
-            get { return this.porukaOPromeni; }
-            set { this.porukaOPromeni = value; }
-        }
-
         public string TipPodataka
         {
             get { return this.tipPodatka; }
             set { this.tipPodatka = value; }
+        }
+
+        public string TipPromene
+        {
+            get { return this.tipPromene; }
+            set { this.tipPromene = value; }
+        }
+
+        public int Kolicina
+        {
+            get { return this.kolicina; }
+            set { this.kolicina = value; }
+        }
+
+        public List<string> Oznake
+        {
+            get { return this.oznake; }
+            set { this.oznake = value; }
         }
     }
 }

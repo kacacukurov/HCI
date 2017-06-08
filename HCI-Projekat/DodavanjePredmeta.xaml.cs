@@ -266,7 +266,12 @@ namespace HCI_Projekat
             if (validacijaNovogPredmeta() && !dodavanjePredmetaIzborStarogUnosa)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodat novi predmet sa oznakom " + OznakaPredmeta.Text.Trim(), "predmet");
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "predmet";
+                staroStanje.Kolicina = 1;
+                staroStanje.TipPromene = "brisanje";
+                staroStanje.Oznake.Add(OznakaPredmeta.Text.Trim());
 
                 // ako su uneti podaci ispravni
                 // u slucaju da postoji predmet (logicki obrisan) sa istom sifrom kao sto je uneta
@@ -405,8 +410,13 @@ namespace HCI_Projekat
                         // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan predmet
                         racunarskiCentar.Predmeti.Remove(OznakaPredmeta.Text.Trim());
                     else {
-                        // pamtimo staro stanje aplikacije zbog undo redo mehanizma
-                        staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Aktiviran logički obrisan predmet sa oznakom " + predmet.Oznaka, "predmet");
+                        // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                        StanjeAplikacije staroStanje = new StanjeAplikacije();
+                        staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                        staroStanje.TipPodataka = "predmet";
+                        staroStanje.Kolicina = 1;
+                        staroStanje.TipPromene = "brisanje";
+                        staroStanje.Oznake.Add(predmet.Oznaka);
 
                         // vracamo logicki obrisan predmet da bude aktivan
                         predmet.Obrisan = false;
@@ -571,8 +581,13 @@ namespace HCI_Projekat
             if (validacijaPodataka() && validacijeIzmeneBrojaTermina() && validacijaIzmeneDuzineTermina() && validacijaIzmeneSoftvera()
                 && validacijaIzmeneTable() && validacijaIzmenePametneTable() && validacijaIzmeneProjektora() && validacijaIzmeneVelicineGrupe())
             {
-                // pamtimo staro stanje aplikacije zbog undo redo mehanizma
-                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjen predmet sa oznakom " + oznakaPredmetaZaIzmenu, "predmet");
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "predmet";
+                staroStanje.Kolicina = 1;
+                staroStanje.TipPromene = "izmena";
+                staroStanje.Oznake.Add(oznakaPredmetaZaIzmenu);
 
                 Predmet predmetIzmena = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu];
                 string staraOznaka = predmetIzmena.Oznaka;

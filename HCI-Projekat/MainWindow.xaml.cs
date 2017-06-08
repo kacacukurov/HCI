@@ -18,6 +18,7 @@ using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Specialized;
+using System.Text;
 
 namespace HCI_Projekat
 {
@@ -41,6 +42,7 @@ namespace HCI_Projekat
         private int brojAktivnihSoftvera;
         private Notifier notifierSucces;
         private Notifier notifierError;
+        private Notifier notifierUndoRedo;
 
         public MainWindow()
         {
@@ -53,7 +55,7 @@ namespace HCI_Projekat
                     offsetY: 30);
 
                 cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
-                    notificationLifetime: System.TimeSpan.FromSeconds(10),
+                    notificationLifetime: System.TimeSpan.FromSeconds(7),
                     maximumNotificationCount: MaximumNotificationCount.FromCount(5));
 
                 cfg.Dispatcher = Application.Current.Dispatcher;
@@ -70,6 +72,21 @@ namespace HCI_Projekat
                 cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
                     notificationLifetime: System.TimeSpan.FromSeconds(3),
                     maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
+            notifierUndoRedo = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: this,
+                    corner: Corner.BottomRight,
+                    offsetX: 20,
+                    offsetY: 50);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: System.TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(1));
 
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
@@ -321,12 +338,44 @@ namespace HCI_Projekat
             string kljucStarog = stekStanja.Undo_Pop();
             if (kljucStarog != "" && prethodnaStanjaAplikacije.Contains(kljucStarog))
             {
-                // pamtimo trenutno stanje aplikacije
-                StanjeAplikacije trenutnoStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Nije " + ((StanjeAplikacije)(prethodnaStanjaAplikacije[kljucStarog])).PorukaOPromeni, ((StanjeAplikacije)(prethodnaStanjaAplikacije[kljucStarog])).TipPodataka);
-
                 // ako ima elemenata na steku i postoji taj kljuc u kolekciji (nismo presli 10 koraka undo mehanizma)
                 // dobavljamo staro stanje aplikacije i azuriramo trenutni prikaz
                 StanjeAplikacije staroStanje = (StanjeAplikacije)(prethodnaStanjaAplikacije[kljucStarog]);
+
+                // pamtimo trenutno stanje aplikacije
+                StanjeAplikacije trenutnoStanje = new StanjeAplikacije();
+                trenutnoStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                trenutnoStanje.TipPodataka = staroStanje.TipPodataka;
+                trenutnoStanje.Oznake = staroStanje.Oznake;
+                trenutnoStanje.Kolicina = staroStanje.Kolicina;
+
+                switch (staroStanje.TipPromene)
+                {
+                    case "dodavanje":
+                        {
+                            trenutnoStanje.TipPromene = "brisanje";
+                            break;
+                        }
+                    case "brisanje":
+                        {
+                            trenutnoStanje.TipPromene = "dodavanje";
+                            break;
+                        }
+                    case "pomeranje":
+                        {
+                            // moguca akcija na kalendaru
+                            trenutnoStanje.TipPromene = "pomeranje";
+                            break;
+                        }
+                    case "izmena":
+                        {
+                            // moguca akcija nad tabelama entiteta
+                            trenutnoStanje.TipPromene = "izmena";
+                            break;
+                        }
+                }
+
+                // postavljamo trenutno stanje na staro stanje koje smo preuzeli sa undo steka
                 racunarskiCentar = staroStanje.RacunarskiCentar;
                 prethodnaStanjaAplikacije.Remove(kljucStarog);
 
@@ -342,7 +391,8 @@ namespace HCI_Projekat
                 MenuItemRedoPicture.IsEnabled = true;
 
                 // prebacujemo fokus na tabelu u kojoj se odslikala promena stanja i ispisujemo poruku o promeni
-                prebaciFokusUzObavestenje(staroStanje.TipPodataka, staroStanje.PorukaOPromeni);
+                string poruka = generisiPoruku(staroStanje.TipPodataka, staroStanje.TipPromene, staroStanje.Kolicina, staroStanje.Oznake);
+                prebaciFokusUzObavestenje(staroStanje.TipPodataka, poruka, staroStanje.TipPromene);
             }
             if (stekStanja.UndoCount == 0 || !prethodnaStanjaAplikacije.Contains(stekStanja.GetUndo().Peek()))
             {
@@ -359,12 +409,44 @@ namespace HCI_Projekat
             string kljucNovog = stekStanja.Redo_Pop();
             if (kljucNovog != "" && sledecaStanjaAplikacije.Contains(kljucNovog))
             {
-                // pamtimo trenutno stanje aplikacije
-                StanjeAplikacije trenutnoStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Nije " + ((StanjeAplikacije)(sledecaStanjaAplikacije[kljucNovog])).PorukaOPromeni, ((StanjeAplikacije)(sledecaStanjaAplikacije[kljucNovog])).TipPodataka);
+                // ako ima elemenata na steku i postoji taj kljuc u kolekciji (nismo presli 10 koraka undo mehanizma)
+                // dobavljamo staro stanje aplikacije i azuriramo trenutni prikaz
+                StanjeAplikacije novoStanje = (StanjeAplikacije)(sledecaStanjaAplikacije[kljucNovog]);
 
-                // ako ima elemenata na steku i postoji taj kljuc u kolekciji (nismo presli 10 koraka redo mehanizma)
-                // dobavljamo novo stanje aplikacije i azuriramo trenutni prikaz
-                StanjeAplikacije novoStanje = (StanjeAplikacije)sledecaStanjaAplikacije[kljucNovog];
+                // pamtimo trenutno stanje aplikacije
+                StanjeAplikacije trenutnoStanje = new StanjeAplikacije();
+                trenutnoStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                trenutnoStanje.TipPodataka = novoStanje.TipPodataka;
+                trenutnoStanje.Oznake = novoStanje.Oznake;
+                trenutnoStanje.Kolicina = novoStanje.Kolicina;
+
+                switch (novoStanje.TipPromene)
+                {
+                    case "dodavanje":
+                        {
+                            trenutnoStanje.TipPromene = "brisanje";
+                            break;
+                        }
+                    case "brisanje":
+                        {
+                            trenutnoStanje.TipPromene = "dodavanje";
+                            break;
+                        }
+                    case "pomeranje":
+                        {
+                            // moguca akcija na kalendaru
+                            trenutnoStanje.TipPromene = "pomeranje";
+                            break;
+                        }
+                    case "izmena":
+                        {
+                            // moguca akcija nad tabelama entiteta
+                            trenutnoStanje.TipPromene = "izmena";
+                            break;
+                        }
+                }
+
+                // postavljamo trenutno stanje na novo stanje koje smo preuzeli sa redo steka
                 racunarskiCentar = novoStanje.RacunarskiCentar;
                 prethodnaStanjaAplikacije.Remove(kljucNovog);
 
@@ -380,7 +462,8 @@ namespace HCI_Projekat
                 MenuItemUndoPicture.IsEnabled = true;
 
                 // prebacujemo fokus na tabelu u kojoj se odslikala promena stanja i ispisujemo poruku o promeni
-                prebaciFokusUzObavestenje(novoStanje.TipPodataka, novoStanje.PorukaOPromeni);
+                string poruka = generisiPoruku(novoStanje.TipPodataka, novoStanje.TipPromene, novoStanje.Kolicina, novoStanje.Oznake);
+                prebaciFokusUzObavestenje(novoStanje.TipPodataka, poruka, novoStanje.TipPromene);
             }
             if (stekStanja.RedoCount == 0 || !sledecaStanjaAplikacije.Contains(stekStanja.GetRedo().Peek()))
             {
@@ -391,7 +474,132 @@ namespace HCI_Projekat
             }
         }
 
-        public void prebaciFokusUzObavestenje(string tipPodatka, string poruka)
+        private string generisiPoruku(string tipPodataka, string tipPromene, int kolicina, List<string> oznake)
+        {
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sbOznake = new StringBuilder();
+
+            foreach(string o in oznake)
+            {
+                if (oznake.IndexOf(o) == oznake.Count - 1)
+                    sbOznake.Append(o);
+                else
+                    sbOznake.Append(o + ", ");
+            }
+            
+            switch(tipPromene)
+            {
+                case "dodavanje":
+                    {
+                        if(tipPodataka == "kalendar")
+                        {
+                            sb.Append("Izvršeno dodavanje termina na kalendar");
+                        }
+                        else
+                        {
+                            if (kolicina == 1) {
+                                // poruka o dodavanju jednog predmeta/softvera/smera/ucionice
+                                sb.Append("Izvršeno dodavanje ");
+                                vratiStringTipaPodataka(tipPodataka, sb, kolicina);
+                                sb.Append("sa oznakom " + sbOznake.ToString());
+                            }
+                            else
+                            {
+                                // poruka o dodavanju vise predmeta/softvera/smerova/ucionica
+                                sb.Append("Izvršeno dodavanje ");
+                                vratiStringTipaPodataka(tipPodataka, sb, kolicina);
+                                sb.Append("sa oznakama " + sbOznake.ToString());
+                            }
+                        }
+                        break;
+                    }
+                case "brisanje":
+                    {
+                        if (tipPodataka == "kalendar")
+                        {
+                            sb.Append("Izvršeno uklanjanje termina sa kalendara");
+                        }
+                        else
+                        {
+                            if (kolicina == 1)
+                            {
+                                // poruka o dodavanju jednog predmeta/softvera/smera/ucionice
+                                sb.Append("Izvršeno uklanjanje ");
+                                vratiStringTipaPodataka(tipPodataka, sb, kolicina);
+                                sb.Append("sa oznakom " + sbOznake.ToString());
+                            }
+                            else
+                            {
+                                // poruka o dodavanju vise predmeta/softvera/smerova/ucionica
+                                sb.Append("Izvršeno uklanjanje ");
+                                vratiStringTipaPodataka(tipPodataka, sb, kolicina);
+                                sb.Append("sa oznakama " + sbOznake.ToString());
+                            }
+                        }
+                        break;
+                    }
+                case "pomeranje":
+                    {
+                        sb.Append("Izvršeno pomeranje termina na kalendaru");
+                        break;
+                    }
+                case "izmena":
+                    {
+                        // moguca akcija nad tabelama entiteta
+                        if (kolicina == 1)
+                        {
+                            // poruka o izmeni jednog predmeta/softvera/smera/ucionice
+                            sb.Append("Izvršena izmena ");
+                            vratiStringTipaPodataka(tipPodataka, sb, kolicina);
+                            sb.Append("sa oznakom " + sbOznake.ToString());
+                        }
+                        else
+                        {
+                            // poruka o izmeni vise softvera/smerova
+                            sb.Append("Izvršena izmena ");
+                            vratiStringTipaPodataka(tipPodataka, sb, kolicina);
+                            sb.Append("sa oznakama " + sbOznake.ToString());
+                        }
+                        break;
+                    }
+            }
+            return sb.ToString();
+        }
+
+        private void vratiStringTipaPodataka(string tipPodatka, StringBuilder sb, int kolicina)
+        {
+            switch (tipPodatka)
+            {
+                case "predmet":
+                    {
+                        sb.Append("predmeta ");
+                        break;
+                    }
+                case "ucionica":
+                    {
+                        if (kolicina == 1)
+                            sb.Append("učionice ");
+                        else
+                            sb.Append("učionica ");
+                        break;
+                    }
+                case "smer":
+                    {
+                        if (kolicina == 1)
+                            sb.Append("smera ");
+                        else
+                            sb.Append("smerova ");
+                        break;
+                    }
+                case "softver":
+                    {
+                        sb.Append("softvera ");
+                        break;
+                    }
+            }
+        }
+
+        private void prebaciFokusUzObavestenje(string tipPodatka, string poruka, string tipPromene)
         {
             switch (tipPodatka)
             {
@@ -420,11 +628,31 @@ namespace HCI_Projekat
                         tabControl.SelectedIndex = 0;
                         break;
                     }
-             }
-            Application.Current.Dispatcher.Invoke(() =>
+            }
+
+            switch (tipPromene)
             {
-                notifierError.ShowInformation(poruka);
-            });
+                case "dodavanje":
+                    {
+                        notifierUndoRedo.ShowSuccess(poruka);
+                        break;
+                    }
+                case "brisanje":
+                    {
+                        notifierUndoRedo.ShowError(poruka);
+                        break;
+                    }
+                case "pomeranje":
+                    {
+                        notifierUndoRedo.ShowInformation(poruka);
+                        break;
+                    }
+                case "izmena":
+                    {
+                        notifierUndoRedo.ShowInformation(poruka);
+                        break;
+                    }
+            }
         }
 
         private void tabsFocus(object sender, RoutedEventArgs e)
@@ -1139,10 +1367,7 @@ namespace HCI_Projekat
                 IzmenaSmerova izmenaSmerova = new IzmenaSmerova(racunarskiCentar, smeroviKolekcija, indeksi, stekStanja, prethodnaStanjaAplikacije);
                 izmenaSmerova.ShowDialog();
                 if (izmenaSmerova.potvrdaIzmena)
-                {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                }
+                    omoguciUndo();
                 tabelaSmerova.Items.Refresh();
             }
             else
@@ -1162,10 +1387,7 @@ namespace HCI_Projekat
                 IzmenaSoftvera izmenaSoftvera = new IzmenaSoftvera(racunarskiCentar, softveriKolekcija, indeksi, stekStanja, prethodnaStanjaAplikacije);
                 izmenaSoftvera.ShowDialog();
                 if (izmenaSoftvera.potvrdaIzmena)
-                {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                }
+                    omoguciUndo();
                 tabelaSoftvera.Items.Refresh();
             }
             else
@@ -1220,10 +1442,7 @@ namespace HCI_Projekat
                 predmetWindow.indeks = tabelaPredmeta.SelectedIndex;
                 predmetWindow.ShowDialog();
                 if (predmetWindow.potvrdio)
-                {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                }
+                    omoguciUndo();
                 tabelaPredmeta.Items.Refresh();
             }
             else
@@ -1255,10 +1474,7 @@ namespace HCI_Projekat
                 softverWindow.indeks = tabelaSoftvera.SelectedIndex;
                 softverWindow.ShowDialog();
                 if (softverWindow.potvrdio)
-                {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                }
+                    omoguciUndo();
                 tabelaSoftvera.Items.Refresh();
             }
             else
@@ -1298,10 +1514,7 @@ namespace HCI_Projekat
                 ucionicaWindow.indeks = tabelaUcionica.SelectedIndex;
                 ucionicaWindow.ShowDialog();
                 if (ucionicaWindow.potvrdio)
-                {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                }
+                    omoguciUndo();
                 tabelaUcionica.Items.Refresh();
             }
             else
@@ -1323,10 +1536,7 @@ namespace HCI_Projekat
                 smerWindow.indeks = tabelaSmerova.SelectedIndex;
                 smerWindow.ShowDialog();
                 if (smerWindow.potvrdio)
-                {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                }
+                    omoguciUndo();
                 tabelaSmerova.Items.Refresh();
             }
             else
@@ -1338,16 +1548,29 @@ namespace HCI_Projekat
             if (tabelaPredmeta.SelectedIndex != -1)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Obrisan predmet/predmeti", "predmet");
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "predmet";
+                staroStanje.Kolicina = tabelaPredmeta.SelectedItems.Count;
+                staroStanje.TipPromene = "dodavanje";
 
                 List<string> oznakePolja = new List<string>();
                 List<string> predmetiUcionice = new List<string>(); //sadrzi duplikate
                 PotvrdaIzmene potvrda = new PotvrdaIzmene();
                 potvrda.Title = "Postoje predmeti";
+
+                string tekstUpozorenja = potvrda.porukaUpozorenja.Text;
+                if (tabelaPredmeta.SelectedItems.Count == 1)
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + " izabrani predmet!";
+                else
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + " izabrane predmete!";
                 
                 List<Predmet> removedItems = new List<Predmet>();
                 foreach (object o in tabelaPredmeta.SelectedItems)
                 {
+                    // u staro stanje smestamo oznaku predmeta koji brisemo, zbog generisanja poruke u undo/redo operaciji
+                    staroStanje.Oznake.Add(((Predmet)o).Oznaka);
+
                     int index = tabelaPredmeta.Items.IndexOf(o);
                     DataGridRow selektovaniRed = (DataGridRow)tabelaPredmeta.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaPredmeta.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
@@ -1366,6 +1589,7 @@ namespace HCI_Projekat
                 List<string> predmetiUcioniceBezDupl = predmetiUcionice.Distinct().ToList();
                 if (oznakePolja.Count > 0)
                 {
+                    potvrda.PorukaBrisanja.Text = "\nPredmeti:\n";
                     for (int i = 0; i < predmetiUcioniceBezDupl.Count; i++)
                     {
                         potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
@@ -1412,8 +1636,7 @@ namespace HCI_Projekat
                 stekStanja.GetUndo().Push(kljuc);
 
                 // omogucavamo pozivanje opcije undo
-                MenuItemUndo.IsEnabled = true;
-                MenuItemUndoPicture.IsEnabled = true;
+                omoguciUndo();
             }
             else
                 return;
@@ -1424,11 +1647,18 @@ namespace HCI_Projekat
             if (tabelaSoftvera.SelectedIndex != -1)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Obrisan softver/softveri", "softver");
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "softver";
+                staroStanje.Kolicina = tabelaPredmeta.SelectedItems.Count;
+                staroStanje.TipPromene = "dodavanje";
 
                 List<Softver> removedItems = new List<Softver>();
                 foreach (object o in tabelaSoftvera.SelectedItems)
                 {
+                    // u staro stanje smestamo oznaku softvera koji brisemo, zbog generisanja poruke u undo/redo operaciji
+                    staroStanje.Oznake.Add(((Softver)o).Oznaka);
+
                     int index = tabelaSoftvera.Items.IndexOf(o);
                     DataGridRow selektovaniRed = (DataGridRow)tabelaSoftvera.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaSoftvera.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
@@ -1492,8 +1722,7 @@ namespace HCI_Projekat
                     stekStanja.GetUndo().Push(kljuc);
 
                     // omogucavamo pozivanje opcije undo
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
+                    omoguciUndo();
                 }
             }
             else
@@ -1505,18 +1734,24 @@ namespace HCI_Projekat
             if (tabelaUcionica.SelectedIndex != -1)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Obrisana ucionica/ucionice", "ucionica");
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "ucionica";
+                staroStanje.Kolicina = tabelaPredmeta.SelectedItems.Count;
+                staroStanje.TipPromene = "dodavanje";
 
                 List<Ucionica> removedItems = new List<Ucionica>();
                 List<string> oznakePolja = new List<string>();
                 List<string> predmetiUcionice = new List<string>(); //sadrzi duplikate
                 PotvrdaIzmene potvrda = new PotvrdaIzmene();
                 potvrda.Title = "Postoje predmeti";
-                potvrda.PorukaBrisanja.Text = "Da li ste sigurni?\n\nUkoliko potvrdite brisanje, sledeci predmeti ce se ukloniti iz rasporeda:\n";
 
                 foreach (object o in tabelaUcionica.SelectedItems)  //za svaku ucionicu
                 {
-                   int index = tabelaUcionica.Items.IndexOf(o);
+                    // u staro stanje smestamo oznaku ucionice koju brisemo, zbog generisanja poruke u undo/redo operaciji
+                    staroStanje.Oznake.Add(((Ucionica)o).Oznaka);
+
+                    int index = tabelaUcionica.Items.IndexOf(o);
                     DataGridRow selektovaniRed = (DataGridRow)tabelaUcionica.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaUcionica.Columns[0].GetCellContent(selektovaniRed) as TextBlock;
                     string oznakaUcionice = content.Text;
@@ -1532,8 +1767,16 @@ namespace HCI_Projekat
                     removedItems.Add(racunarskiCentar.Ucionice[oznakaUcionice]);
                 }
                 List<string> predmetiUcioniceBezDupl = predmetiUcionice.Distinct().ToList();
+
+                string tekstUpozorenja = potvrda.porukaUpozorenja.Text;
+                if (predmetiUcioniceBezDupl.Count == 1)
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + " predmet u izabranoj učionici!";
+                else
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + " predmete u izabranoj učionici!";
+
                 if (oznakePolja.Count > 0)
                 {
+                    potvrda.PorukaBrisanja.Text = "\nPredmeti:\n";
                     for(int i = 0; i < predmetiUcioniceBezDupl.Count; i++)
                     {
                         potvrda.PorukaBrisanja.Text += "\n" + (i + 1) + ". " + predmetiUcioniceBezDupl[i];
@@ -1581,8 +1824,7 @@ namespace HCI_Projekat
                 stekStanja.GetUndo().Push(kljuc);
 
                 // omogucavamo pozivanje opcije undo
-                MenuItemUndo.IsEnabled = true;
-                MenuItemUndoPicture.IsEnabled = true;
+                omoguciUndo();
             }
             else
                 return;
@@ -1593,7 +1835,11 @@ namespace HCI_Projekat
             if (tabelaSmerova.SelectedIndex != -1)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Obrisan smer/smerovi", "smer");
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "smer";
+                staroStanje.Kolicina = tabelaPredmeta.SelectedItems.Count;
+                staroStanje.TipPromene = "dodavanje";
 
                 List<string> oznakePolja = new List<string>();
                 List<string> predmetiUcionice = new List<string>(); //sadrzi duplikate
@@ -1604,6 +1850,9 @@ namespace HCI_Projekat
                 List<Smer> removedItems = new List<Smer>();
                 foreach (object o in tabelaSmerova.SelectedItems)
                 {
+                    // u staro stanje smestamo oznaku smera koji brisemo, zbog generisanja poruke u undo/redo operaciji
+                    staroStanje.Oznake.Add(((Smer)o).Oznaka);
+
                     int index = tabelaSmerova.Items.IndexOf(o);
                     DataGridRow selektovaniRed = (DataGridRow)tabelaSmerova.ItemContainerGenerator.ContainerFromIndex(index);
                     TextBlock content = tabelaSmerova.Columns[1].GetCellContent(selektovaniRed) as TextBlock;
@@ -1673,8 +1922,7 @@ namespace HCI_Projekat
                 stekStanja.GetUndo().Push(kljuc);
 
                 // omogucavamo pozivanje opcije undo
-                MenuItemUndo.IsEnabled = true;
-                MenuItemUndoPicture.IsEnabled = true;
+                omoguciUndo();
             }
             else
                 return;
@@ -1782,7 +2030,6 @@ namespace HCI_Projekat
 
         public void omoguciUndo()
         {
-            MessageBox.Show("aaaaaaa");
             MenuItemUndo.IsEnabled = true;
             MenuItemUndoPicture.IsEnabled = true;
         }

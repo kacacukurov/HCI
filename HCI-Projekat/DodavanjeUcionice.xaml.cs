@@ -238,7 +238,12 @@ namespace HCI_Projekat
             if (validacijaNoveUcionice() && !dodavanjeUcioniceIzborStarogUnosa)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodata nova ucionica sa oznakom " + oznakaUcionica.Text.Trim(), "ucionica");
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "ucionica";
+                staroStanje.Kolicina = 1;
+                staroStanje.TipPromene = "brisanje";
+                staroStanje.Oznake.Add(oznakaUcionica.Text.Trim());
 
                 novaUcionica.Oznaka = oznakaUcionica.Text.Trim();
                 novaUcionica.Opis = opisUcionica.Text.Trim();
@@ -348,8 +353,13 @@ namespace HCI_Projekat
                         // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojecu neaktivnu ucionicu
                         racunarskiCentar.Ucionice.Remove(oznakaUcionica.Text.Trim());
                     else {
-                        // pamtimo staro stanje aplikacije zbog undo redo mehanizma
-                        staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Aktivirana logički obrisana učionica sa oznakom " + ucionica.Oznaka, "ucionica");
+                        // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                        StanjeAplikacije staroStanje = new StanjeAplikacije();
+                        staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                        staroStanje.TipPodataka = "ucionica";
+                        staroStanje.Kolicina = 1;
+                        staroStanje.TipPromene = "brisanje";
+                        staroStanje.Oznake.Add(ucionica.Oznaka);
 
                         // vracamo logicki obrisanu ucionicu da bude aktivna
                         ucionica.Obrisan = false;
@@ -480,8 +490,13 @@ namespace HCI_Projekat
             if (validacijaPodataka() && validacijaIzmeneSoftvera() && validacijaIzmeneTable() && validacijaIzmenePametneTable() &&
                 validacijaIzmeneProjektora() && validacijaBrojaRadnihMesta())
             {
-                // pamtimo staro stanje aplikacije zbog undo redo mehanizma
-                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjena učionica sa oznakom " + oznakaUcioniceZaIzmenu, "ucionica");
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
+                staroStanje.TipPodataka = "ucionica";
+                staroStanje.Kolicina = 1;
+                staroStanje.TipPromene = "izmena";
+                staroStanje.Oznake.Add(oznakaUcioniceZaIzmenu);
 
                 Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
                 string staraOznaka = ucionicaIzmena.Oznaka;

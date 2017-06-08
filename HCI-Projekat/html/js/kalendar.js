@@ -1,5 +1,4 @@
 ﻿var predmetiLista = [];
-var dodavanje = false;
 var ucioniceLista = [];
 var smeroviLista = [];
 var smeroviNazivi = [];
@@ -64,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('drop', date.format(), resourceId);
         },
         eventReceive: function (event) { // poziva se kada se uradi drop novog elementa
-            dodavanje = true;
             console.log('eventReceive', event);
             var predmet;
             var terminaNema = false;
@@ -126,8 +124,8 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         eventDrop: function (event) { // called when an event (already on the calendar) is moved
             console.log('eventDrop', event);
-
-            for (var i = 0; i < predmetiLista.length; i++) {    //trazimo ppolje predmeta koje se pomera
+            var predmet;
+            for (var i = 0; i < predmetiLista.length; i++) {    //trazimo polje predmeta koje se pomera
                 if (event.title.split('-')[0] == predmetiLista[i].oznaka) {
                     predmet = predmetiLista[i];
                 }
@@ -397,8 +395,7 @@ function posaljiObjekat(event, dodat, indeks) { //poziva se kada se doda novo po
     var start = event.start.format('YYYY-MM-DD HH:mm:ss');
     var day = event.start.format('dddd');
     var end;
-    if (dodavanje) {
-        dodavanje = false;
+    if (dodat) {
         var drugi = event;
         $('#calendar').fullCalendar('removeEvents', event._id);
         var datum = event.start.format('YYYY-MM-DD HH:mm:ss').split(' ');

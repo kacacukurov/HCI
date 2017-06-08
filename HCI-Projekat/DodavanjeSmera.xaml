@@ -11,8 +11,6 @@
         <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
         <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
         <RoutedUICommand x:Key="otvoriDatum" Text="otvoriDatum"></RoutedUICommand>
-        <RoutedUICommand x:Key="undo" Text="undo"></RoutedUICommand>
-        <RoutedUICommand x:Key="redo" Text="redo"></RoutedUICommand>
         <ContextMenu x:Key="TextBoxContextMenu" Background="White">
             <MenuItem Command="ApplicationCommands.Copy" />
             <MenuItem Command="ApplicationCommands.Cut" />
@@ -27,16 +25,12 @@
         <CommandBinding Command="{StaticResource odustani}" Executed="cancelClick"></CommandBinding>
         <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClick"></CommandBinding>
         <CommandBinding Command="{StaticResource otvoriDatum}" Executed="otvoriDatum"></CommandBinding>
-        <CommandBinding Command="{StaticResource undo}" Executed="undoClick"></CommandBinding>
-        <CommandBinding Command="{StaticResource redo}" Executed="redoClick"></CommandBinding>
     </Window.CommandBindings>
 
     <Window.InputBindings>
         <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
         <KeyBinding Key="Down" Modifiers="" Command="{StaticResource otvoriDatum}"></KeyBinding>
-        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
-        <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
         <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
         <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
         <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
@@ -69,20 +63,6 @@
                     </MenuItem>
 
                     <MenuItem Header="_Edit" HorizontalAlignment="Left">
-                        <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
-                            </MenuItem.InputBindings>
-                        </MenuItem>
-
-                        <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y">
-                            <MenuItem.InputBindings>
-                                <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
-                            </MenuItem.InputBindings>
-                        </MenuItem>
-
-                        <Separator></Separator>
-
                         <MenuItem Header="_Cut" InputGestureText="Ctrl+X" Command="ApplicationCommands.Cut">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
@@ -116,19 +96,6 @@
                 </Menu.ItemsPanel>
 
                 <Menu.Items>
-
-                    <MenuItem HorizontalAlignment="Left" Name="Undo" Width="27" Click="undoClick">
-                        <MenuItem.Icon>
-                            <Image Source="picture/undo.png" Stretch="UniformToFill" ToolTip="Undo"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-
-                    <MenuItem HorizontalAlignment="Left" Name="Redo" Width="27" Click="redoClick">
-                        <MenuItem.Icon>
-                            <Image Source="picture/redo.png" Stretch="UniformToFill" ToolTip="Redo"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-
                     <MenuItem HorizontalAlignment="Left" Name="Cut" Width="27" Command="ApplicationCommands.Cut">
                         <MenuItem.Icon>
                             <Image Source="picture/cut.png" Stretch="UniformToFill" ToolTip="Cut"/>

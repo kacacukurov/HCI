@@ -132,7 +132,7 @@ namespace HCI_Projekat
             detaljanPrikazUcionica.Visibility = Visibility.Hidden;
 
             InitializeChromium();
-            cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError);
+            cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError, stekStanja, prethodnaStanjaAplikacije);
             chromeBrowser.RegisterJsObject("cefCustomObject", cef);
         }
 
@@ -330,6 +330,8 @@ namespace HCI_Projekat
                 racunarskiCentar = staroStanje.RacunarskiCentar;
                 prethodnaStanjaAplikacije.Remove(kljucStarog);
 
+                cef.RacunarskiCentar = racunarskiCentar;
+                cef.posaljiPodatke();
                 azurirajKolekcije();    
 
                 string kljucTrenutnog = Guid.NewGuid().ToString();
@@ -349,7 +351,6 @@ namespace HCI_Projekat
                 MenuItemUndo.IsEnabled = false;
                 MenuItemUndoPicture.IsEnabled = false;
             }
-            
         }
 
         private void redoClick(object sender, RoutedEventArgs e)
@@ -367,6 +368,8 @@ namespace HCI_Projekat
                 racunarskiCentar = novoStanje.RacunarskiCentar;
                 prethodnaStanjaAplikacije.Remove(kljucNovog);
 
+                cef.RacunarskiCentar = racunarskiCentar;
+                cef.posaljiPodatke();
                 azurirajKolekcije();
 
                 string kljucTrenutnog = Guid.NewGuid().ToString();
@@ -410,6 +413,11 @@ namespace HCI_Projekat
                 case "softver":
                     {
                         tabControl.SelectedIndex = 4;
+                        break;
+                    }
+                case "kalendar":
+                    {
+                        tabControl.SelectedIndex = 0;
                         break;
                     }
              }
@@ -1733,7 +1741,6 @@ namespace HCI_Projekat
 
             using (XmlTextWriter writer = new XmlTextWriter(sw))
             {
-                // add formatting so the XML is easy to read in the log
                 writer.Formatting = Formatting.Indented;
 
                 serializer.WriteObject(writer, racunarskiCentar);
@@ -1771,6 +1778,13 @@ namespace HCI_Projekat
                 fs.Close();
                 Console.WriteLine("Deserijalizacija uspesno izvrsena!\n");
             }
+        }
+
+        public void omoguciUndo()
+        {
+            MessageBox.Show("aaaaaaa");
+            MenuItemUndo.IsEnabled = true;
+            MenuItemUndoPicture.IsEnabled = true;
         }
 
         private void tabChanged(object sender, SelectionChangedEventArgs e)

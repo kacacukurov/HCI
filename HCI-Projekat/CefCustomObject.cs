@@ -7,22 +7,36 @@ using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using System.Windows.Threading;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Specialized;
 
 namespace HCI_Projekat
 {
     public class CefCustomObject
     {
         private static ChromiumWebBrowser _instanceBrowser = null;
-        private static Window _instanceWindow = null;
+        private MainWindow _instanceWindow = null;
         private RacunarskiCentar racunarskiCentar = null;
         private Notifier not;
+        private UndoRedoStack stekStanja;
+        OrderedDictionary prethodnaStanjaAplikacije;
 
-        public CefCustomObject(ChromiumWebBrowser originalBrowser, Window mainWindow, RacunarskiCentar racunarskiCentar, Notifier not)
+        public CefCustomObject(ChromiumWebBrowser originalBrowser, MainWindow mainWindow, RacunarskiCentar racunarskiCentar, Notifier not, UndoRedoStack stekStanja, OrderedDictionary prethodnaStanja)
         {
             _instanceBrowser = originalBrowser;
             _instanceWindow = mainWindow;
             this.racunarskiCentar = racunarskiCentar;
             this.not = not;
+            this.stekStanja = stekStanja;
+            this.prethodnaStanjaAplikacije = prethodnaStanja;
+        }
+
+        public RacunarskiCentar RacunarskiCentar
+        {
+            get { return this.racunarskiCentar; }
+            set { this.racunarskiCentar = value; }
         }
 
         public void showDevTools()
@@ -183,6 +197,9 @@ namespace HCI_Projekat
 
         public void getEvent(string id, string naziv, string pocetak, string kraj, string dan, string ucionica, bool dodat)
         {
+            // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+            StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodat novi termin na kalendar", "kalendar");
+
             if (!racunarskiCentar.PoljaKalendara.ContainsKey(id))
             {
                 racunarskiCentar.PoljaKalendara.Add(id, new KalendarPolje(id, naziv, pocetak, kraj, dan, ucionica));
@@ -200,12 +217,43 @@ namespace HCI_Projekat
                 Predmet p = racunarskiCentar.Predmeti[naziv.Split('-')[0]];
                 p.PreostaliTermini--;
             }
+
+            // na undo stek treba da upisemo staro stanje aplikacije
+            // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+            string kljuc = Guid.NewGuid().ToString();
+            // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+            // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+            if (prethodnaStanjaAplikacije.Count >= 2)
+                prethodnaStanjaAplikacije.RemoveAt(0);
+            prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+            stekStanja.GetUndo().Push(kljuc);
+
+            MessageBox.Show("Br el na steku za undo: " + stekStanja.GetUndo().Count.ToString());
+            // omogucavamo pozivanje opcije undo
+            _instanceWindow.omoguciUndo();
         }
 
         public void obrisiPolje(string id, string oznakaPredmeta)
         {
+            // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+            StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Obrisan termin sa kalendara", "kalendar");
+
             racunarskiCentar.Predmeti[oznakaPredmeta].PreostaliTermini++;
             racunarskiCentar.PoljaKalendara.Remove(id);
+
+            // na undo stek treba da upisemo staro stanje aplikacije
+            // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+            string kljuc = Guid.NewGuid().ToString();
+            // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+            // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+            if (prethodnaStanjaAplikacije.Count >= 2)
+                prethodnaStanjaAplikacije.RemoveAt(0);
+            prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+            stekStanja.GetUndo().Push(kljuc);
+
+            MessageBox.Show("Br el na steku za undo: " + stekStanja.GetUndo().Count.ToString());
+            // omogucavamo pozivanje opcije undo
+            _instanceWindow.omoguciUndo();
         }
 
         public void dobaviPredmeteSmera(string smer)
@@ -246,12 +294,22 @@ namespace HCI_Projekat
 
         public void alert(string tekst)
         {
-
             Application.Current.Dispatcher.Invoke(() =>
             {
                 not.ShowError(tekst);
             });
-            
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
         }
     }
 }

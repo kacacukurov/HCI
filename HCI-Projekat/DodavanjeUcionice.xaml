@@ -38,7 +38,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="TextElement.Foreground" Value="Black"/>
-                                <Setter TargetName="Border" Property="Background" Value="#FFCCC7F9"/>
+                                <Setter TargetName="Border" Property="Background" Value="#FFB8C6F5"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="False">
                                 <Setter Property="TextElement.Foreground" Value="#FF303030"/>

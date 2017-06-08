@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="Dodavanje softvera" Height="500" Width="500" MinHeight="500" MinWidth="500" WindowStartupLocation="CenterScreen" Name="DodavanjeSoftveraWindow">
+        Title="Softver" Height="500" Width="500" MinHeight="500" MinWidth="500" WindowStartupLocation="CenterScreen" Name="DodavanjeSoftveraWindow">
 
     <Window.Resources>
         <RoutedUICommand x:Key="sledeciKorak" Text="next"></RoutedUICommand>

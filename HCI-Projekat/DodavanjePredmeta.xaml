@@ -7,7 +7,7 @@
         xmlns:toogle="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="Dodavanje predmeta" Height="600" Width="600" MinHeight="600" MinWidth="600" WindowStartupLocation="CenterScreen" Name="DodavanjePredmetaWindow">
+        Title="Predmet" Height="600" Width="600" MinHeight="600" MinWidth="600" WindowStartupLocation="CenterScreen" Name="DodavanjePredmetaWindow">
 
     <Window.Resources>
         <RoutedUICommand x:Key="sledeciKorak" Text="next"></RoutedUICommand>

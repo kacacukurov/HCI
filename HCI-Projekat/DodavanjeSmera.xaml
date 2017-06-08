@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="Dodavanje smera" Height="400" Width="600" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen" Name="DodavanjeSmeraWindow">
+        Title="Smer" Height="400" Width="600" MinWidth="500" MinHeight="500" WindowStartupLocation="CenterScreen" Name="DodavanjeSmeraWindow">
 
     <Window.Resources>
         <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>

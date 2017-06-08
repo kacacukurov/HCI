@@ -12,6 +12,9 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using System.Collections.Specialized;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HCI_Projekat
 {
@@ -31,9 +34,13 @@ namespace HCI_Projekat
         private string oznakaPredmetaZaIzmenu;
         private Notifier notifierError;
         private Notifier notifierMainWindow;
+        OrderedDictionary prethodnaStanjaAplikacije;
+        StanjeAplikacije staroStanje;
+        public bool potvrdio;
+        private UndoRedoStack stekStanja;
 
         public DodavanjePredmeta(RacunarskiCentar racunarskiCentar, ObservableCollection<Predmet> predmeti, bool izmena, string oznaka,
-            Notifier notifierMainWindow)
+            Notifier notifierMainWindow, UndoRedoStack stack, OrderedDictionary prethodnaStanja)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -51,6 +58,10 @@ namespace HCI_Projekat
             });
             this.notifierMainWindow = notifierMainWindow;
 
+            this.prethodnaStanjaAplikacije = prethodnaStanja;
+            this.staroStanje = null;
+            this.potvrdio = false;
+            this.stekStanja = stack;
             predmet = new Predmet();
             this.racunarskiCentar = racunarskiCentar;
             this.izmena = izmena;
@@ -254,6 +265,9 @@ namespace HCI_Projekat
             }
             if (validacijaNovogPredmeta() && !dodavanjePredmetaIzborStarogUnosa)
             {
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodat novi predmet sa oznakom " + OznakaPredmeta.Text.Trim(), "predmet");
+
                 // ako su uneti podaci ispravni
                 // u slucaju da postoji predmet (logicki obrisan) sa istom sifrom kao sto je uneta
                 // i pritom je odlucio da zeli ipak da gazi stari unos
@@ -319,6 +333,19 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste dodali novi predmet!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
             else if (dodavanjePredmetaIzborStarogUnosa)
@@ -330,6 +357,19 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste aktivirali predmet!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
         }
@@ -365,6 +405,9 @@ namespace HCI_Projekat
                         // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan predmet
                         racunarskiCentar.Predmeti.Remove(OznakaPredmeta.Text.Trim());
                     else {
+                        // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                        staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Aktiviran logički obrisan predmet sa oznakom " + predmet.Oznaka, "predmet");
+
                         // vracamo logicki obrisan predmet da bude aktivan
                         predmet.Obrisan = false;
                         dodavanjePredmetaIzborStarogUnosa = true;
@@ -528,6 +571,9 @@ namespace HCI_Projekat
             if (validacijaPodataka() && validacijeIzmeneBrojaTermina() && validacijaIzmeneDuzineTermina() && validacijaIzmeneSoftvera()
                 && validacijaIzmeneTable() && validacijaIzmenePametneTable() && validacijaIzmeneProjektora() && validacijaIzmeneVelicineGrupe())
             {
+                // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjen predmet sa oznakom " + oznakaPredmetaZaIzmenu, "predmet");
+
                 Predmet predmetIzmena = racunarskiCentar.Predmeti[oznakaPredmetaZaIzmenu];
                 string staraOznaka = predmetIzmena.Oznaka;
                 bool oznakaPromenjena = false;
@@ -538,44 +584,7 @@ namespace HCI_Projekat
                 predmetIzmena.Oznaka = OznakaPredmeta.Text.Trim();
                 predmetIzmena.Naziv = NazivPredmeta.Text.Trim();
                 predmetIzmena.Opis = OpisPredmeta.Text.Trim();
-//                predmetIzmena.VelicinaGrupe = int.Parse(VelicinaGrupePredmet.Text.Trim());
                 predmetIzmena.MinDuzinaTermina = int.Parse(DuzinaTerminaPredmet.Text.Trim());
-//                predmetIzmena.BrTermina = int.Parse(BrojTerminaPredmet.Text.Trim());
-
-//                predmetIzmena.NeophodanProjektor = PrisustvoProjektoraPredmet.IsChecked;
-//                predmetIzmena.ProjektorString = predmetIzmena.NeophodanProjektor ? "neophodan" : "nije neophodan";
-//                predmetIzmena.NeophodnaTabla = PrisustvoTablePredmet.IsChecked;
-//                predmetIzmena.TablaString = predmetIzmena.NeophodnaTabla ? "neophodna" : "nije neophodna";
-//                predmetIzmena.NeophodnaPametnaTabla = PrisustvoPametneTable.IsChecked;
-//                predmetIzmena.PametnaTablaString = predmetIzmena.NeophodnaPametnaTabla ? "neophodna" : "nije neophodna";
-
-/*                if ((bool)Windows.IsChecked)
-                    predmetIzmena.OperativniSistem = Windows.Content.ToString();
-                else if ((bool)Linux.IsChecked)
-                    predmetIzmena.OperativniSistem = Linux.Content.ToString();
-                else if ((bool)Svejedno.IsChecked)
-                    predmetIzmena.OperativniSistem = Svejedno.Content.ToString();
-
-                StringBuilder sb = new StringBuilder();
-                int brojSoftvera = 0;
-                predmetIzmena.Softveri.Clear();
-                for (int i = 0; i < softverTabela.Items.Count; i++)
-                {
-                    Softver softver = (Softver)softverTabela.Items[i];
-                    if (softver.Instaliran)
-                    {
-                        brojSoftvera++;
-                        predmetIzmena.Softveri.Add(softver.Oznaka);
-
-                        if (brojSoftvera > 1)
-                            sb.Append("\n");
-                        sb.Append("Oznaka: " + softver.Oznaka);
-                        sb.Append("\nNaziv: " + softver.Naziv);
-                        sb.Append("\nOpis: " + softver.Opis + "\n");
-                        softver.Instaliran = false;
-                    }
-                }
-                predmetIzmena.SoftveriLista = sb.ToString();*/
 
                 bool stariSmerPronadjen = false;
                 bool noviPredmetPostavljen = false;
@@ -619,6 +628,19 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste izmenili predmet!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
         }
@@ -1065,6 +1087,18 @@ namespace HCI_Projekat
                 {
                     polje.NazivPolja = polje.NazivPolja.Split('-')[0] + '-' + oznakaNovogSmera;
                 }
+            }
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
             }
         }
     }

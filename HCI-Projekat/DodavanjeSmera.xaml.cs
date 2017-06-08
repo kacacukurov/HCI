@@ -7,6 +7,9 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using System.Collections.Specialized;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HCI_Projekat
 {
@@ -25,9 +28,13 @@ namespace HCI_Projekat
         private bool dodavanjeSmeraIzborStarogUnosa;
         private Notifier notifierError;
         private Notifier notifierMainWindow;
+        OrderedDictionary prethodnaStanjaAplikacije;
+        StanjeAplikacije staroStanje;
+        public bool potvrdio;
+        private UndoRedoStack stekStanja;
 
         public DodavanjeSmera(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, bool izmena, string oznaka, 
-            Notifier notifierMainWindow)
+            Notifier notifierMainWindow, UndoRedoStack stack, OrderedDictionary prethodnaStanja)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -43,6 +50,11 @@ namespace HCI_Projekat
 
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
+
+            this.prethodnaStanjaAplikacije = prethodnaStanja;
+            this.staroStanje = null;
+            this.potvrdio = false;
+            this.stekStanja = stack;
             this.notifierMainWindow = notifierMainWindow;
             smer = new Smer();
             this.racunarskiCentar = racunarskiCentar;
@@ -114,6 +126,9 @@ namespace HCI_Projekat
             }
             if (validacijaDodavanjaSmera() && !dodavanjeSmeraIzborStarogUnosa)
             {
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodat novi smer sa oznakom " + OznakaSmera.Text.Trim(), "smer");
+
                 smer.Naziv = NazivSmera.Text.Trim();
                 smer.Oznaka = OznakaSmera.Text.Trim();
                 smer.Opis = OpisSmera.Text.Trim();
@@ -126,6 +141,19 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste dodali novi smer!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
             else if (dodavanjeSmeraIzborStarogUnosa)
@@ -137,6 +165,19 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste aktivirali smer!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
         }
@@ -166,6 +207,9 @@ namespace HCI_Projekat
                         // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan smer
                         racunarskiCentar.Smerovi.Remove(OznakaSmera.Text.Trim());
                     else {
+                        // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                        staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Aktiviran logički obrisan smer sa oznakom " + smer.Oznaka, "smer");
+
                         // vracamo logicki obrisan smer da bude aktivan
                         smer.Obrisan = false;
                         dodavanjeSmeraIzborStarogUnosa = true;
@@ -188,6 +232,9 @@ namespace HCI_Projekat
         {
             if (validacijaPraznihPolja())
             {
+                // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjen smer sa oznakom " + oznakaSmeraZaIzmenu, "smer");
+
                 Smer smerIzmena = racunarskiCentar.Smerovi[oznakaSmeraZaIzmenu];
                 string staraOznaka = smerIzmena.Oznaka;
                 bool oznakaIzmenjena = false;
@@ -221,6 +268,20 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste izmenili smer!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
+                this.Close();
             }
         }
 
@@ -278,6 +339,18 @@ namespace HCI_Projekat
         {
             if (e.Key == Key.Tab && (Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift)
                 DatumUvodjenja.IsDropDownOpen = true;
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
         }
     }
 }

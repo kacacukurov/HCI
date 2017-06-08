@@ -12,6 +12,9 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using System.Collections.Specialized;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HCI_Projekat
 {
@@ -31,9 +34,13 @@ namespace HCI_Projekat
         private bool dodavanjeUcioniceIzborStarogUnosa;
         private Notifier notifierError;
         private Notifier notifierMainWindow;
+        OrderedDictionary prethodnaStanjaAplikacije;
+        StanjeAplikacije staroStanje;
+        public bool potvrdio;
+        private UndoRedoStack stekStanja;
 
         public DodavanjeUcionice(RacunarskiCentar racunarskiCentar, ObservableCollection<Ucionica> ucionice, bool izmena, string oznaka,
-            Notifier notifierMainWindow)
+            Notifier notifierMainWindow, UndoRedoStack stack, OrderedDictionary prethodnaStanja)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -50,6 +57,10 @@ namespace HCI_Projekat
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
 
+            this.prethodnaStanjaAplikacije = prethodnaStanja;
+            this.staroStanje = null;
+            this.potvrdio = false;
+            this.stekStanja = stack;
             this.notifierMainWindow = notifierMainWindow;
             this.inicijalizacija = false;
             InitializeComponent();
@@ -226,6 +237,9 @@ namespace HCI_Projekat
             }
             if (validacijaNoveUcionice() && !dodavanjeUcioniceIzborStarogUnosa)
             {
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodata nova ucionica sa oznakom " + oznakaUcionica.Text.Trim(), "ucionica");
+
                 novaUcionica.Oznaka = oznakaUcionica.Text.Trim();
                 novaUcionica.Opis = opisUcionica.Text.Trim();
 
@@ -270,6 +284,19 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste dodali novu učionicu!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
             else if (dodavanjeUcioniceIzborStarogUnosa)
@@ -279,8 +306,21 @@ namespace HCI_Projekat
                 tabelaUcionica.Add(racunarskiCentar.Ucionice[oznakaUcionica.Text.Trim()]);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    notifierMainWindow.ShowSuccess("Uspešno ste dodali novu učionicu!");
+                    notifierMainWindow.ShowSuccess("Uspešno ste aktivirali postojeću učionicu!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
         }
@@ -308,6 +348,9 @@ namespace HCI_Projekat
                         // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojecu neaktivnu ucionicu
                         racunarskiCentar.Ucionice.Remove(oznakaUcionica.Text.Trim());
                     else {
+                        // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                        staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Aktivirana logički obrisana učionica sa oznakom " + ucionica.Oznaka, "ucionica");
+
                         // vracamo logicki obrisanu ucionicu da bude aktivna
                         ucionica.Obrisan = false;
                         dodavanjeUcioniceIzborStarogUnosa = true;
@@ -437,6 +480,9 @@ namespace HCI_Projekat
             if (validacijaPodataka() && validacijaIzmeneSoftvera() && validacijaIzmeneTable() && validacijaIzmenePametneTable() &&
                 validacijaIzmeneProjektora() && validacijaBrojaRadnihMesta())
             {
+                // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjena učionica sa oznakom " + oznakaUcioniceZaIzmenu, "ucionica");
+
                 Ucionica ucionicaIzmena = racunarskiCentar.Ucionice[oznakaUcioniceZaIzmenu];
                 string staraOznaka = ucionicaIzmena.Oznaka;
                 bool oznakaIzmenjena = false;
@@ -446,42 +492,6 @@ namespace HCI_Projekat
 
                 ucionicaIzmena.Oznaka = oznakaUcionica.Text.Trim();
                 ucionicaIzmena.Opis = opisUcionica.Text.Trim();
-/*
-                ucionicaIzmena.PrisustvoPametneTable = prisustvoPametneTableUcionica.IsChecked;
-                ucionicaIzmena.PametnaTablaString = ucionicaIzmena.PrisustvoPametneTable ? "prisutna" : "nije prisutna";
-                ucionicaIzmena.PrisustvoTable = prisustvoTableUcionica.IsChecked;
-                ucionicaIzmena.TablaString = ucionicaIzmena.PrisustvoTable ? "prisutna" : "nije prisutna";
-                ucionicaIzmena.PrisustvoProjektora = prisustvoProjektoraUcionica.IsChecked;
-                ucionicaIzmena.ProjektorString = ucionicaIzmena.PrisustvoProjektora ? "prisutan" : "nije prisutan";
-
-                ucionicaIzmena.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text.Trim());
-                if ((bool)LinuxOSUcionica.IsChecked)
-                    ucionicaIzmena.OperativniSistem = "Linux";
-                else if ((bool)WindowsOSUcionica.IsChecked)
-                    ucionicaIzmena.OperativniSistem = "Windows";
-                else
-                    ucionicaIzmena.OperativniSistem = "Windows i Linux";
-
-                ucionicaIzmena.InstaliraniSoftveri.Clear();
-                StringBuilder sb = new StringBuilder();
-                int brojSoftvera = 0;
-                for (int i = 0; i < softverTabela.Items.Count; i++)
-                {
-                    Softver softver = (Softver)softverTabela.Items[i];
-                    if (softver.Instaliran)
-                    {
-                        brojSoftvera++;
-                        ucionicaIzmena.InstaliraniSoftveri.Add(softver.Oznaka);
-
-                        if (brojSoftvera > 1)
-                            sb.Append("\n");
-                        sb.Append("Oznaka: " + softver.Oznaka);
-                        sb.Append("\nNaziv: " + softver.Naziv);
-                        sb.Append("\nOpis: " + softver.Opis + "\n");
-                        softver.Instaliran = false;
-                    }
-                }
-                ucionicaIzmena.SoftveriLista = sb.ToString();*/
 
                 if (oznakaIzmenjena)
                 {
@@ -494,6 +504,19 @@ namespace HCI_Projekat
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste izmenili učionicu!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
         }
@@ -821,6 +844,18 @@ namespace HCI_Projekat
             }
             staraUcionica.BrojRadnihMesta = int.Parse(brojRadnihMestaUcionica.Text.Trim());
             return true;
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
         }
     }
 }

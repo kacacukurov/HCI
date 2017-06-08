@@ -31,12 +31,13 @@ namespace HCI_Projekat
         private bool dodavanjeSoftveraIzborStarogUnosa;
         private Notifier notifierError;
         private Notifier notifierMainWindow;
-        private UndoRedoStack stack;
-        OrderedDictionary sviRacunarskiCentri;
+        private UndoRedoStack stekStanja;
+        OrderedDictionary prethodnaStanjaAplikacije;
+        StanjeAplikacije staroStanje;
         public bool potvrdio;
 
         public DodavanjeSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, bool izmena, string oznaka,
-            Notifier notifierMainWindow, UndoRedoStack stack, OrderedDictionary sviRacunarskiCentri)
+            Notifier notifierMainWindow, UndoRedoStack stack, OrderedDictionary prethodnaStanja)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -53,7 +54,7 @@ namespace HCI_Projekat
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
             this.potvrdio = false;
-            this.stack = stack;
+            this.stekStanja = stack;
             this.notifierMainWindow = notifierMainWindow;
             InitializeComponent();
             this.racunarskiCentar = racunarskiCentar;
@@ -66,7 +67,8 @@ namespace HCI_Projekat
             if (!izmena)
                 oznakaSoftver.Focus();
             BackStepMenuItem.IsEnabled = false;
-            this.sviRacunarskiCentri = sviRacunarskiCentri;
+            this.prethodnaStanjaAplikacije = prethodnaStanja;
+            this.staroStanje = null;
         }
 
         private void undoClick(object sender, RoutedEventArgs e)
@@ -187,14 +189,8 @@ namespace HCI_Projekat
             }
             if (validacijaNovogSoftvera() && !dodavanjeSoftveraIzborStarogUnosa)
             {
-
-                //dodavanje na stek
-                string kljuc = Guid.NewGuid().ToString();
-                if (sviRacunarskiCentri.Count >= 2)
-                    sviRacunarskiCentri.RemoveAt(0);
-                sviRacunarskiCentri.Add(kljuc, DeepClone(racunarskiCentar));
-                stack.Do(kljuc);
-                potvrdio = true;
+                // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Dodat novi softver sa oznakom " + oznakaSoftver.Text.Trim(), "softver");
 
                 noviSoftver.Oznaka = oznakaSoftver.Text.Trim();
                 noviSoftver.Naziv = nazivSoftver.Text.Trim();
@@ -210,13 +206,25 @@ namespace HCI_Projekat
                 noviSoftver.Proizvodjac = proizvodjacSoftver.Text.Trim();
                 noviSoftver.Sajt = sajtSoftver.Text.Trim();
 
-
                 tabelaSoftvera.Add(noviSoftver);
                 racunarskiCentar.DodajSoftver(noviSoftver);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     notifierMainWindow.ShowSuccess("Uspešno ste dodali novi softver!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
             else if (dodavanjeSoftveraIzborStarogUnosa)
@@ -226,9 +234,21 @@ namespace HCI_Projekat
                 tabelaSoftvera.Add(racunarskiCentar.Softveri[oznakaSoftver.Text.Trim()]);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    notifierMainWindow.ShowSuccess("Uspešno ste aktivirali softver!");
+                    notifierMainWindow.ShowSuccess("Uspešno ste aktivirali postojeći softver!");
                 });
-                
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
         }
@@ -253,19 +273,13 @@ namespace HCI_Projekat
                     odluka.Cena.Text = "Cena: " + softver.Cena.ToString();
                     odluka.ShowDialog();
 
-
-                    //dodavanje na stek
-                    string kljuc = Guid.NewGuid().ToString();
-                    if (sviRacunarskiCentri.Count >= 2)
-                        sviRacunarskiCentri.RemoveAt(0);
-                    sviRacunarskiCentri.Add(kljuc, DeepClone(racunarskiCentar));
-                    stack.Do(kljuc);
-                    potvrdio = true;
-
                     if (odluka.potvrdaNovogUnosa)
                         // ukoliko je korisnik potvrdio da zeli da unese nove podatke, gazimo postojeci neaktivan softver
                         racunarskiCentar.Softveri.Remove(oznakaSoftver.Text.Trim());
                     else {
+                        // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                        staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Aktiviran logički obrisan softver sa oznakom " + softver.Oznaka, "softver");
+
                         // vracamo logicki obrisan softver da bude aktivan
                         softver.Obrisan = false;
                         dodavanjeSoftveraIzborStarogUnosa = true;
@@ -498,13 +512,9 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka() && proveraIzmeneOS(oznakaSoftveraZaIzmenu))
             {
-                string kljuc = Guid.NewGuid().ToString();
-                if (sviRacunarskiCentri.Count >= 2)
-                    sviRacunarskiCentri.RemoveAt(0);
-                sviRacunarskiCentri.Add(kljuc, DeepClone(racunarskiCentar));
-                stack.Do(kljuc);
-                potvrdio = true;
-
+                // pamtimo staro stanje aplikacije zbog undo redo mehanizma
+                staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjen softver sa oznakom " + oznakaSoftveraZaIzmenu, "softver");
+                
                 Softver softverIzmena = racunarskiCentar.Softveri[oznakaSoftveraZaIzmenu];
                 bool promenilaSeOznaka = false;
                 bool promenioSeNaziv = false;
@@ -641,8 +651,21 @@ namespace HCI_Projekat
                 tabelaSoftvera[indeks] = softverIzmena;
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    notifierMainWindow.ShowSuccess("Uspešno ste dodali izmenili softver!");
+                    notifierMainWindow.ShowSuccess("Uspešno ste izmenili softver!");
                 });
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdio = true;
+
                 this.Close();
             }
         }

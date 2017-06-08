@@ -131,13 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddIntCommand.cs" />
     <Compile Include="BrisanjePoljaKalendara.xaml.cs">
       <DependentUpon>BrisanjePoljaKalendara.xaml</DependentUpon>
     </Compile>
     <Compile Include="CefCustomObject.cs" />
-    <Compile Include="CustomNotification.cs" />
-    <Compile Include="ICommand.cs" />
     <Compile Include="IzmenaSmerova.xaml.cs">
       <DependentUpon>IzmenaSmerova.xaml</DependentUpon>
     </Compile>
@@ -168,6 +165,7 @@
     <Compile Include="RacunarskiCentar.cs" />
     <Compile Include="Smer.cs" />
     <Compile Include="Softver.cs" />
+    <Compile Include="StanjeAplikacije.cs" />
     <Compile Include="Ucionica.cs" />
     <Compile Include="UndoRedoStack.cs" />
     <Page Include="BrisanjePoljaKalendara.xaml">

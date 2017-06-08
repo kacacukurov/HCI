@@ -8,6 +8,9 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using System.Collections.Specialized;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HCI_Projekat
 {
@@ -19,9 +22,12 @@ namespace HCI_Projekat
         private RacunarskiCentar racunarskiCentar;
         private ObservableCollection<Softver> tabelaSoftvera;
         private List<int> indeksiZaIzmenu;
+        public bool potvrdaIzmena;
+        private UndoRedoStack stekStanja;
+        OrderedDictionary prethodnaStanjaAplikacije;
         private Notifier notifierError;
 
-        public IzmenaSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, List<int> indeksi)
+        public IzmenaSoftvera(RacunarskiCentar racunarskiCentar, ObservableCollection<Softver> softveri, List<int> indeksi, UndoRedoStack stek, OrderedDictionary prethodnaStanja)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -39,6 +45,9 @@ namespace HCI_Projekat
             });
 
             InitializeComponent();
+            this.potvrdaIzmena = false;
+            this.stekStanja = stek;
+            this.prethodnaStanjaAplikacije = prethodnaStanja;
             this.racunarskiCentar = racunarskiCentar;
             this.indeksiZaIzmenu = indeksi;
             tabelaSoftvera = softveri;
@@ -106,18 +115,18 @@ namespace HCI_Projekat
         {
             if (validacijaPodataka())
             {
+                // pamtimo stanje alikacije pre nego sto uradimo izmenu smerova
+                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjena grupa softvera", "softver");
+
                 List<string> softveriIzmenjenogNazivaIliOpisa = new List<string>();
                 foreach (int index in indeksiZaIzmenu)
                 {
                     Softver softverIzmena = racunarskiCentar.Softveri[tabelaSoftvera[index].Oznaka];
-                    bool promenioSeNaziv = false;
-                    bool promenioSeOpis = false;
                     
                     if (nazivSoftver.Text.Trim() != "")
                     {
                         if (!softverIzmena.Naziv.Equals(nazivSoftver.Text.Trim()))
                         {
-                            promenioSeNaziv = true;
                             softveriIzmenjenogNazivaIliOpisa.Add(softverIzmena.Oznaka);
                         }
                         softverIzmena.Naziv = nazivSoftver.Text.Trim();
@@ -127,7 +136,6 @@ namespace HCI_Projekat
                     {
                         if (!softverIzmena.Opis.Equals(opisSoftver.Text.Trim()))
                         {
-                            promenioSeOpis = true;
                             softveriIzmenjenogNazivaIliOpisa.Add(softverIzmena.Oznaka);
                         }
                         softverIzmena.Opis = opisSoftver.Text.Trim();
@@ -195,6 +203,19 @@ namespace HCI_Projekat
                         }
                     }
                 }
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdaIzmena = true;
+
                 this.Close();
             }
         }
@@ -239,6 +260,18 @@ namespace HCI_Projekat
             }
 
             return true;
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
         }
     }
 }

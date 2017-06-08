@@ -5,51 +5,39 @@ namespace HCI_Projekat
 {
     public class UndoRedoStack
     {
-        private Stack<string> _Undo;
-        private Stack<string> _Redo;
+        private Stack<string> Undo;
+        private Stack<string> Redo;
+
+        public UndoRedoStack()
+        {
+            Undo = new Stack<string>();
+            Redo = new Stack<string>();
+        }
 
         public Stack<string> GetUndo()
         {
-            return _Undo;
+            return Undo;
         }
 
         public Stack<string> GetRedo()
         {
-            return _Redo;
+            return Redo;
         }
 
         public int UndoCount
         {
-            get{  return _Undo.Count; }
+            get{  return Undo.Count; }
         }
         public int RedoCount
         {
-            get { return _Redo.Count; }
+            get { return Redo.Count; }
         }
 
-        public UndoRedoStack()
+        public string Undo_Pop()
         {
-            Reset();
-        }
-
-        public void Reset()
-        {
-            _Undo = new Stack<string>();
-            _Redo = new Stack<string>();
-        }
-
-        public void Do(string input)
-        {
-            _Undo.Push(input);
-            _Redo.Clear();
-        }
-
-        public string Undo()
-        {
-            if (_Undo.Count > 0)
+            if (Undo.Count > 0)
             {
-                string rc = _Undo.Pop();
-                _Redo.Push(rc);
+                string rc = Undo.Pop();
                 return rc;
             }
             else
@@ -58,12 +46,11 @@ namespace HCI_Projekat
             }
         }
 
-        public string Redo()
+        public string Redo_Pop()
         {
-            if (_Redo.Count > 0)
+            if (Redo.Count > 0)
             {
-                string rc = _Redo.Pop();
-                _Undo.Push(rc);
+                string rc = Redo.Pop();
                 return rc;
             }
             else
@@ -71,7 +58,5 @@ namespace HCI_Projekat
                 return "";
             }
         }
-
-
     }
 }

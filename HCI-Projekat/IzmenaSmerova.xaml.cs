@@ -8,6 +8,9 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Specialized;
 
 namespace HCI_Projekat
 {
@@ -20,9 +23,11 @@ namespace HCI_Projekat
         private ObservableCollection<Smer> tabelaSmerova;
         private List<int> indeksi;
         public bool potvrdaIzmena;
+        private UndoRedoStack stekStanja;
+        OrderedDictionary prethodnaStanjaAplikacije;
         private Notifier notifierError;
 
-        public IzmenaSmerova(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, List<int> indeksi)
+        public IzmenaSmerova(RacunarskiCentar racunarskiCentar, ObservableCollection<Smer> smerovi, List<int> indeksi, UndoRedoStack stek, OrderedDictionary prethodnaStanja)
         {
             notifierError = new Notifier(cfg =>
             {
@@ -41,6 +46,8 @@ namespace HCI_Projekat
 
             InitializeComponent();
             this.potvrdaIzmena = false;
+            this.stekStanja = stek;
+            this.prethodnaStanjaAplikacije = prethodnaStanja;
             this.racunarskiCentar = racunarskiCentar;
             this.indeksi = indeksi;
             tabelaSmerova = smerovi;
@@ -81,6 +88,9 @@ namespace HCI_Projekat
         {
             if (validacijaPraznihPolja())
             {
+                // pamtimo stanje alikacije pre nego sto uradimo izmenu smerova
+                StanjeAplikacije staroStanje = new StanjeAplikacije(DeepClone(racunarskiCentar), "Izmenjena grupa smerova", "smer");
+
                 foreach (int index in indeksi)
                 {
                     Smer smerIzmena = racunarskiCentar.Smerovi[tabelaSmerova[index].Oznaka];
@@ -110,6 +120,19 @@ namespace HCI_Projekat
 
                     tabelaSmerova[index] = smerIzmena;
                 }
+
+                // na undo stek treba da upisemo staro stanje aplikacije
+                // generisemo neki novi kljuc pod kojim cemo cuvati prethodno stanje na steku
+                string kljuc = Guid.NewGuid().ToString();
+                // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
+                // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
+                if (prethodnaStanjaAplikacije.Count >= 2)
+                    prethodnaStanjaAplikacije.RemoveAt(0);
+                prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
+                stekStanja.GetUndo().Push(kljuc);
+                // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
+                potvrdaIzmena = true;
+
                 this.Close();
             }
         }
@@ -155,6 +178,18 @@ namespace HCI_Projekat
         {
             if (e.Key == Key.Tab && (Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift)
                 DatumUvodjenja.IsDropDownOpen = true;
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
         }
     }
 }

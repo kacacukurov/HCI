@@ -703,7 +703,7 @@
                                         <RowDefinition Height="7*"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
-                                    <TextBox Grid.Column="0" Name="opisUcionica" LostFocus="resetujBojuOkvira" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,-3,0,10" Grid.RowSpan="2" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <TextBox Grid.Column="0" Name="opisUcionica" LostFocus="resetujBojuOkvira" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Grid.RowSpan="2" ContextMenu="{StaticResource TextBoxContextMenu}"/>
                                 </Grid>
                             </Grid>
                             <Grid Grid.Column="1" Grid.Row="1">

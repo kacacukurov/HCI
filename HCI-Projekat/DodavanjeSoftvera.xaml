@@ -922,7 +922,7 @@
                                         <RowDefinition Height="7*"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
-                                    <TextBox Grid.Row="1" Grid.Column="0" Name="opisSoftver" LostFocus="resetujBojuOkvira" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Visible" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="0" Name="opisSoftver" LostFocus="resetujBojuOkvira" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True" ContextMenu="{StaticResource TextBoxContextMenu}"/>
                                 </Grid>
                             </Grid>
                         </Grid>

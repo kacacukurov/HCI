@@ -537,7 +537,7 @@
                                     <RowDefinition Height="10*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <TextBox Grid.Row="1" Grid.Column="0" Name="OpisSmera" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Visible" KeyDown="otvoriUnazad" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                <TextBox Grid.Row="1" Grid.Column="0" Name="OpisSmera" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True" KeyDown="otvoriUnazad" ContextMenu="{StaticResource TextBoxContextMenu}"/>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -26,24 +26,49 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
-                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="5,5,0,0"
-                        Padding="25,5,25,5" Margin="0,0,0,0" BorderBrush="Gainsboro">
-                            <ContentPresenter x:Name="ContentSite" ContentSource="Header" />
+                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="10,10,0,0"
+                        Padding="25,5,25,5" Margin="0,0,0,0">
+                            <ContentPresenter x:Name="ContentSite" ContentSource="Header"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="TextElement.Foreground" Value="Black"/>
-                                <Setter TargetName="Border" Property="Background" Value="#FFB8C6F5"/>
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#FFC2CAE6" Offset="1"/>
+                                            <GradientStop Color="#FF666EAE" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="False">
-                                <Setter Property="TextElement.Foreground" Value="#FF303030"/>
-                                <Setter TargetName="Border" Property="Background" Value="White" />
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="White" Offset="1"/>
+                                            <GradientStop Color="#FFB6B6B6" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
 
         <SolidColorBrush x:Key="HighlightedBackgroundBrush" Color="#FF797878" />
         <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#FF505050" />
@@ -529,9 +554,21 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem Name="Korak1Softver" Width="200" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock TextAlignment="Center" Text="Korak 1" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="korak1" Text="Korak 1" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="korak1" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="korak1" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
@@ -734,9 +771,21 @@
                 </TabItem>
 
                 <TabItem Name="Korak2Softver" Width="200" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock TextAlignment="Center" Text="Korak 2" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="korak2" Text="Korak 2" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="korak2" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="korak2" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />

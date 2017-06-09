@@ -10,6 +10,22 @@
         <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}">
             <Setter Property="Focusable" Value="False"/>
         </Style>
+
+        <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderBrush" Value="#FF666EAE"/>
+                    <Setter Property="Background" Value="#FFC2CAE6"/>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+            </Style.Resources>
+        </Style>
+
         <Style x:Key="ButtonStyleOdustani" TargetType="{x:Type Button}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -126,6 +142,40 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0.5,0" EndPoint="0.5,1.9">
+            <GradientStop Color="#FFC2CAE6" Offset="0"/>
+            <GradientStop Color="#FF666EAE" Offset="1"/>
+            <GradientStop Color="#FF7F8DC1" Offset="0.509"/>
+            <GradientStop Color="#FF586E9C" Offset="0.542"/>
+            <GradientStop Color="#FF8393BD" Offset="0.542"/>
+            <GradientStop Color="#FF666EAE" Offset="0.526"/>
+        </LinearGradientBrush>
+
+        <RadialGradientBrush x:Key="BorderBrush" GradientOrigin="0.496,1.052">
+            <RadialGradientBrush.RelativeTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                    <TranslateTransform X="0.02" Y="0.3"/>
+                </TransformGroup>
+            </RadialGradientBrush.RelativeTransform>
+            <GradientStop Color="#FFC2CAE6" Offset="1"/>
+            <GradientStop Color="#FF666EAE" Offset="0.3"/>
+        </RadialGradientBrush>
+
+        <Style x:Key="HeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource HeaderBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
+        </Style>
+
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -145,12 +195,13 @@
         <Viewbox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
             <TextBlock Name="porukaBrisanje" TextAlignment="Center">Da biste smanjili broj termina, odaberite one koje želite da obrišete</TextBlock>
         </Viewbox>
-        <DataGrid Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Path=PredmetUkalendaru}" Name="poljaKalendara" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+        <DataGrid Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Path=PredmetUkalendaru}" Name="poljaKalendara" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column" Background="White">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1.5*" MinWidth="50" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -158,6 +209,7 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -165,6 +217,7 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -172,6 +225,7 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -179,6 +233,7 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>

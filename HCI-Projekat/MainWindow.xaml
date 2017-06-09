@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="MainWindow" Name="mainWindow" MinWidth="630" MinHeight="600" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
+        Title="MainWindow" Name="mainWindow" MinWidth="785" MinHeight="500" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
 
     <Window.Resources>
         <RoutedUICommand x:Key="novaUcionica" Text="ucionica"></RoutedUICommand>
@@ -33,22 +33,95 @@
             <Setter Property="Focusable" Value="False"/>
         </Style>
 
+        <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderBrush" Value="#FF666EAE"/>
+                    <Setter Property="Background" Value="#FFC2CAE6"/>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+            </Style.Resources>
+        </Style>
+
+        <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0.5,0" EndPoint="0.5,1.9">
+            <GradientStop Color="#FFC2CAE6" Offset="0"/>
+            <GradientStop Color="#FF666EAE" Offset="1"/>
+            <GradientStop Color="#FF7F8DC1" Offset="0.509"/>
+            <GradientStop Color="#FF586E9C" Offset="0.542"/>
+            <GradientStop Color="#FF8393BD" Offset="0.542"/>
+            <GradientStop Color="#FF666EAE" Offset="0.526"/>
+        </LinearGradientBrush>
+
+        <RadialGradientBrush x:Key="BorderBrush" GradientOrigin="0.496,1.052">
+            <RadialGradientBrush.RelativeTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                    <TranslateTransform X="0.02" Y="0.3"/>
+                </TransformGroup>
+            </RadialGradientBrush.RelativeTransform>
+            <GradientStop Color="#FFC2CAE6" Offset="1"/>
+            <GradientStop Color="#FF666EAE" Offset="0.3"/>
+        </RadialGradientBrush>
+
+        <Style x:Key="HeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource HeaderBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
+        </Style>
+
         <Style x:Key="TabItem" TargetType="{x:Type TabItem}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
-                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="5,5,0,0"
-                        Padding="25,5,25,5" Margin="0,0,0,0" BorderBrush="Gainsboro">
-                            <ContentPresenter x:Name="ContentSite" ContentSource="Header" />
+                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="10,10,0,0"
+                        Padding="25,5,25,5" Margin="0,0,0,0">
+                            <ContentPresenter x:Name="ContentSite" ContentSource="Header"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="TextElement.Foreground" Value="Black"/>
-                                <Setter TargetName="Border" Property="Background" Value="#FFB8C6F5"/>
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#FFC2CAE6" Offset="1"/>
+                                            <GradientStop Color="#FF666EAE" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="False">
-                                <Setter Property="TextElement.Foreground" Value="#FF303030"/>
-                                <Setter TargetName="Border" Property="Background" Value="White" />
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="White" Offset="1"/>
+                                            <GradientStop Color="#FFB6B6B6" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -506,7 +579,7 @@
                         </MenuItem>
 
                         <Separator></Separator>
-                        
+
                         <MenuItem Click="sacuvajKalendar" Header="_Sačuvaj" InputGestureText="Ctrl+S">
                             <MenuItem.Icon>
                                 <Image Source="picture/save.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
@@ -583,7 +656,7 @@
                         </MenuItem>
 
                         <Separator></Separator>
-                        
+
                         <MenuItem Click="otvoriKriterijumFilter" Header="_Filtriranje elemenata tabele" InputGestureText="Ctrl+Shift+F" Name="MenuItemIzborFiltera" IsEnabled="False">
                             <MenuItem.Icon>
                                 <Image Source="picture/filter.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
@@ -646,18 +719,45 @@
             </Menu>
 
             <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControl" SelectionChanged="tabChanged">
+                
                 <TabItem Name="KalendarTab" Width="125" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock Text="Kalendar" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="kalendarTabText" Text="Kalendar" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="kalendarTabText" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="kalendarTabText" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    
                     <Grid Name="BrowserGrid">
                     </Grid>
                 </TabItem>
 
                 <TabItem Name="UcionicaTab" Width="125" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock Text="Učionica" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="ucionicaTabText" Text="Učionica" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="ucionicaTabText" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="ucionicaTabText" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
@@ -679,7 +779,7 @@
                                         <ColumnDefinition Width="2*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid>
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Filter:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -734,7 +834,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="0">
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -751,12 +851,13 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <DataGrid Grid.Row="2" Name="tabelaUcionica" LostFocus="tabelaUcionicaIzgubilaFokus" GotFocus="tabelaUcionicaDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White">
+                        <DataGrid Grid.Row="2" Name="tabelaUcionica" LostFocus="tabelaUcionicaIzgubilaFokus" GotFocus="tabelaUcionicaDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Oznaka, FallbackValue='-'}" Header="Oznaka" Width="1.5*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -764,6 +865,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -771,6 +873,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -778,6 +881,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -785,6 +889,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -792,6 +897,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -799,6 +905,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -917,9 +1024,21 @@
                 </TabItem>
 
                 <TabItem Name="PredmetTab" Width="125" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock Text="Predmet" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="predmetTabText" Text="Predmet" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="predmetTabText" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="predmetTabText" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
@@ -941,7 +1060,7 @@
                                         <ColumnDefinition Width="2*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid>
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Filter:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -999,7 +1118,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="0">
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -1016,12 +1135,13 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <DataGrid Grid.Row="2" Name="tabelaPredmeta" LostFocus="tabelaPredmetaIzgubilaFokus" GotFocus="tabelaPredmetaDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White">
+                        <DataGrid Grid.Row="2" Name="tabelaPredmeta" LostFocus="tabelaPredmetaIzgubilaFokus" GotFocus="tabelaPredmetaDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1029,6 +1149,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1036,6 +1157,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1043,6 +1165,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1050,6 +1173,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1057,6 +1181,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1064,6 +1189,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1071,6 +1197,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1078,6 +1205,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1085,6 +1213,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1212,9 +1341,21 @@
                 </TabItem>
 
                 <TabItem Name="SmerTab" Width="125" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock Text="Smer" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="smerTabText" Text="Smer" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="smerTabText" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="smerTabText" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
@@ -1236,7 +1377,7 @@
                                         <ColumnDefinition Width="2*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid>
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Filter:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -1276,7 +1417,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="0">
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -1293,12 +1434,13 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <DataGrid Grid.Row="2" Name="tabelaSmerova" LostFocus="tabelaSmerovaIzgubilaFokus" GotFocus="tabelaSmerovaDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White">
+                        <DataGrid Grid.Row="2" Name="tabelaSmerova" LostFocus="tabelaSmerovaIzgubilaFokus" GotFocus="tabelaSmerovaDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="80">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1306,6 +1448,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1313,6 +1456,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1320,6 +1464,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1423,10 +1568,23 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Name="SoftverTab" Width="125" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock Text="Softver" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                <TabItem x:Name="SoftverTab" Width="125" Style="{StaticResource TabItem}">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="softverTabText" Text="Softver" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="softverTabText" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="softverTabText" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.1*"/>
@@ -1448,7 +1606,7 @@
                                         <ColumnDefinition Width="2*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid>
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Filter:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -1496,7 +1654,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="0">
-                                        <Label Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
+                                        <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Pretraga:"/>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -1513,12 +1671,13 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <DataGrid Grid.Row="2" Name="tabelaSoftvera" LostFocus="tabelaSoftveraIzgubilaFokus" GotFocus="tabelaSoftveraDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White">
+                        <DataGrid Grid.Row="2" Name="tabelaSoftvera" LostFocus="tabelaSoftveraIzgubilaFokus" GotFocus="tabelaSoftveraDobilaFokus" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionMode="Extended" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" Background="White" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1526,6 +1685,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1533,6 +1693,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1540,6 +1701,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1547,6 +1709,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1554,6 +1717,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1561,6 +1725,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1568,6 +1733,7 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>

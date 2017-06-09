@@ -19,6 +19,56 @@
         <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}">
             <Setter Property="Focusable" Value="False"/>
         </Style>
+
+        <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0.5,0" EndPoint="0.5,1.9">
+            <GradientStop Color="#FFC2CAE6" Offset="0"/>
+            <GradientStop Color="#FF666EAE" Offset="1"/>
+            <GradientStop Color="#FF7F8DC1" Offset="0.509"/>
+            <GradientStop Color="#FF586E9C" Offset="0.542"/>
+            <GradientStop Color="#FF8393BD" Offset="0.542"/>
+            <GradientStop Color="#FF666EAE" Offset="0.526"/>
+        </LinearGradientBrush>
+
+        <RadialGradientBrush x:Key="BorderBrush" GradientOrigin="0.496,1.052">
+            <RadialGradientBrush.RelativeTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                    <TranslateTransform X="0.02" Y="0.3"/>
+                </TransformGroup>
+            </RadialGradientBrush.RelativeTransform>
+            <GradientStop Color="#FFC2CAE6" Offset="1"/>
+            <GradientStop Color="#FF666EAE" Offset="0.3"/>
+        </RadialGradientBrush>
+
+        <Style x:Key="HeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource HeaderBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
+        </Style>
+
+        <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderBrush" Value="#FF666EAE"/>
+                    <Setter Property="Background" Value="#FFC2CAE6"/>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+            </Style.Resources>
+        </Style>
+
         <ContextMenu x:Key="TextBoxContextMenu" Background="White">
             <MenuItem Command="ApplicationCommands.Copy" />
             <MenuItem Command="ApplicationCommands.Cut" />
@@ -31,24 +81,49 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
-                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="5,5,0,0"
-                        Padding="25,5,25,5" Margin="0,0,0,0" BorderBrush="Gainsboro">
-                            <ContentPresenter x:Name="ContentSite" ContentSource="Header" />
+                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="10,10,0,0"
+                        Padding="25,5,25,5" Margin="0,0,0,0">
+                            <ContentPresenter x:Name="ContentSite" ContentSource="Header"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="TextElement.Foreground" Value="Black"/>
-                                <Setter TargetName="Border" Property="Background" Value="#FFB8C6F5"/>
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#FFC2CAE6" Offset="1"/>
+                                            <GradientStop Color="#FF666EAE" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="False">
-                                <Setter Property="TextElement.Foreground" Value="#FF303030"/>
-                                <Setter TargetName="Border" Property="Background" Value="White" />
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="White" Offset="1"/>
+                                            <GradientStop Color="#FFB6B6B6" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
 
         <SolidColorBrush x:Key="HighlightedBackgroundBrush" Color="#FF797878" />
         <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#FF505050" />
@@ -533,9 +608,21 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem Name="Korak1Predmet" Width="200" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock TextAlignment="Center" Text="Korak 1" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="korak1" Text="Korak 1" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="korak1" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="korak1" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.2*" />
@@ -669,12 +756,13 @@
                                 </Grid>
                                 <Grid Grid.Row="2">
 
-                                    <DataGrid Name="smeroviTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="Single" SelectionUnit="FullRow" TargetUpdated="izabranSmerPripadnostiPredmeta" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" Background="White">
+                                    <DataGrid Name="smeroviTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="Single" SelectionUnit="FullRow" TargetUpdated="izabranSmerPripadnostiPredmeta" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" Background="White" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="2*" MinWidth="150" IsReadOnly="True" CellStyle="{StaticResource CellStyle}">
                                                 <DataGridTextColumn.ElementStyle>
                                                     <Style>
                                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                                        <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                                     </Style>
                                                 </DataGridTextColumn.ElementStyle>
                                             </DataGridTextColumn>
@@ -682,6 +770,7 @@
                                                 <DataGridTextColumn.ElementStyle>
                                                     <Style>
                                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                                        <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                                     </Style>
                                                 </DataGridTextColumn.ElementStyle>
                                             </DataGridTextColumn>
@@ -849,9 +938,21 @@
                     </Grid>
                 </TabItem>
                 <TabItem Name="Korak2Predmet" Width="200" Style="{StaticResource TabItem}">
-                    <TabItem.Header>
-                        <TextBlock TextAlignment="Center" Text="Korak 2" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF505050"/>
-                    </TabItem.Header>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="korak2" Text="Korak 2" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="korak2" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="korak2" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="0.2*" />
@@ -1022,12 +1123,13 @@
                                     </Viewbox>
                                 </Grid>
                                 <Grid Grid.Row="2">
-                                    <DataGrid SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Name="softverTabela" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" Background="White">
+                                    <DataGrid SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Name="softverTabela" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserAddRows="False" Background="White" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource CellStyle}">
                                                 <DataGridTextColumn.ElementStyle>
                                                     <Style>
                                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                                        <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                                     </Style>
                                                 </DataGridTextColumn.ElementStyle>
                                             </DataGridTextColumn>
@@ -1035,6 +1137,7 @@
                                                 <DataGridTextColumn.ElementStyle>
                                                     <Style>
                                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                                        <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                                     </Style>
                                                 </DataGridTextColumn.ElementStyle>
                                             </DataGridTextColumn>
@@ -1042,6 +1145,7 @@
                                                 <DataGridTextColumn.ElementStyle>
                                                     <Style>
                                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                                        <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
                                                     </Style>
                                                 </DataGridTextColumn.ElementStyle>
                                             </DataGridTextColumn>

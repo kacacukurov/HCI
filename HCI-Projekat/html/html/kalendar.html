@@ -14,7 +14,7 @@
     <script src="../js/fullcalendar.min.js"></script>
     <script src="../js/scheduler.min.js"></script>
     <script src="../js/jquery.qtip.min.js"></script>
-
+    <script src="../js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link href="../css/fullcalendar.min.css" rel="stylesheet" />
@@ -26,24 +26,11 @@
     <title>Proba</title>
 
     <style>
-
-        #wrap {
-            width: 1100px;
-            margin: 0 auto;
-        }
-
-        #external-events {
+        #external-events, .filter-div {
             float: right;
-            width: 13%;
-            padding: 0 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-            margin-top: 3%;
+            width: 27vh;
+            text-align: center;
             margin-right: 1%;
-        }
-        #calendarTrash {
-            height: 150px;
-            border: groove;
         }
 
         #external-events h4 {
@@ -53,50 +40,98 @@
         }
 
         #external-events .fc-event {
-            margin: 10px 0;
-            cursor: pointer;
+            margin: 1px 0;
+            cursor: pointer;            
+            background: #797979;
+            border-color: #797979;
+            text-align: center;
         }
 
         #calendar {
-            margin-left: 10px;
+            margin-top: -2.5%;
+            margin-left: 5px;
             float: left;
-        }
-        #predmeti{
-            float: left;
+            height: 80%;
+            width: 69vh;
         }
 
-        #novi, #filterDiv{
-            border: groove;
+        #calendarTrash
+        {
+            height: 70px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        #zaglavljeNovaStavka, #zaglavljeBrisanje, #zaglavljeFilter{
+            background: #7d90d4;
+            border-color: #7d90d4;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            text-align: center;
+            padding-top: 5px; 
+            padding-bottom: 5px;
+        }
+
+        .panel-body{
+            padding-top: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-bottom: 2px;
+        }
+
+        .btn-primary{
+            padding-top: 2px;
+            padding-bottom: 2px;
+            padding-right: 8px;
+            padding-left: 8px;
+            border-color:#625959;
+            background-color:#625959;
         }
     </style>
 </head>
 
 <body>
-    <div id='external-events'>
-        <div id="novi">
-            <h4>Nova stavka kalendara</h4>
-            <div class='fc-event' id="poljeKalendara"></div>
-            <div>Smer: <select id="smerovi" onchange="smerPromenjen()"></select></div>
-            <div>Predmet: <select id="predmeti" onchange="predmetPromenjen()"></select></div><br />
-            Duzina trajanja termina: <b id="duzina"></b><br />
-            Broj nerasporedjenih termina: <b id="termini"></b>
+    <div id="external-events">
+        <div class="panel panel-primary" id='external-events'>
+            <div class="panel-heading" id="zaglavljeNovaStavka"><b>Nova stavka kalendara</b></div>
+            <div class="panel-body" id="novi">
+                <div class='fc-event' id="poljeKalendara"></div>
+                <div><strong><b style="{color:#a6a4a9}">Smer:</b></strong><br/><select id="smerovi" onchange="smerPromenjen()"></select></div>
+                <div><strong><b style="{color:#a6a4a9}">Predmet:</b></strong><br/><select id="predmeti" onchange="predmetPromenjen()"></select></div>
+                <br/>
+                <span>Dužina termina:<br/><b id="duzina"></b></span><br />
+                <span>Preostali termini:<br/><b id="termini"></b></span>
+            </div>
         </div>
-        <div id="calendarTrash" class="calendar-trash">
-            Prevucite ovde za brisanje
+    
+        <div class="panel panel-primary" id='external-events' style="padding-bottom:1px">
+            <div class="panel-heading" id="zaglavljeBrisanje"><b>Zona brisanja</b></div>
+            <div class="panel-body" id="calendarTrash">
+            </div>
         </div>
-        <div id="filterDiv">
-            Filter <br/> 
-            <select id="vrstaFiltera" onchange="vrstaFilteraPromenjena()">
-                <option>Nedelja</option>
-                <option>Dan</option>
-                <option>Ucionica</option>
-                <option>Smer</option>
-                <option>Predmet</option>
-            </select>
-            <br/>Podatak:
-            <select id="podaciFiltera"></select>
-            <button id="filtriraj" onclick="filtrirajPodatke()">Filtriraj</button>
+
+        <div class="panel panel-primary filter-div" id="filterDiv">
+            <div class="panel-heading" id="zaglavljeFilter"><b>Filter prikaza</b></div>
+            <div class="panel-body">
+                <div style="{padding-bottom:1px; margin-bottom:1px;}">
+                    <span><strong>Kriterijum:</strong></span><br />
+                    <select id="vrstaFiltera" onchange="vrstaFilteraPromenjena()">
+                        <option>Nedelja</option>
+                        <option>Dan</option>
+                        <option>Ucionica</option>
+                        <option>Smer</option>
+                        <option>Predmet</option>
+                    </select>
+                </div>
+                <div style="{padding-top:1px;}">
+                    <span><strong>Vrednost kriterijuma:</strong></span><br/>
+                    <select id="podaciFiltera"></select>
+                </div>
+                <br/>
+                <button class="btn btn-primary" id="filtriraj" onclick="filtrirajPodatke()">Filtriraj</button>
+            </div>
         </div>
+        
     </div>
         <div id="calendar" style="height:80%; width:85%"></div>
 

@@ -120,7 +120,7 @@ namespace HCI_Projekat
             if (validacijaDodavanjaSmera() && !dodavanjeSmeraIzborStarogUnosa)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje = new StanjeAplikacije();
                 staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                 staroStanje.TipPodataka = "smer";
                 staroStanje.Kolicina = 1;
@@ -145,10 +145,11 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
+
                 // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
                 potvrdio = true;
 
@@ -169,10 +170,11 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
+
                 // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
                 potvrdio = true;
 
@@ -203,7 +205,7 @@ namespace HCI_Projekat
                         racunarskiCentar.Smerovi.Remove(OznakaSmera.Text.Trim());
                     else {
                         // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                        StanjeAplikacije staroStanje = new StanjeAplikacije();
+                        staroStanje = new StanjeAplikacije();
                         staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                         staroStanje.TipPodataka = "smer";
                         staroStanje.Kolicina = 1;
@@ -241,7 +243,7 @@ namespace HCI_Projekat
             if (validacijaPraznihPolja())
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje = new StanjeAplikacije();
                 staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                 staroStanje.TipPodataka = "smer";
                 staroStanje.Kolicina = 1;
@@ -287,10 +289,11 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
+
                 // postavljamo flag na true, da bismo mogli da omogucimo klik na dugme za undo operaciju
                 potvrdio = true;
 

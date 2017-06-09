@@ -211,9 +211,8 @@ namespace HCI_Projekat
                 ucionicaWindow.ShowDialog();
                 if (ucionicaWindow.potvrdio)
                 {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                    MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
+                    omoguciUndo();
+                    ponistiOnemoguciRedo();
                 }
             }
             else
@@ -236,9 +235,8 @@ namespace HCI_Projekat
                 predmetWindow.ShowDialog();
                 if (predmetWindow.potvrdio)
                 {
-                    MenuItemUndo.IsEnabled = true;
-                    MenuItemUndoPicture.IsEnabled = true;
-                    MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
+                    omoguciUndo();
+                    ponistiOnemoguciRedo();
                 }
             }
             else if ((racunarskiCentar.Smerovi.Count == 0 && racunarskiCentar.Softveri.Count == 0) || (brojAktivnihSoftvera == 0 && brojAktivnihSmerova == 0))
@@ -273,9 +271,8 @@ namespace HCI_Projekat
             smerWindow.ShowDialog();
             if (smerWindow.potvrdio)
             {
-                MenuItemUndo.IsEnabled = true;
-                MenuItemUndoPicture.IsEnabled = true;
-                MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
+                omoguciUndo();
+                ponistiOnemoguciRedo();
             }
 
             if (racunarskiCentar.Smerovi.Count - stariBrojSmerova == 1)
@@ -295,9 +292,8 @@ namespace HCI_Projekat
             softverWindow.ShowDialog();
             if (softverWindow.potvrdio)
             {
-                MenuItemUndo.IsEnabled = true;
-                MenuItemUndoPicture.IsEnabled = true;
-                MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
+                omoguciUndo();
+                ponistiOnemoguciRedo();
             }
 
             if (racunarskiCentar.Softveri.Count - stariBrojSoftvera == 1)
@@ -461,7 +457,7 @@ namespace HCI_Projekat
 
                 // postavljamo trenutno stanje na novo stanje koje smo preuzeli sa redo steka
                 racunarskiCentar = novoStanje.RacunarskiCentar;
-                prethodnaStanjaAplikacije.Remove(kljucNovog);
+                sledecaStanjaAplikacije.Remove(kljucNovog);
 
                 cef.RacunarskiCentar = racunarskiCentar;
                 cef.posaljiPodatke();
@@ -1383,7 +1379,10 @@ namespace HCI_Projekat
                     prethodnaStanjaAplikacije, notifierSucces);
                 izmenaSmerova.ShowDialog();
                 if (izmenaSmerova.potvrdaIzmena)
+                {
                     omoguciUndo();
+                    ponistiOnemoguciRedo();
+                }
                 tabelaSmerova.Items.Refresh();
             }
             else
@@ -1404,7 +1403,10 @@ namespace HCI_Projekat
                     prethodnaStanjaAplikacije, notifierSucces);
                 izmenaSoftvera.ShowDialog();
                 if (izmenaSoftvera.potvrdaIzmena)
+                {
                     omoguciUndo();
+                    ponistiOnemoguciRedo();
+                }
                 tabelaSoftvera.Items.Refresh();
             }
             else
@@ -1459,7 +1461,10 @@ namespace HCI_Projekat
                 predmetWindow.indeks = tabelaPredmeta.SelectedIndex;
                 predmetWindow.ShowDialog();
                 if (predmetWindow.potvrdio)
+                {
                     omoguciUndo();
+                    ponistiOnemoguciRedo();
+                }
                 tabelaPredmeta.Items.Refresh();
             }
             else
@@ -1491,7 +1496,10 @@ namespace HCI_Projekat
                 softverWindow.indeks = tabelaSoftvera.SelectedIndex;
                 softverWindow.ShowDialog();
                 if (softverWindow.potvrdio)
+                {
                     omoguciUndo();
+                    ponistiOnemoguciRedo();
+                }
                 tabelaSoftvera.Items.Refresh();
             }
             else
@@ -1531,7 +1539,10 @@ namespace HCI_Projekat
                 ucionicaWindow.indeks = tabelaUcionica.SelectedIndex;
                 ucionicaWindow.ShowDialog();
                 if (ucionicaWindow.potvrdio)
+                {
                     omoguciUndo();
+                    ponistiOnemoguciRedo();
+                }
                 tabelaUcionica.Items.Refresh();
             }
             else
@@ -1553,7 +1564,10 @@ namespace HCI_Projekat
                 smerWindow.indeks = tabelaSmerova.SelectedIndex;
                 smerWindow.ShowDialog();
                 if (smerWindow.potvrdio)
+                {
                     omoguciUndo();
+                    ponistiOnemoguciRedo();
+                }
                 tabelaSmerova.Items.Refresh();
             }
             else
@@ -1647,13 +1661,14 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
 
                 // omogucavamo pozivanje opcije undo
                 omoguciUndo();
+                ponistiOnemoguciRedo();
             }
             else
                 return;
@@ -1667,7 +1682,7 @@ namespace HCI_Projekat
                 StanjeAplikacije staroStanje = new StanjeAplikacije();
                 staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                 staroStanje.TipPodataka = "softver";
-                staroStanje.Kolicina = tabelaPredmeta.SelectedItems.Count;
+                staroStanje.Kolicina = tabelaSoftvera.SelectedItems.Count;
                 staroStanje.TipPromene = "dodavanje";
 
                 List<Softver> removedItems = new List<Softver>();
@@ -1733,13 +1748,14 @@ namespace HCI_Projekat
                     string kljuc = Guid.NewGuid().ToString();
                     // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                     // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                    if (prethodnaStanjaAplikacije.Count >= 2)
+                    if (prethodnaStanjaAplikacije.Count >= 3)
                         prethodnaStanjaAplikacije.RemoveAt(0);
                     prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                     stekStanja.GetUndo().Push(kljuc);
 
                     // omogucavamo pozivanje opcije undo
                     omoguciUndo();
+                    ponistiOnemoguciRedo();
                 }
             }
             else
@@ -1754,7 +1770,7 @@ namespace HCI_Projekat
                 StanjeAplikacije staroStanje = new StanjeAplikacije();
                 staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                 staroStanje.TipPodataka = "ucionica";
-                staroStanje.Kolicina = tabelaPredmeta.SelectedItems.Count;
+                staroStanje.Kolicina = tabelaUcionica.SelectedItems.Count;
                 staroStanje.TipPromene = "dodavanje";
 
                 List<Ucionica> removedItems = new List<Ucionica>();
@@ -1835,13 +1851,14 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
 
                 // omogucavamo pozivanje opcije undo
                 omoguciUndo();
+                ponistiOnemoguciRedo();
             }
             else
                 return;
@@ -1855,7 +1872,7 @@ namespace HCI_Projekat
                 StanjeAplikacije staroStanje = new StanjeAplikacije();
                 staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                 staroStanje.TipPodataka = "smer";
-                staroStanje.Kolicina = tabelaPredmeta.SelectedItems.Count;
+                staroStanje.Kolicina = tabelaSmerova.SelectedItems.Count;
                 staroStanje.TipPromene = "dodavanje";
 
                 List<string> oznakePolja = new List<string>();
@@ -1933,13 +1950,14 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
 
                 // omogucavamo pozivanje opcije undo
                 omoguciUndo();
+                ponistiOnemoguciRedo();
             }
             else
                 return;
@@ -2045,6 +2063,17 @@ namespace HCI_Projekat
             MenuItemUndo.IsEnabled = true;
             MenuItemUndoPicture.IsEnabled = true;
             MenuItemUndoPictureImg.Source = new BitmapImage(new Uri(@"/picture/undo.png", UriKind.Relative));
+        }
+
+        private void ponistiOnemoguciRedo()
+        {
+            // redo stek praznimo, kao i kolekciju sledecih mogucih stanja jer smo sad uneli novu izmenu
+            // koja prekida lanac undo-redo
+            stekStanja.GetRedo().Clear();
+            sledecaStanjaAplikacije.Clear();
+            MenuItemRedo.IsEnabled = true;
+            MenuItemRedoPicture.IsEnabled = true;
+            MenuItemRedoPictureImg.Source = new BitmapImage(new Uri(@"/picture/redo1.png", UriKind.Relative));
         }
 
         private void tabChanged(object sender, SelectionChangedEventArgs e)

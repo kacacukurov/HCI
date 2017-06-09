@@ -182,7 +182,7 @@ namespace HCI_Projekat
             if (validacijaNovogSoftvera() && !dodavanjeSoftveraIzborStarogUnosa)
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje = new StanjeAplikacije();
                 staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                 staroStanje.TipPodataka = "softver";
                 staroStanje.Kolicina = 1;
@@ -215,7 +215,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
@@ -239,7 +239,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
@@ -277,7 +277,7 @@ namespace HCI_Projekat
                         racunarskiCentar.Softveri.Remove(oznakaSoftver.Text.Trim());
                     else {
                         // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                        StanjeAplikacije staroStanje = new StanjeAplikacije();
+                        staroStanje = new StanjeAplikacije();
                         staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                         staroStanje.TipPodataka = "softver";
                         staroStanje.Kolicina = 1;
@@ -523,7 +523,7 @@ namespace HCI_Projekat
             if (validacijaPodataka() && proveraIzmeneOS(oznakaSoftveraZaIzmenu))
             {
                 // pamtimo stanje alikacije pre nego sto uradimo dodavanje novog
-                StanjeAplikacije staroStanje = new StanjeAplikacije();
+                staroStanje = new StanjeAplikacije();
                 staroStanje.RacunarskiCentar = DeepClone(racunarskiCentar);
                 staroStanje.TipPodataka = "softver";
                 staroStanje.Kolicina = 1;
@@ -674,7 +674,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 2)
+                if (prethodnaStanjaAplikacije.Count >= 3)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);

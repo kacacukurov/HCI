@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
         Title="MainWindow" Name="mainWindow" MinWidth="785" MinHeight="500" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
@@ -448,6 +449,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -497,6 +500,7 @@
     </Window.InputBindings>
 
     <Grid>
+        
         <DockPanel>
             <Menu DockPanel.Dock="Top" Name="FirstMenu" Margin="0,0,0,1" Height="30">
 
@@ -780,6 +784,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid>
                                         <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Filter:"/>
+                                        <tb:TaskbarIcon x:Name="tb" VerticalAlignment="Top" Visibility="Hidden"></tb:TaskbarIcon>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>

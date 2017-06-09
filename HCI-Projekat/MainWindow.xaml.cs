@@ -21,6 +21,8 @@ using System.Collections.Specialized;
 using Microsoft.Win32;
 using System.Text;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using System.Windows.Controls.Primitives;
 
 namespace HCI_Projekat
 {
@@ -45,6 +47,7 @@ namespace HCI_Projekat
         private Notifier notifierSucces;
         private Notifier notifierError;
         private Notifier notifierUndoRedo;
+        private DispatcherTimer timer;
 
         public MainWindow()
         {
@@ -96,6 +99,7 @@ namespace HCI_Projekat
             // stek za undo redo mehanizam za kolekciju stanja aplikacije
             stekStanja = new UndoRedoStack();
             InitializeComponent();
+            Loaded += OnLoaded;
             KalendarTab.Focus();
 
             racunarskiCentar = new RacunarskiCentar();
@@ -104,6 +108,18 @@ namespace HCI_Projekat
             InitializeChromium();
             cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError, stekStanja, prethodnaStanjaAplikacije);
             chromeBrowser.RegisterJsObject("cefCustomObject", cef);
+        }
+
+        private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.timer = new DispatcherTimer(new TimeSpan(0, 0, 6), DispatcherPriority.Normal, OnTimerTick, Dispatcher);
+            this.timer.Start();
+        }
+
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            var balloon = new CustomBalloon { BalloonText = "Ring Ring" };
+            tb.ShowCustomBalloon(balloon, PopupAnimation.Scroll, 3000);
         }
 
         private void inicijalizujPodatke()

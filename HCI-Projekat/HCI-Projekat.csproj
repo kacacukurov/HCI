@@ -62,8 +62,13 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
@@ -73,6 +78,7 @@
       <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -135,6 +141,9 @@
       <DependentUpon>BrisanjePoljaKalendara.xaml</DependentUpon>
     </Compile>
     <Compile Include="CefCustomObject.cs" />
+    <Compile Include="CustomBalloon.xaml.cs">
+      <DependentUpon>CustomBalloon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelpProvider.cs" />
     <Compile Include="HelpViewer.xaml.cs">
       <DependentUpon>HelpViewer.xaml</DependentUpon>
@@ -174,9 +183,16 @@
     <Compile Include="Smer.cs" />
     <Compile Include="Softver.cs" />
     <Compile Include="StanjeAplikacije.cs" />
+    <Compile Include="Tutorijal.xaml.cs">
+      <DependentUpon>Tutorijal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ucionica.cs" />
     <Compile Include="UndoRedoStack.cs" />
     <Page Include="BrisanjePoljaKalendara.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomBalloon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -257,6 +273,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PotvrdaOdustajanja.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tutorijal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

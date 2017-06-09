@@ -489,9 +489,9 @@
         <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
         <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
         <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
-        <KeyBinding Key="Tab" Modifiers="Ctrl" Command="{StaticResource backToTabs}"></KeyBinding>
         <KeyBinding Key="F" Modifiers="Ctrl + Shift" Command="{StaticResource filter}"></KeyBinding>
         <KeyBinding Key="P" Modifiers="Ctrl + Shift" Command="{StaticResource pretraga}"></KeyBinding>
+        <KeyBinding Key="Tab" Modifiers="Ctrl" Command="{StaticResource backToTabs}"></KeyBinding>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{StaticResource open}"></KeyBinding>
     </Window.InputBindings>

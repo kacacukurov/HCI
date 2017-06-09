@@ -1,0 +1,47 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" href="picture.css" />
+</head>
+<body>
+    <h4>Kalendarski prikaz rasporeda</h4>
+    <p>
+        Na kalendarskom prikazu rasporeda se inicijalno vidi nedeljni prikaz rada računarskog centra, od ponedeljka, do subote.
+        Napravljen je u vidu šeme, čije kolone predstavljaju dane u nedelji, odnosno učionice, dok su vrste časovi u kojima radi
+        računarsko centar.
+    </p>
+    <img src="pictures/prikazRasporeda.png" alt="tab1" class="picture" width="80%" height="70%" />
+    <p>
+        <h4>Dodavanje u raspored</h4>
+        Dodavanje novih predmeta na raspored vrši se po principu prevlačenja preko ekrana (drag and drop). Prvo se odabere
+        željeni smer, zatim predmet u okviru tog smera. Klikne se na plavi pravougaonik koji se potom privuče na bilo koje slobodno
+        mesto u rasporedu. Ukoliko učionica u koju je nova stavka prevučena, ne zadovoljava sve potrebne uslove za izvođenje
+        nastave tog predmeta, stavka neće biti dodata u raspored. Isto se dešava i ukoliko se svi predviđeni termini
+        tog predmeta već nalaze na rasporedu. Dužina polja koju će stavka imati na kalendaru, zavisi od dužine trajanja
+        termina tog predmeta.
+    </p>
+    <img src="pictures/novaStavka.png" alt="tab1" class="picture" />
+
+    <p>
+        <h4>Brisanje iz rasporeda</h4>
+        Brisanje stavki iz rasporeda se radi takođe principom prevlačenja (drag and drop). Odabere se stavka, klikne se mišem
+        na nju i zatim se prevuče do dela <b>Prevucite ovde za brisanje</b>. Nakon što se stavka obriše, poveća se njen broj
+        neraspoređenih termina i ona se ukloni iz rasporeda.
+    </p>
+    <img src="pictures/brisanjeStavke.png" alt="tab1" class="picture" />
+
+    <p>
+        <h4>Filteri unutar rasporeda</h4>
+        Osim nedeljnog prikaza, na rasporedu su omogućeni i prikazi po: danu, učionici, smeru i predmetu.
+        Ovaj kriterijum filtera se bira unutar dela <b>Filter</b>.
+    </p>
+    <img src="pictures/filterKalendar.png" alt="tab1" class="picture" />
+    <p>
+        Nakon što se odabere filter, po kom će da se filtrira prikaz rasporeda, moguće je odabrati i podatak po kom
+        se filtrira. Ukoliko je odabran filter po danu, u opadajućem meniju ispod će biti ponuđeni svi dani. Nakon odabira određenog
+        dana i pritiskom na dugme <b>Filtriraj</b>, menja se prikaz rasporeda.
+    </p>
+
+    <br /><br />
+    Link do početnog prozora za pomoć: <a href="mainWindow.html">Početna stranica</a>
+</body>
+</html>

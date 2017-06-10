@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:featureTouring="clr-namespace:ThinkSharp.FeatureTouring;assembly=ThinkSharp.FeatureTour"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="MainWindow" Name="mainWindow" MinWidth="785" MinHeight="500" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka">
+        Title="MainWindow" Name="mainWindow" MinWidth="785" MinHeight="500" WindowState="Maximized" 
+        WindowStartupLocation="CenterScreen" Closed="SerijalizacijaPodataka" GotFocus="fokusiran" Deactivated="skloniPopUp" Activated="prikaziPopUp">
 
     <Window.Resources>
         <RoutedUICommand x:Key="novaUcionica" Text="ucionica"></RoutedUICommand>
@@ -500,7 +501,35 @@
     </Window.InputBindings>
 
     <Grid>
-        
+
+        <Popup Name="myPopup"
+                PlacementRectangle="-90,-10,0,0"
+               PopupAnimation="Slide"
+              AllowsTransparency="True"
+               PlacementTarget ="{Binding ElementName=dodajSoftverButton}"
+              Placement="Top">
+            <Grid x:Name="grid" Height="130" Width="200" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                    <StackPanel Orientation="Vertical">
+                        <Button Background="Transparent" BorderThickness="0" Width="17" Height="17" HorizontalAlignment="Right" Click="prekiniTutorijal">
+                            <Image Source="picture/exitTutorial.png" HorizontalAlignment="Right" Stretch="UniformToFill" Width="17" Height="17"/>
+                        </Button>
+                        
+                        <TextBlock TextWrapping="Wrap" Text="Dobrodosli na tutorijal za dodavanje softvera. Pritisnite dugme za dodavanje." />
+                        
+                    </StackPanel>
+                </Border>
+                <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="150,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+            </Grid>
+        </Popup>
+
+
+
         <DockPanel>
             <Menu DockPanel.Dock="Top" Name="FirstMenu" Margin="0,0,0,1" Height="30">
 
@@ -689,7 +718,12 @@
                         </MenuItem.Style>
                         <MenuItem Click="otvoriHelp" Header="_Help" InputGestureText="F1" Name="MenuItemHelp">
                             <MenuItem.Icon>
-                                <Image Source="picture/help.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/help.png" Stretch="UniformToFill" Width="17" Height="17"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Click="pokreniTutorijal" Header="_Tutorijal" Name="MenuItemTutorijal">
+                            <MenuItem.Icon>
+                                <Image Source="picture/tutorial.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                         </MenuItem>
 
@@ -1890,7 +1924,11 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSoftveraClick" Name="dodajSoftverButton" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSoftveraClick" Name="dodajSoftverButton" 
+                                        Foreground="White" Style="{StaticResource ButtonStyleZavrsi}"
+                                        Command="{Binding CmdOpenDialog}"
+                                        featureTouring:TourHelper.ElementID="klikniDodavanje"
+                                        featureTouring:TourHelper.Placement="BottomCenter">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Dodaj</TextBlock>

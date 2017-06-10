@@ -684,7 +684,7 @@ namespace HCI_Projekat
                                             polje.Pocetak.Split(' ')[1], polje.Kraj.Split(' ')[1], false));
                     }
                 }
-                int visak = noviBrojTermina - stariPredmet.PreostaliTermini;
+                int visak = razlika - stariPredmet.PreostaliTermini;
                 int stariBrojPreostalih = stariPredmet.PreostaliTermini;
                 BrisanjePoljaKalendara prozorBrisanje = new BrisanjePoljaKalendara();
                 prozorBrisanje.porukaBrisanje.Text += "\nPotrebno stavki za brisanje: " + visak;

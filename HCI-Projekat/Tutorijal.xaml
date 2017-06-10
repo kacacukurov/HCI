@@ -5,22 +5,1236 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="Tutorijal" Height="300" Width="300">
+        Title="Tutorijal" Height="500" Width="500" MinHeight="500" MinWidth="500" Deactivated="skloniPopUp" Activated="prikaziPopUp"  WindowStartupLocation="CenterScreen" Name="TutorijalWindow">
+    <Window.Resources>
+        <RoutedUICommand x:Key="sledeciKorak" Text="next"></RoutedUICommand>
+        <RoutedUICommand x:Key="prethodniKorak" Text="back"></RoutedUICommand>
+        <RoutedUICommand x:Key="odustani" Text="cancel"></RoutedUICommand>
+        <RoutedUICommand x:Key="zavrsi" Text="finish"></RoutedUICommand>
+        <RoutedUICommand x:Key="sledeciDeo" Text="next"></RoutedUICommand>
+        <RoutedUICommand x:Key="prethodniDeo" Text="back"></RoutedUICommand>
+        <ContextMenu x:Key="TextBoxContextMenu" Background="White">
+            <MenuItem Command="ApplicationCommands.Copy" />
+            <MenuItem Command="ApplicationCommands.Cut" />
+            <MenuItem Command="ApplicationCommands.Paste" />
+        </ContextMenu>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
+        </Style>
+        <Style x:Key="TabItem" TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Border x:Name="Border" BorderThickness="1,1,1,0" CornerRadius="10,10,0,0"
+                        Padding="25,5,25,5" Margin="0,0,0,0">
+                            <ContentPresenter x:Name="ContentSite" ContentSource="Header"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#FFC2CAE6" Offset="1"/>
+                                            <GradientStop Color="#FF666EAE" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Background" TargetName="Border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="White" Offset="1"/>
+                                            <GradientStop Color="#FFB6B6B6" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <SolidColorBrush x:Key="HighlightedBackgroundBrush" Color="#FF797878" />
+        <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#FF505050" />
+        <SolidColorBrush x:Key="NormalBorderBrush" Color="#FFFFFFFF" />
+        <SolidColorBrush x:Key="SolidMenuFontBrush" Color="#FFFFFFFF" />
+        <SolidColorBrush x:Key="HighlightedText" Color="#FFFFFFFF" />
+
+        <Style x:Key="{x:Type Menu}" TargetType="{x:Type Menu}">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Foreground" Value="{StaticResource SolidMenuFontBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Menu}">
+                        <Border
+            Background="{StaticResource MenuBackgroundBrush}"
+            BorderBrush="{StaticResource MenuBackgroundBrush}"
+            BorderThickness="1">
+                            <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="{x:Type MenuItem}" TargetType="{x:Type MenuItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="Border"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="Col0" MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuTextColumnGroup"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup"/>
+                                    <ColumnDefinition x:Name="Col3" Width="14"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- ContentPresenter to show an Icon if needed -->
+                                <ContentPresenter Grid.Column="0" Margin="4,0,6,0" x:Name="Icon" VerticalAlignment="Center" ContentSource="Icon"/>
+
+                                <!-- Glyph is a checkmark if needed for a checkable menu -->
+                                <Grid Grid.Column="0" Visibility="Hidden" Margin="4,0,6,0" x:Name="GlyphPanel" VerticalAlignment="Center">
+                                    <Path x:Name="GlyphPanelpath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z" FlowDirection="LeftToRight"/>
+                                </Grid>
+
+                                <!-- Content for the menu text etc -->
+                                <ContentPresenter Grid.Column="1"
+                                Margin="{TemplateBinding Padding}"
+                                x:Name="HeaderHost"
+                                RecognizesAccessKey="True"
+                                ContentSource="Header"/>
+
+                                <!-- Content for the menu IGT -->
+                                <ContentPresenter Grid.Column="2"
+                                Margin="8,1,8,1"
+                                x:Name="IGTHost"
+                                ContentSource="InputGestureText"
+                                VerticalAlignment="Center"/>
+
+                                <!-- Arrow drawn path which points to the next level of the menu -->
+                                <Grid Grid.Column="3" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center">
+                                    <Path x:Name="ArrowPanelPath" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z"/>
+                                </Grid>
+
+                                <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
+                                <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="SubMenuPopup" Focusable="false" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                                    <Border x:Name="SubMenuBorder" BorderBrush="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" BorderThickness="1" Padding="2,2,2,2">
+                                        <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
+                                            <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+
+                        <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
+                        <ControlTemplate.Triggers>
+                            <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
+                            <Trigger Property="Role" Value="TopLevelHeader">
+                                <Setter Property="Padding" Value="6,1,6,1"/>
+                                <Setter Property="Placement" Value="Bottom" TargetName="SubMenuPopup"/>
+                                <Setter Property="MinWidth" Value="0" TargetName="Col0"/>
+                                <Setter Property="Width" Value="Auto" TargetName="Col3"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="GlyphPanel"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="IGTHost"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+
+                            <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
+                            <Trigger Property="Role" Value="TopLevelItem">
+                                <Setter Property="Padding" Value="6,1,6,1"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+
+                            <!-- Role = SubMenuHeader : this is a child menu item which does not have children -->
+                            <Trigger Property="Role" Value="SubmenuHeader">
+                                <Setter Property="DockPanel.Dock" Value="Top"/>
+                                <Setter Property="Padding" Value="0,2,0,2"/>
+                            </Trigger>
+
+                            <!-- Role = SubMenuItem : this is a child menu item which has children-->
+                            <Trigger Property="Role" Value="SubmenuItem">
+                                <Setter Property="DockPanel.Dock" Value="Top"/>
+                                <Setter Property="Padding" Value="0,2,0,2"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+                            <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+                                <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup"/>
+                            </Trigger>
+
+                            <!-- If no Icon is present the we collapse the Icon Content -->
+                            <Trigger Property="Icon" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                            </Trigger>
+
+                            <!-- The GlyphPanel contains the CheckMark -->
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Visibility" Value="Visible" TargetName="GlyphPanel"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                            </Trigger>
+
+                            <!-- Using the system colors for the Menu Highlight and IsEnabled-->
+                            <Trigger Property="IsHighlighted" Value="true">
+                                <Setter Property="Background" Value="{StaticResource HighlightedBackgroundBrush}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{StaticResource HighlightedText}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource NormalBorderBrush}" TargetName="Border"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="false">
+                                <Setter Property="Background" Value="{StaticResource MenuBackgroundBrush}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{StaticResource SolidMenuFontBrush}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource MenuBackgroundBrush}" TargetName="Border"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="LightGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonStyleOdustani" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="8" BorderBrush="#FFE04040" BorderThickness="2">
+                                <Border.Background>
+                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                        <RadialGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" 
+                                   ScaleX="1.5" ScaleY="1.5"/>
+                                                <TranslateTransform X="0.02" Y="0.3"/>
+                                            </TransformGroup>
+                                        </RadialGradientBrush.RelativeTransform>
+                                        <GradientStop Offset="1" Color="#FFF94D4D"/>
+                                        <GradientStop Offset="0.3" Color="#FF8D1111"/>
+                                    </RadialGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         TextElement.FontWeight="Bold"></ContentPresenter>
+                            </Border>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#00000000" Offset="1"/>
+                                            <GradientStop Color="#FF303030" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF505050"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonStyleZavrsi" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="8" BorderBrush="#FF69B459" BorderThickness="2">
+                                <Border.Background>
+                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                        <RadialGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" 
+                                   ScaleX="1.5" ScaleY="1.5"/>
+                                                <TranslateTransform X="0.02" Y="0.3"/>
+                                            </TransformGroup>
+                                        </RadialGradientBrush.RelativeTransform>
+                                        <GradientStop Offset="1" Color="#FF57B268"/>
+                                        <GradientStop Offset="0.3" Color="#FF1E4B0D"/>
+                                    </RadialGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         TextElement.FontWeight="Bold"></ContentPresenter>
+                            </Border>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#00000000" Offset="1"/>
+                                            <GradientStop Color="#FF303030" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF505050"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonStyleNastavi" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="8" BorderBrush="#FF7878D4" BorderThickness="2">
+                                <Border.Background>
+                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                        <RadialGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" 
+                                   ScaleX="1.5" ScaleY="1.5"/>
+                                                <TranslateTransform X="0.02" Y="0.3"/>
+                                            </TransformGroup>
+                                        </RadialGradientBrush.RelativeTransform>
+                                        <GradientStop Offset="1" Color="#FF96ABF1"/>
+                                        <GradientStop Offset="0.3" Color="#FF333F8F"/>
+                                    </RadialGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         TextElement.FontWeight="Bold"></ContentPresenter>
+                            </Border>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#00000000" Offset="1"/>
+                                            <GradientStop Color="#FF303030" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF505050"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource sledeciKorak}" Executed="nextClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource prethodniKorak}" Executed="backClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource odustani}" Executed="cancelClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource zavrsi}" Executed="finishClick"></CommandBinding>
+        <CommandBinding Command="{StaticResource sledeciDeo}" Executed="nextStep"></CommandBinding>
+        <CommandBinding Command="{StaticResource prethodniDeo}" Executed="backStep"></CommandBinding>
+        <CommandBinding Command="ApplicationCommands.Help" Executed="otvoriHelp"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Right" Modifiers="Ctrl" Command="{StaticResource sledeciKorak}"></KeyBinding>
+        <KeyBinding Key="Left" Modifiers="Ctrl" Command="{StaticResource prethodniKorak}"></KeyBinding>
+        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{StaticResource sledeciDeo}"></KeyBinding>
+        <KeyBinding Key="B" Modifiers="Ctrl" Command="{StaticResource prethodniDeo}"></KeyBinding>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
+    </Window.InputBindings>
+
     <Grid>
-        <Border 
-            Opacity="0.5"
-            Background="Pink" 
-            BorderBrush="Red"
-            BorderThickness="2"
-            CornerRadius="10"
-            Margin="10">
-            <Border.BitmapEffect>
-                <DropShadowBitmapEffect />
-            </Border.BitmapEffect>
-            <StackPanel Margin="10">
-                <TextBlock Text="Hello World - in pink just for Jo. :-)" />
-                <TextBlock Text="{Binding BalloonText}" />
-            </StackPanel>
-        </Border>
+
+        
+
+        <DockPanel>
+            <Menu DockPanel.Dock="Top" Name="FirstMenu" Margin="0,0,0,1">
+
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+
+                <Menu.Items>
+
+                    <MenuItem Header="_File" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <MenuItem.Style>
+                            <Style>
+                                <Setter Property="MenuItem.Foreground" Value="White"/>
+                                <Setter Property="MenuItem.FontSize" Value="14"></Setter>
+                            </Style>
+                        </MenuItem.Style>
+                        <MenuItem Click="finishClick" Header="_Sačuvaj" InputGestureText="Ctrl+S">
+                            <MenuItem.Icon>
+                                <Image Source="picture/save.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Click="cancelClick" Header="_Odustani" InputGestureText="Ctrl+Q">
+                            <MenuItem.Icon>
+                                <Image Source="picture/leave.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="_Edit" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <MenuItem.Style>
+                            <Style>
+                                <Setter Property="MenuItem.Foreground" Value="White"/>
+                                <Setter Property="MenuItem.FontSize" Value="14"></Setter>
+                            </Style>
+                        </MenuItem.Style>
+                        <MenuItem Header="_Cut" InputGestureText="Ctrl+X" Command="ApplicationCommands.Cut">
+                            <MenuItem.Icon>
+                                <Image Source="picture/cut.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Header="_Copy" InputGestureText="Ctrl+C" Command="ApplicationCommands.Copy">
+                            <MenuItem.Icon>
+                                <Image Source="picture/copy.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <MenuItem Header="_Paste" InputGestureText="Ctrl+V" Command="ApplicationCommands.Paste">
+                            <MenuItem.Icon>
+                                <Image Source="picture/paste.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                            <MenuItem.InputBindings>
+                                <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
+                            </MenuItem.InputBindings>
+                        </MenuItem>
+
+                        <Separator></Separator>
+
+                        <MenuItem Header="_Sledeći korak" InputGestureText="Ctrl+N" Click="nextStep" Name="NextStepMenuItem">
+                            <MenuItem.Icon>
+                                <Image Source="picture/nextStep.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="_Prethodni korak" InputGestureText="Ctrl+B" Click="backStep" Name="BackStepMenuItem">
+                            <MenuItem.Icon>
+                                <Image Source="picture/backStep.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                    </MenuItem>
+
+                    <MenuItem Header="_Help" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <MenuItem Click="otvoriHelp" Header="_Help" InputGestureText="F1" Name="MenuItemHelp">
+                            <MenuItem.Icon>
+                                <Image Source="picture/help.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style>
+                                <Setter Property="MenuItem.Foreground" Value="White"/>
+                                <Setter Property="MenuItem.FontSize" Value="14"></Setter>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                </Menu.Items>
+            </Menu>
+
+            <Menu DockPanel.Dock="Top" Name="SecondMenu">
+
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+
+                <Menu.Items>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Cut" Width="27" Command="ApplicationCommands.Cut">
+                        <MenuItem.Icon>
+                            <Image Source="picture/cut.png" Stretch="UniformToFill" ToolTip="Cut"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Copy" Width="27" Command="ApplicationCommands.Copy">
+                        <MenuItem.Icon>
+                            <Image Source="picture/copy.png" Stretch="UniformToFill" ToolTip="Copy"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem HorizontalAlignment="Left" Name="Paste" Width="27" Command="ApplicationCommands.Paste">
+                        <MenuItem.Icon>
+                            <Image Source="picture/paste.png" Stretch="UniformToFill" ToolTip="Paste"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                </Menu.Items>
+            </Menu>
+
+            <TabControl DockPanel.Dock="Top" VerticalAlignment="Stretch" Name="tabControlUcionica">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabPanel}">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Name="Korak1Softver" Width="200" Style="{StaticResource TabItem}">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="korak1" Text="Korak 1" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="korak1" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="korak1" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="9*" />
+                            <RowDefinition Height="0.80*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="27*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16*"/>
+                                    <ColumnDefinition Width="27*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Oznaka:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.8*"/>
+                                        <ColumnDefinition Width="0.1*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Text="" Name="oznakaSoftver" Grid.Column="0" Grid.Row="1" LostFocus="oznakaIzgubilaFocus" GotFocus="oznakaDobilaFokus" TextChanged="UnetaOznakaSoftvera" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Name="GreskaOznakaSoftvera" FontSize="12" VerticalAlignment="Bottom" Foreground="Red"/>
+                                    <Popup Name="popupOznaka"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=oznakaSoftver}"
+                                          Placement="Top">
+                                        <Grid x:Name="grid" Height="120" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Unesite oznaku za novi softver, ona mora biti jedinstvena na nivou sistema. Kada završite sa unosom, pređite na polje ispod." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Naziv:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.8*"/>
+                                        <ColumnDefinition Width="0.1*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Text="" Grid.Row="1" Grid.Column="0" Name="nazivSoftver" LostFocus="nazivIzgubioFokus" GotFocus="nazivDobioFokus" TextChanged="nazivPromenioTekst"  ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <Popup Name="popupNaziv"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=nazivSoftver}"
+                                          Placement="Top">
+                                        <Grid x:Name="gridpopupNaziv" Height="100" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Unesite naziv za novi softver. Kada završite sa unosom, pređite na polje ispod." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2*"/>
+                                        <RowDefinition Height="6*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Operativni sistem:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="12*"/>
+                                        <RowDefinition Height="6*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Name="stakRadioButton" IsEnabled="False" GotFocus="OSdobioFockus" LostFocus="OSizgubioFokus">
+                                        <StackPanel  >
+                                            <RadioButton Name="LinuxOSSoftver" Content="Linux"/>
+                                            <RadioButton Name="WindowsOSSoftver" Content="Windows"/>
+                                            <RadioButton Name="WindowsAndLinuxOSSoftver" Content="Linux i Windows" IsChecked="True"/>
+                                        </StackPanel>
+                                    </Viewbox>
+                                    <Popup Name="popupOS"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=stakRadioButton}"
+                                          Placement="Top">
+                                        <Grid x:Name="gridpopupOS" Height="100" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Odaberite jedan od ponuđenih operativnih sistema. Kada završite sa unosom, pređite na polje ispod." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="3*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Proizvođač:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Text="" Grid.Row="1" Grid.Column="0" Name="proizvodjacSoftver" LostFocus="proizvodjacIzgubioFokus" GotFocus="proizvodjacDobioFokus" TextChanged="UnetProizvodjac" IsEnabled="False" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <Popup Name="popupProizvodjac"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=proizvodjacSoftver}"
+                                          Placement="Top">
+                                        <Grid x:Name="gridpopupProizvodjac" Height="100" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Unesite naziv proizvođača softvera. Kada završite sa unosom, kliknite na dugme nastavi." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+                                
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="cancelButtonTab1" Foreground="White" Style="{StaticResource ButtonStyleOdustani}">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Odustani</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button IsEnabled="False" Grid.Column="1" Grid.Row="1" Click="nextClick" Name="nextButton" Foreground="White" LostFocus="nastaviIzgubioFokus" GotFocus="nastavioDobioFokus" Style="{StaticResource ButtonStyleNastavi}">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Nastavi <Bold>&gt;</Bold></TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Right" Modifiers="" Command="{StaticResource sledeciKorak}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                                <Popup Name="popupNastavi"
+                                            PlacementRectangle="-90,-10,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=nextButton}"
+                                          Placement="Top">
+                                    <Grid x:Name="gridpopupNastavi" Height="100" Width="200" Background="Transparent">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="40"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                            <StackPanel Orientation="Vertical">
+
+                                                <TextBlock TextWrapping="Wrap" Text="Kliknite na dugme da biste nastavili sa dodavanjem softvera." />
+
+                                            </StackPanel>
+                                        </Border>
+                                        <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="150,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </TabItem>
+
+                <TabItem Name="Korak2Softver" Width="200" Style="{StaticResource TabItem}" IsEnabled="False" GotFocus="otvorenDrugiTab">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <TextBlock Name="korak2" Text="Korak 2" FontSize="23" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                                    <Setter TargetName="korak2" Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                                    <Setter TargetName="korak2" Property="Foreground" Value="#FF4A4B4A"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="9*" />
+                            <RowDefinition Height="0.80*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="27*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="14*"/>
+                                    <ColumnDefinition Width="27*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Sajt:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="0.1*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Column="0" Grid.Row="1" Name="sajtSoftver" LostFocus="sajtIzgubioFokus" GotFocus="sajtDobioFokus" TextChanged="drugiTabPromenaTeksta" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <Popup Name="popupSajt"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=sajtSoftver}"
+                                          Placement="Top">
+                                        <Grid x:Name="gridpopupSajt" Height="100" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Unesite sajt softvera. Kada završite sa unosom, pređite na sledeće polje." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+                                
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Godina izdavanja:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.8*"/>
+                                        <ColumnDefinition Width="0.1*"/>
+                                        <ColumnDefinition Width="2.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="1" Grid.Column="0" Name="godinaSoftver" LostFocus="godinaIzgubilaFokus" GotFocus="godinaDobilaFokus" TextChanged="proveriUnetuGodinu" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <TextBlock Text="" Grid.Column="2" Grid.Row="1" Name="GreskaGodinaSoftver" FontSize="12" VerticalAlignment="Bottom" Foreground="Red"/>
+                                    <Popup Name="popupGodina"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=godinaSoftver}"
+                                          Placement="Top">
+                                        <Grid x:Name="gridpopupGodina" Height="100" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Unesite godinu izdavanja softvera. Kada završite sa unosom, pređite na sledeće polje." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Cena:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="2" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.8*"/>
+                                        <ColumnDefinition Width="0.1*"/>
+                                        <ColumnDefinition Width="2.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox IsEnabled="False" Grid.Row="1" Grid.Column="0" Name="cenaSoftver" LostFocus="cenaIzgubilaFokus" GotFocus="cenaDobilaFokus" TextChanged="proveriUnetuCenu" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <TextBlock Grid.Column="2" Grid.Row="1" Name="GreskaCenaSoftver" FontSize="12" VerticalAlignment="Bottom" Foreground="Red"/>
+                                    <Popup Name="popupCena"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=cenaSoftver}"
+                                          Placement="Top">
+                                        <Grid x:Name="gridpopupCena" Height="100" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Unesite cenu softvera. Kada završite sa unosom, pređite na sledeće polje." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+                                
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="4*"/>
+                                        <RowDefinition Height="4*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                                        <TextBlock>Opis:</TextBlock>
+                                    </Viewbox>
+                                </Grid>
+                                <Grid Grid.Row="3" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition Height="7*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox IsEnabled="false" Grid.Row="1" Grid.Column="0" Name="opisSoftver" LostFocus="opisIzgubioFokus" GotFocus="opisDobioFokus" TextChanged="UnetOpis" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <Popup Name="popupOpis"
+                                            PlacementRectangle="80,0,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=opisSoftver}"
+                                          Placement="Top">
+                                        <Grid x:Name="gridpopupOpis" Height="100" Width="200" Background="Transparent">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                                <StackPanel Orientation="Vertical">
+
+                                                    <TextBlock TextWrapping="Wrap" Text="Unesite opis softvera. Kada završite sa unosom, kliknite Završi." />
+
+                                                </StackPanel>
+                                            </Border>
+                                            <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="20,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                        </Grid>
+                                    </Popup>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="backClick" Name="backButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> <Bold>&lt;</Bold> Nazad</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Left" Modifiers="" Command="{StaticResource prethodniKorak}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Column="1" Grid.Row="1" Click="cancelClick" Name="cancelButtonTab2" Foreground="White" Style="{StaticResource ButtonStyleOdustani}">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Odustani</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="8*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="6*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Button IsEnabled="false" Grid.Column="1" Grid.Row="1" Click="finishClick" Name="finishButton" Foreground="White" GotFocus="zavrsiDobioFokus" LostFocus="zavrsiIzgubioFokus" Style="{StaticResource ButtonStyleZavrsi}">
+                                    <Button.Content>
+                                        <Viewbox Margin="5,0,5,0">
+                                            <TextBlock> Završi</TextBlock>
+                                        </Viewbox>
+                                    </Button.Content>
+                                    <Button.InputBindings>
+                                        <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
+                                    </Button.InputBindings>
+                                </Button>
+                                <Popup Name="popupZavrsi"
+                                            PlacementRectangle="-90,-10,0,0"
+                                           PopupAnimation="Slide"
+                                          AllowsTransparency="True"
+                                           PlacementTarget ="{Binding ElementName=finishButton}"
+                                          Placement="Top">
+                                    <Grid x:Name="gridpopupZavrsi" Height="100" Width="200" Background="Transparent">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="40"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderBrush="Silver" BorderThickness="1" Background="#e1e1ea" CornerRadius="5" Grid.Row="0" Padding="5">
+                                            <StackPanel Orientation="Vertical">
+
+                                                <TextBlock TextWrapping="Wrap" Text="Kliknite dugme da biste dodali softver." />
+
+                                            </StackPanel>
+                                        </Border>
+                                        <Path Fill="White" Stretch="Fill" Stroke="Silver" HorizontalAlignment="Left" Margin="150,-1.6,0,0" Width="25" Grid.Row="1" 
+                     Data="M22.166642,154.45381 L29.999666,187.66699 40.791059,154.54395"/>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </TabItem>
+
+            </TabControl>
+        </DockPanel>
+
+        <TextBlock Visibility="Hidden" Background="AliceBlue" Width="300" Height="100" Name="tutorijalTekst" VerticalAlignment="Top" HorizontalAlignment="Right"></TextBlock>
     </Grid>
 </Window>

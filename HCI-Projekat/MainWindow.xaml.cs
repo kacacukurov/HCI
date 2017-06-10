@@ -21,8 +21,6 @@ using System.Collections.Specialized;
 using Microsoft.Win32;
 using System.Text;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using System.Windows.Controls.Primitives;
 
 namespace HCI_Projekat
 {
@@ -52,6 +50,8 @@ namespace HCI_Projekat
         List<string> sugestijeSmerova;
         List<string> sugestijePredmeta;
         List<string> sugestijeSoftvera;
+
+        private bool tutorijalUkljucen;
 
         public MainWindow()
         {
@@ -104,7 +104,7 @@ namespace HCI_Projekat
             stekStanja = new UndoRedoStack();
             InitializeComponent();
             KalendarTab.Focus();
-
+            tutorijalUkljucen = false;
             racunarskiCentar = new RacunarskiCentar();
             DeserijalizacijaPodataka();
             inicijalizujPodatke();
@@ -115,6 +115,26 @@ namespace HCI_Projekat
             sugestijeSoftvera = new List<string>() { "?oznaka", "?naziv", "?opis", "?proizvodjac", "?sajt", "?godina_izdavanja", "?cena", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
             cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError, stekStanja, prethodnaStanjaAplikacije);
             chromeBrowser.RegisterJsObject("cefCustomObject", cef);
+            
+            //podesavanje pomeranja popup-a za tutorila prilikom pomeranja i resize-a prozora
+            Window w = Window.GetWindow(dodajSoftverButton);
+            if (null != w)
+            {
+                w.LocationChanged += delegate (object sender, EventArgs e)
+                {
+                    var offset = myPopup.HorizontalOffset;
+                    myPopup.HorizontalOffset = offset + 1;
+                    myPopup.HorizontalOffset = offset;
+                };
+
+                w.SizeChanged += delegate (object sender, SizeChangedEventArgs e)
+                {
+                    myPopup.TransformToAncestor(w);
+                    var offset = myPopup.HorizontalOffset;
+                    myPopup.HorizontalOffset = offset + 1;
+                    myPopup.HorizontalOffset = offset;
+                };
+            }
         }
 
         private void inicijalizujPodatke()
@@ -300,6 +320,15 @@ namespace HCI_Projekat
 
         private void dodavanjeSoftveraClick(object sender, RoutedEventArgs e)
         {
+            if (tutorijalUkljucen)
+            {
+                Tutorijal tutorijal = new Tutorijal(racunarskiCentar, softveriKolekcija, false, "", notifierSucces, stekStanja, prethodnaStanjaAplikacije);
+                tutorijal.ShowDialog();
+                myPopup.IsOpen = false;
+                tutorijalUkljucen = false;
+                return;
+            }
+
             if (tabControl.SelectedIndex != 4)
                 tabControl.SelectedIndex = 4;
             int stariBrojSoftvera = racunarskiCentar.Softveri.Count;
@@ -3608,6 +3637,39 @@ namespace HCI_Projekat
                 string str = HelpProvider.GetHelpKey((DependencyObject)focusedControl);
                 HelpProvider.ShowHelp("mainWindow", this);
             }
+        }
+
+        private void pokreniTutorijal(object sender, RoutedEventArgs e)
+        {
+            SoftverTab.Focus();
+            myPopup.IsOpen = true;
+            tutorijalUkljucen = true;
+        }
+
+        //poziva se kada se prozor deaktivira
+        private void skloniPopUp(object sender, EventArgs e)
+        {
+            myPopup.IsOpen = false;
+        }
+        //poziva se kada se prozor aktivira
+        private void prikaziPopUp(object sender, EventArgs e)
+        {
+            if (tutorijalUkljucen)
+                myPopup.IsOpen = true;
+        }
+        //poziva se kada se klikne na dugme za gasenje na popup-u
+        private void prekiniTutorijal(object sender, EventArgs e)
+        {
+            tutorijalUkljucen = false;
+            myPopup.IsOpen = false;
+        }
+
+        private void fokusiran(object sender, EventArgs e)
+        {
+            if (tutorijalUkljucen && (tabControl.SelectedIndex == 4))
+                myPopup.IsOpen = true;
+            else
+                myPopup.IsOpen = false;
         }
     }
 }

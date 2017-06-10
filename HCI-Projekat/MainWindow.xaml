@@ -519,7 +519,7 @@
                             <Image Source="picture/exitTutorial.png" HorizontalAlignment="Right" Stretch="UniformToFill" Width="17" Height="17"/>
                         </Button>
                         
-                        <TextBlock TextWrapping="Wrap" Text="Dobrodosli na tutorijal za dodavanje softvera. Pritisnite dugme za dodavanje." />
+                        <TextBlock TextWrapping="Wrap" Text="Dobrodošli na tutorijal za dodavanje softvera. Pritisnite dugme za dodavanje." />
                         
                     </StackPanel>
                 </Border>

@@ -50,7 +50,19 @@
     </p>
     <p>
         <h4>Pretraga softvera</h4>
-
+        Ukoliko ne postoji nijedna pojava ključne reci ("?oznaka", "?naziv", "?opis", "?proizvodjac", "?sajt", "?godina_izdavanja",
+         "?cena", "?=", "?!=", "?&gt;", "?&lt;", "?&lt;=", "?&gt;=")
+        u pretrazi, onda se pretraga izvršava tako što se uneta vrednost traži u svim obeležjima jednog softvera.
+        U suprotnom, radi se pretraga zasnovana na korišćenju upita. Dozvoljeno je postojanje jednog upita u polju za pretragu.
+        Ukoliko ih ima više, korisnik će biti obavešten o ograničenom broju istih.
+        Upit ima oblik _KLJUČNA_REC _OPERATOR _VREDNOST gde ključna reč može biti iz skupa ("?oznaka", "?naziv", "?opis", "?proizvođac",
+         "?sajt", "?godina_izdavanja", "?cena"),
+        operand iz skupa (?!=, ?=, ?&gt;, ?&lt;, ?&lt;=, ?&gt;=), dok vrednost može biti bilo šta. Ukoliko se kao ključna reč na početku upita
+        odabere neka iz skupa ?godina_izdavanja, tada vrednost koja se unosi nakon operatora mora biti ceo broj, kako bi upit bio validan.
+        Takođe, ukoliko je uneta ključna reč ?cena, tada vrednost nakon operatora mora biti ceo ili realan broj, kako bi upit bio validan.
+        Relacije koje se unose na mestu operatora imaju svoje standarno značenje i primenjuju se na obeležje softvera koje
+        je predstavljeno ključnom rečju sa pocetka upita.
+        Ukoliko bilo koje od pravila bude narušeno, korisniku će se pojaviti adekvatno obaveštenje. <br/>
         Prečica na tastaturi da bi se fokusirala pretraga je <b>Ctrl+Shift+P</b>.
     </p>
     <p>

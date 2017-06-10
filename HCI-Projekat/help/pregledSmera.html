@@ -46,7 +46,16 @@
     </p>
     <p>
         <h4>Pretraga smerova</h4>
-
+        Ukoliko ne postoji nijedna pojava ključne reči ("?naziv", "?oznaka", "?opis", "?=", "?!=", "?&gt;", "?&lt;", "?&gt;=",
+         "?&lt;=")
+        u pretrazi, onda se pretraga izvršava tako što se uneta vrednost traži u svim obeležjima jednog smera.
+        U suprotnom, radi se pretraga zasnovana na korišćenju upita. Dozvoljeno je postojanje jednog upita u polju za pretragu.
+        Ukoliko ih ima više, korisnik će biti obavešten o ograničenom broju istih.
+        Upit ima oblik _KLJUČNA_REC _OPERATOR _VREDNOST gde ključna rec može biti iz skupa ("?oznaka", "?naziv", "?opis"),
+        operand iz skupa (?!=, ?=), dok vrednost može biti bilo šta.
+        Relacije koje se unose na mestu operatora imaju svoje standarno značenje i primenjuju se na obeležje smera koje
+        je predstavljeno ključnom rečju sa poćetka upita.
+        Ukoliko bilo koje od pravila bude narušeno, korisniku će se pojaviti adekvatno obaveštenje.<br />
         Prečica na tastaturi da bi se fokusirala pretraga je <b>Ctrl+Shift+P</b>.
     </p>
     <p>
@@ -54,7 +63,8 @@
         Filer funkcioniše tako što je potrebno najpre odabrati kriterijum po kome se vrši filtriranje. Kriterijum po kome je
         moguće izvršiti filtriranje na tabelom, su podaci predmeta po kolonama. Listu kriterijuma filtera je moguće automatski
         otvoriti pomoću <b>Alt+Up</b> ili <b>Alt+Down</b> prečica na tastaturi. Nakon što korisnik odabere kriterijum,
-        potrebno je da u tekstualnom polju za unos, koje se nalazi pored, unese tekst koji želi da pretražuje u tabeli.<br />
+        potrebno je da u tekstualnom polju za unos, koje se nalazi pored, unese tekst koji želi da pretražuje u tabeli, osim ako
+        je odabrao datum uvođenja. U tom slučaju se pojavljuju dva polja i potrebno je odabrati opseg datuma koji se pretražuje.<br />
         Prečica na tastaturi da bi se fokusirao filter je <b>Ctrl+Shift+F</b>.
     </p>
     <img src="pictures/filterSmera.png" alt="tab1" class="picture" />

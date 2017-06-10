@@ -47,7 +47,11 @@ namespace HCI_Projekat
         private Notifier notifierSucces;
         private Notifier notifierError;
         private Notifier notifierUndoRedo;
-        private DispatcherTimer timer;
+
+        List<string> sugestijeUcionica;
+        List<string> sugestijeSmerova;
+        List<string> sugestijePredmeta;
+        List<string> sugestijeSoftvera;
 
         public MainWindow()
         {
@@ -99,27 +103,18 @@ namespace HCI_Projekat
             // stek za undo redo mehanizam za kolekciju stanja aplikacije
             stekStanja = new UndoRedoStack();
             InitializeComponent();
-            Loaded += OnLoaded;
             KalendarTab.Focus();
 
             racunarskiCentar = new RacunarskiCentar();
             DeserijalizacijaPodataka();
             inicijalizujPodatke();
             InitializeChromium();
+            sugestijeUcionica = new List<string>() { "?br_mesta", "?oznaka", "?opis", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
+            sugestijePredmeta = new List<string>() { "?oznaka", "?naziv", "?opis", "?velicina_grupe", "?min_duzina_termina", "?br_termina", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
+            sugestijeSmerova = new List<string>() { "?naziv", "?oznaka", "?opis", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
+            sugestijeSoftvera = new List<string>() { "?oznaka", "?naziv", "?opis", "?proizvodjac", "?sajt", "?godina_izdavanja", "?cena", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
             cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError, stekStanja, prethodnaStanjaAplikacije);
             chromeBrowser.RegisterJsObject("cefCustomObject", cef);
-        }
-
-        private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            this.timer = new DispatcherTimer(new TimeSpan(0, 0, 6), DispatcherPriority.Normal, OnTimerTick, Dispatcher);
-            this.timer.Start();
-        }
-
-        private void OnTimerTick(object sender, EventArgs e)
-        {
-            var balloon = new CustomBalloon { BalloonText = "Ring Ring" };
-            tb.ShowCustomBalloon(balloon, PopupAnimation.Scroll, 3000);
         }
 
         private void inicijalizujPodatke()
@@ -174,6 +169,10 @@ namespace HCI_Projekat
             tabelaUcionica.UnselectAll();
             detaljanPrikazUcionica.Visibility = Visibility.Hidden;
 
+            UcionicaPretragaUnos.TextChanged += txtAuto_TextChanged;
+            PredmetPretragaUnos.TextChanged += txtAuto_TextChanged;
+            SmerPretragaUnos.TextChanged += txtAuto_TextChanged;
+            SoftverPretragaUnos.TextChanged += txtAuto_TextChanged;
         }
 
         private void InitializeChromium()
@@ -739,24 +738,28 @@ namespace HCI_Projekat
             // trenutno smo u tabu za ucionice
             if (tabControl.SelectedIndex == 1)
             {
+                UcionicaPretragaUnos.Text = "";
                 UcionicaFilterKriterijum.IsDropDownOpen = true;
                 UcionicaFilterKriterijum.Focus();
             }
             // trenutno smo u tabu za predmete
             else if (tabControl.SelectedIndex == 2)
             {
+                PredmetPretragaUnos.Text = "";
                 PredmetFilterKriterijum.IsDropDownOpen = true;
                 PredmetFilterKriterijum.Focus();
             }
             // trenutno smo u tabu za smerove
             else if (tabControl.SelectedIndex == 3)
             {
+                SmerPretragaUnos.Text = "";
                 SmerFilterKriterijum.IsDropDownOpen = true;
                 SmerFilterKriterijum.Focus();
             }
             // trenutno smo u tabu za softvere
             else if (tabControl.SelectedIndex == 4)
             {
+                SoftverPretragaUnos.Text = "";
                 SoftverFilterKriterijum.IsDropDownOpen = true;
                 SoftverFilterKriterijum.Focus();
             }
@@ -860,14 +863,18 @@ namespace HCI_Projekat
                 {
                     // kao kriterijum za filtriranje je izabran datum uvođenja
                     SmerFilterUnos.Visibility = Visibility.Hidden;
-                    SmerFilterDatumVrednost.Visibility = Visibility.Visible;
-                    SmerFilterDatumVrednost.Text = "";
+                    FilterGrid.Visibility = Visibility.Hidden;
+                    DateGrid.Visibility = Visibility.Visible;
+                    SmerFilterDatumOdVrednost.Text = "";
+                    SmerFilterDatumDoVrednost.Text = "";
                 }
                 else
                 {
                     SmerFilterUnos.Visibility = Visibility.Visible;
-                    SmerFilterDatumVrednost.Visibility = Visibility.Hidden;
-                    SmerFilterDatumVrednost.Text = "";
+                    FilterGrid.Visibility = Visibility.Visible;
+                    DateGrid.Visibility = Visibility.Hidden;
+                    SmerFilterDatumOdVrednost.Text = "";
+                    SmerFilterDatumDoVrednost.Text = "";
                 }
                 ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
                 cv.Filter = null;
@@ -892,6 +899,34 @@ namespace HCI_Projekat
                 ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
                 cv.Filter = null;
             }
+        }
+
+        private void otvoriDatum1(object sender, KeyEventArgs e)
+        {
+            if (SmerFilterDatumDoVrednost.IsDropDownOpen)
+                SmerFilterDatumDoVrednost.IsDropDownOpen = false;
+            if (e.Key == Key.Tab)
+            {
+                if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
+                    SmerFilterDatumOdVrednost.IsDropDownOpen = true; 
+            }
+        }
+
+        private void otvoriDatum2(object sender, KeyEventArgs e)
+        {
+            SmerFilterDatumOdVrednost.IsDropDownOpen = false;
+            if (e.Key == Key.Tab)
+            {
+                if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
+                    SmerFilterDatumDoVrednost.IsDropDownOpen = true;
+            }
+        }
+
+        private void otvoriUnazadDatum1(object sender, KeyEventArgs e)
+        {
+            SmerFilterDatumDoVrednost.IsDropDownOpen = false;
+            if (e.Key == Key.Tab && (Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift)
+                SmerFilterDatumOdVrednost.IsDropDownOpen = true;
         }
 
         private void filtrirajPoVrednosti(object sender, TextChangedEventArgs e)
@@ -1032,17 +1067,99 @@ namespace HCI_Projekat
                 if (indexKriterijuma == 2)
                 {
                     // izabrano je filtriranje po datumu uvodjenja
-                    string vrednost = SmerFilterDatumVrednost.Text.Trim();
+                    string vrednostOd = SmerFilterDatumOdVrednost.Text.Trim();
+                    string vrednostDo = SmerFilterDatumDoVrednost.Text.Trim();
 
                     ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
-                    if (vrednost == "")
+                    if (vrednostOd == "" && vrednostDo == "")
                         cv.Filter = null;
                     else
                     {
                         cv.Filter = o =>
                         {
                             Smer s = o as Smer;
-                            return (s.Datum.Equals(DateTime.Parse(vrednost).ToString("dd/MM/yyyy")));
+                            try
+                            {
+                                if(vrednostOd != "")
+                                    vrednostOd = DateTime.Parse(vrednostOd).ToString("dd/MM/yyyy");
+                                if(vrednostDo != "")    
+                                    vrednostDo = DateTime.Parse(vrednostDo).ToString("dd/MM/yyyy");
+                                string dan1 = "";
+                                string dan2 = "";
+                                string mesec1 = "";
+                                string mesec2 = "";
+                                string godina1 = "";
+                                string godina2 = "";
+                                if (vrednostOd != "" && vrednostDo == "")
+                                {
+                                    string[] tokensOd = vrednostOd.Split('-');
+                                    dan1 = tokensOd[0];
+                                    mesec1 = tokensOd[1];
+                                    godina1 = tokensOd[2];
+                                    DateTime dateOd = new DateTime(Int32.Parse(godina1), Int32.Parse(mesec1), Int32.Parse(dan1));
+
+                                    string[] tokensTekuci = s.Datum.Split('-');
+                                    string dan = tokensTekuci[0];
+                                    string mesec = tokensTekuci[1];
+                                    string godina = tokensTekuci[2];
+                                    DateTime dateTekuci = new DateTime(Int32.Parse(godina), Int32.Parse(mesec), Int32.Parse(dan));
+
+                                    int odnosGodina = DateTime.Compare(dateOd, dateTekuci);
+
+                                    // gledamo datume vece ili jednake datumu koji je izabran kao pocetni
+                                    return (odnosGodina <= 0);
+                                }
+                                else if (vrednostOd == "" && vrednostDo != "")
+                                {
+                                    string[] tokensDo = vrednostDo.Split('-');
+                                    dan2 = tokensDo[0];
+                                    mesec2 = tokensDo[1];
+                                    godina2 = tokensDo[2];
+                                    DateTime dateDo = new DateTime(Int32.Parse(godina2), Int32.Parse(mesec2), Int32.Parse(dan2));
+
+                                    string[] tokensTekuci = s.Datum.Split('-');
+                                    string dan = tokensTekuci[0];
+                                    string mesec = tokensTekuci[1];
+                                    string godina = tokensTekuci[2];
+                                    DateTime dateTekuci = new DateTime(Int32.Parse(godina), Int32.Parse(mesec), Int32.Parse(dan));
+
+                                    int odnosGodina = DateTime.Compare(dateDo, dateTekuci);
+
+                                    // gledamo datume manje ili jednake datumu koji je izabran kao krajnji
+                                    return (odnosGodina >= 0);
+                                }
+                                else
+                                {
+                                    string[] tokensOd = vrednostOd.Split('-');
+                                    dan1 = tokensOd[0];
+                                    mesec1 = tokensOd[1];
+                                    godina1 = tokensOd[2];
+                                    DateTime dateOd = new DateTime(Int32.Parse(godina1), Int32.Parse(mesec1), Int32.Parse(dan1));
+
+                                    string[] tokensDo = vrednostDo.Split('-');
+                                    dan2 = tokensDo[0];
+                                    mesec2 = tokensDo[1];
+                                    godina2 = tokensDo[2];
+                                    DateTime dateDo = new DateTime(Int32.Parse(godina2), Int32.Parse(mesec2), Int32.Parse(dan2));
+
+                                    string[] tokensTekuci = s.Datum.Split('-');
+                                    string dan = tokensTekuci[0];
+                                    string mesec = tokensTekuci[1];
+                                    string godina = tokensTekuci[2];
+                                    DateTime dateTekuci = new DateTime(Int32.Parse(godina), Int32.Parse(mesec), Int32.Parse(dan));
+
+                                    int odnosGodinaOd = DateTime.Compare(dateOd, dateTekuci);
+                                    int odnosGodinaDo = DateTime.Compare(dateDo, dateTekuci);
+
+                                    // gledamo datume vece ili jednake datumu koji je izabran kao pocetni
+                                    // i datume manje ili jednake datumu koji je izabran kao krajnji
+                                    return (odnosGodinaOd <= 0 && odnosGodinaDo >= 0);
+                                }
+                            }
+                            catch
+                            {
+                                return false;
+                            }
                         };
                     }
                 }
@@ -1100,11 +1217,1281 @@ namespace HCI_Projekat
             }
         }
 
-        private void pretraziUcionice(object sender, TextChangedEventArgs e)
+        public void pronadjiUcionicuClick(object sender, EventArgs e)
         {
-            TextBox t = (TextBox)sender;
-            string parametar = t.Text.Trim();
+            string upit = UcionicaPretragaUnos.Text.Trim();
+            List<string> tokens = System.Text.RegularExpressions.Regex.Split(upit, @"\s{1,}").ToList();
 
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
+            if (tokens.Count == 1 && tokens[0] == "")
+                cv.Filter = null;
+            else
+            {
+                bool nemaReciSaUpitnikom = true;
+                foreach(string token in tokens)
+                {
+                    if(token.StartsWith("?"))
+                    {
+                        nemaReciSaUpitnikom = false;
+                        break;
+                    }
+                }
+
+                if(nemaReciSaUpitnikom)
+                {
+                    // radimo pretragu po svim kolonama na osnovu unetog stringa
+                    pretraziUcionice(upit);
+                }
+                else
+                {
+                    // postoje kljucne reci za definisanje upita, pa radimo pretragu po datom upitu
+                    //provera da li je redosled tokena dobar
+                    List<string> kljucne_reci_1 = new List<string>() { "?br_mesta", "?oznaka", "?opis" };
+                    string kljucna_rec_2 = "?br_mesta";
+                    List<string> operatori_ar = new List<string>() { "?<", "?>", "?<=", "?>=", "?=", "?!=" };
+                    bool loseDefinisanUpit = false;
+
+                    int brojReciSaUpitnikom = 0;
+                    foreach(string token in tokens)
+                    {
+                        if (token.StartsWith("?"))
+                            brojReciSaUpitnikom++;
+                    }
+
+                    if(brojReciSaUpitnikom > 2)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        UcionicaPretragaUnos.Focus();
+                        UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
+                        return;
+                    }
+
+                    // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
+                    if (!kljucne_reci_1.Contains(tokens[0]))
+                        loseDefinisanUpit = true;
+                    else
+                    {
+                        if(tokens[0] == kljucna_rec_2)
+                        {
+                            // operator moze biti bilo sta
+                            if (!operatori_ar.Contains(tokens[1]))
+                                loseDefinisanUpit = true;
+                            else
+                            {
+                                // proveravamo da li iza operatora ima dva stringa
+                                if (tokens.Count > 3)
+                                    loseDefinisanUpit = true;
+                                else {
+                                    // vrednost iza operatora mora biti int vrednost
+                                    try
+                                    {
+                                        Int32.Parse(tokens[2]);
+                                    }
+                                    catch
+                                    {
+                                        loseDefinisanUpit = true;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // operator moze biti != ili =
+                            if (tokens[1] != "?=" && tokens[1] != "?!=")
+                                loseDefinisanUpit = true;
+                        }
+                    }
+
+                    if(loseDefinisanUpit)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Loše definisan upit u pretrazi učionica!");
+                        UcionicaPretragaUnos.Focus();
+                        UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
+                    }
+                    else
+                    {
+                        // obrada uslova
+                        string prviOperand = tokens[0].Substring(1, tokens[0].Length - 1);
+                        string operatorToken = tokens[1].Substring(1, tokens[1].Length - 1);
+                        string drugiOperand = "";
+                        if (prviOperand == "br_mesta")
+                            drugiOperand = tokens[2];
+                        else
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            for(int i = 2; i<tokens.Count; i++)
+                            {
+                                if (i == tokens.Count - 1)
+                                    sb.Append(tokens[i]);
+                                else
+                                    sb.Append(tokens[i] + " ");
+                            }
+                            drugiOperand = sb.ToString();
+                        }
+
+                        int brojPrviOperand = 0;
+                        int brojOperator = 0;
+
+                        if (prviOperand == "oznaka")
+                            brojPrviOperand = 1;
+                        else if (prviOperand == "opis")
+                            brojPrviOperand = 2;
+                        else if (prviOperand == "br_mesta")
+                            brojPrviOperand = 3;
+
+                        if (operatorToken == "!=")
+                            brojOperator = 1;
+                        else if (operatorToken == "=")
+                            brojOperator = 2;
+                        else if (operatorToken == ">")
+                            brojOperator = 3;
+                        else if (operatorToken == "<")
+                            brojOperator = 4;
+                        else if (operatorToken == ">=")
+                            brojOperator = 5;
+                        else if (operatorToken == "<=")
+                            brojOperator = 6;
+
+                        if (brojPrviOperand == 3)
+                        {
+                            // filter po broju mesta
+                            int vrednost = Int32.Parse(drugiOperand);
+
+                            cv.Filter = o =>
+                            {
+                                Ucionica u = o as Ucionica;
+                                if (brojOperator == 1)
+                                    // br mesta != vrednost
+                                    return (u.BrojRadnihMesta != vrednost);
+                                else if (brojOperator == 2)
+                                    // br mesta = vrednost
+                                    return (u.BrojRadnihMesta == vrednost);
+                                else if (brojOperator == 3)
+                                    // br mesta > vrednost
+                                    return (u.BrojRadnihMesta > vrednost);
+                                else if (brojOperator == 4)
+                                    // br mesta < vrednost
+                                    return (u.BrojRadnihMesta < vrednost);
+                                else if (brojOperator == 5)
+                                    // br mesta >= vrednost
+                                    return (u.BrojRadnihMesta >= vrednost);
+                                else
+                                    // br mesta <= vrednost
+                                    return (u.BrojRadnihMesta <= vrednost);
+                            };
+                        }
+                        else if (brojPrviOperand == 1)
+                        {
+                            // filter po oznaci
+                            cv.Filter = o =>
+                            {
+                                Ucionica u = o as Ucionica;
+                                if (brojOperator == 1)
+                                    // oznaka != vrednost
+                                    return (!u.Oznaka.Equals(drugiOperand));
+                                else
+                                    // oznaka = vrednost
+                                    return (u.Oznaka.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 2)
+                        {
+                            // filter po opisu
+                            cv.Filter = o =>
+                            {
+                                Ucionica u = o as Ucionica;
+                                if (brojOperator == 1)
+                                    // opis != vrednost
+                                    return (!u.Opis.Equals(drugiOperand));
+                                else
+                                    // opis = vrednost
+                                    return (u.Opis.Equals(drugiOperand));
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
+        public void pronadjiPredmetClick(object sender, EventArgs e)
+        {
+            string upit = PredmetPretragaUnos.Text.Trim();
+            List<string> tokens = System.Text.RegularExpressions.Regex.Split(upit, @"\s{1,}").ToList();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+            if (tokens.Count == 1 && tokens[0] == "")
+                cv.Filter = null;
+            else
+            {
+                bool nemaReciSaUpitnikom = true;
+                foreach (string token in tokens)
+                {
+                    if (token.StartsWith("?"))
+                    {
+                        nemaReciSaUpitnikom = false;
+                        break;
+                    }
+                }
+
+                if (nemaReciSaUpitnikom)
+                {
+                    // radimo pretragu po svim kolonama na osnovu unetog stringa
+                    pretraziPredmete(upit);
+                }
+                else
+                {
+                    // postoje kljucne reci za definisanje upita, pa radimo pretragu po datom upitu
+                    //provera da li je redosled tokena dobar
+                    List<string> kljucne_reci_1 = new List<string>() { "?oznaka", "?naziv", "?opis", "?velicina_grupe", "?min_duzina_termina", "?br_termina" };
+                    List<string> operatori_ar = new List<string>() { "?<", "?>", "?<=", "?>=", "?=", "?!=" };
+                    bool loseDefinisanUpit = false;
+
+                    int brojReciSaUpitnikom = 0;
+                    foreach (string token in tokens)
+                    {
+                        if (token.StartsWith("?"))
+                            brojReciSaUpitnikom++;
+                    }
+
+                    if (brojReciSaUpitnikom > 2)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        PredmetPretragaUnos.Focus();
+                        PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
+                        return;
+                    }
+
+                    // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
+                    if (!kljucne_reci_1.Contains(tokens[0]))
+                        loseDefinisanUpit = true;
+                    else
+                    {
+                        if (tokens[0] == "?velicina_grupe" || tokens[0] == "?min_duzina_termina" || tokens[0] == "?br_termina") 
+                        {
+                            if (tokens.Count > 3)
+                                loseDefinisanUpit = true;
+                            else
+                            {
+                                // operator moze biti bilo sta
+                                if (!operatori_ar.Contains(tokens[1]))
+                                    loseDefinisanUpit = true;
+                                else
+                                {
+                                    // vrednost iza operatora mora biti int vrednost
+                                    try
+                                    {
+                                        Int32.Parse(tokens[2]);
+                                    }
+                                    catch
+                                    {
+                                        loseDefinisanUpit = true;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // operator moze biti != ili =
+                            if (tokens[1] != "?=" && tokens[1] != "?!=")
+                                loseDefinisanUpit = true;
+                        }
+                    }
+
+                    if (loseDefinisanUpit)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Loše definisan upit u pretrazi predmeta!");
+                        PredmetPretragaUnos.Focus();
+                        PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
+                    }
+                    else
+                    {
+                        // obrada uslova
+                        string prviOperand = tokens[0].Substring(1, tokens[0].Length - 1);
+                        string operatorToken = tokens[1].Substring(1, tokens[1].Length - 1);
+                        string drugiOperand = "";
+                        if (prviOperand == "velicina_grupe" || prviOperand == "min_duzina_termina" || prviOperand == "br_termina")
+                            drugiOperand = tokens[2];
+                        else
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 2; i < tokens.Count; i++)
+                            {
+                                if (i == tokens.Count - 1)
+                                    sb.Append(tokens[i]);
+                                else
+                                    sb.Append(tokens[i] + " ");
+                            }
+                            drugiOperand = sb.ToString();
+                        }
+
+                        int brojPrviOperand = 0;
+                        int brojOperator = 0;
+
+                        if (prviOperand == "naziv")
+                            brojPrviOperand = 1;
+                        else if (prviOperand == "oznaka")
+                            brojPrviOperand = 2;
+                        else if (prviOperand == "opis")
+                            brojPrviOperand = 3;
+                        else if (prviOperand == "velicina_grupe")
+                            brojPrviOperand = 4;
+                        else if (prviOperand == "min_duzina_termina")
+                            brojPrviOperand = 5;
+                        else if (prviOperand == "br_termina")
+                            brojPrviOperand = 6;
+
+                        if (operatorToken == "!=")
+                            brojOperator = 1;
+                        else if (operatorToken == "=")
+                            brojOperator = 2;
+                        else if (operatorToken == ">")
+                            brojOperator = 3;
+                        else if (operatorToken == "<")
+                            brojOperator = 4;
+                        else if (operatorToken == ">=")
+                            brojOperator = 5;
+                        else if (operatorToken == "<=")
+                            brojOperator = 6;
+
+                        if (brojPrviOperand == 1)
+                        {
+                            // filter po nazivu
+                            cv.Filter = o =>
+                            {
+                                Predmet p = o as Predmet;
+                                if (brojOperator == 1)
+                                    // naziv != vrednost
+                                    return (!p.Naziv.Equals(drugiOperand));
+                                else
+                                    // naziv = vrednost
+                                    return (p.Naziv.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 2)
+                        {
+                            // filter po oznaci
+                            cv.Filter = o =>
+                            {
+                                Predmet p = o as Predmet;
+                                if (brojOperator == 1)
+                                    // oznaka != vrednost
+                                    return (!p.Oznaka.Equals(drugiOperand));
+                                else
+                                    // oznaka = vrednost
+                                    return (p.Oznaka.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 3)
+                        {
+                            // filter po opisu
+                            cv.Filter = o =>
+                            {
+                                Predmet p = o as Predmet;
+                                if (brojOperator == 1)
+                                    // opis != vrednost
+                                    return (!p.Opis.Equals(drugiOperand));
+                                else
+                                    // opis = vrednost
+                                    return (p.Opis.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 4)
+                        {
+                            // filter po velicini grupe
+                            int vrednost = Int32.Parse(drugiOperand);
+
+                            cv.Filter = o =>
+                            {
+                                Predmet p = o as Predmet;
+                                if (brojOperator == 1)
+                                    // vel grupe != vrednost
+                                    return (p.VelicinaGrupe != vrednost);
+                                else if (brojOperator == 2)
+                                    // vel grupe = vrednost
+                                    return (p.VelicinaGrupe == vrednost);
+                                else if (brojOperator == 3)
+                                    // vel grupe > vrednost
+                                    return (p.VelicinaGrupe > vrednost);
+                                else if (brojOperator == 4)
+                                    // vel grupe < vrednost
+                                    return (p.VelicinaGrupe < vrednost);
+                                else if (brojOperator == 5)
+                                    // vel grupe >= vrednost
+                                    return (p.VelicinaGrupe >= vrednost);
+                                else
+                                    // vel grupe <= vrednost
+                                    return (p.VelicinaGrupe <= vrednost);
+                            };
+                        }
+                        else if (brojPrviOperand == 5)
+                        {
+                            // filter po minimalnoj duzini termina
+                            int vrednost = Int32.Parse(drugiOperand);
+
+                            cv.Filter = o =>
+                            {
+                                Predmet p = o as Predmet;
+                                if (brojOperator == 1)
+                                    // min duzina != vrednost
+                                    return (p.MinDuzinaTermina != vrednost);
+                                else if (brojOperator == 2)
+                                    // min duzina = vrednost
+                                    return (p.MinDuzinaTermina == vrednost);
+                                else if (brojOperator == 3)
+                                    // min duzina > vrednost
+                                    return (p.MinDuzinaTermina > vrednost);
+                                else if (brojOperator == 4)
+                                    // min duzina < vrednost
+                                    return (p.MinDuzinaTermina < vrednost);
+                                else if (brojOperator == 5)
+                                    // min duzina >= vrednost
+                                    return (p.MinDuzinaTermina >= vrednost);
+                                else
+                                    // min duzina <= vrednost
+                                    return (p.MinDuzinaTermina <= vrednost);
+                            };
+                        }
+                        else if (brojPrviOperand == 6)
+                        {
+                            // filter po broju termina
+                            int vrednost = Int32.Parse(drugiOperand);
+
+                            cv.Filter = o =>
+                            {
+                                Predmet p = o as Predmet;
+                                if (brojOperator == 1)
+                                    // br termina != vrednost
+                                    return (p.BrTermina != vrednost);
+                                else if (brojOperator == 2)
+                                    // br termina = vrednost
+                                    return (p.BrTermina == vrednost);
+                                else if (brojOperator == 3)
+                                    // br termina > vrednost
+                                    return (p.BrTermina > vrednost);
+                                else if (brojOperator == 4)
+                                    // br termina < vrednost
+                                    return (p.BrTermina < vrednost);
+                                else if (brojOperator == 5)
+                                    // br termina >= vrednost
+                                    return (p.BrTermina >= vrednost);
+                                else
+                                    // br termina <= vrednost
+                                    return (p.BrTermina <= vrednost);
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
+        public void pronadjiSmerClick(object sender, EventArgs e)
+        {
+            string upit = SmerPretragaUnos.Text.Trim();
+            List<string> tokens = System.Text.RegularExpressions.Regex.Split(upit, @"\s{1,}").ToList();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
+            if (tokens.Count == 1 && tokens[0] == "")
+                cv.Filter = null;
+            else
+            {
+                bool nemaReciSaUpitnikom = true;
+                foreach (string token in tokens)
+                {
+                    if (token.StartsWith("?"))
+                    {
+                        nemaReciSaUpitnikom = false;
+                        break;
+                    }
+                }
+
+                if (nemaReciSaUpitnikom)
+                {
+                    // radimo pretragu po svim kolonama na osnovu unetog stringa
+                    pretraziSmerove(upit);
+                }
+                else
+                {
+                    // postoje kljucne reci za definisanje upita, pa radimo pretragu po datom upitu
+                    //provera da li je redosled tokena dobar
+                    List<string> kljucne_reci_1 = new List<string>() { "?naziv", "?oznaka", "?opis" };
+                    List<string> operatori_ar = new List<string>() { "?=", "?!=" };
+                    bool loseDefinisanUpit = false;
+
+                    int brojReciSaUpitnikom = 0;
+                    foreach (string token in tokens)
+                    {
+                        if (token.StartsWith("?"))
+                            brojReciSaUpitnikom++;
+                    }
+
+                    if (brojReciSaUpitnikom > 2)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        SmerPretragaUnos.Focus();
+                        SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
+                        return;
+                    }
+
+                    // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
+                    if (!kljucne_reci_1.Contains(tokens[0]))
+                        loseDefinisanUpit = true;
+                    else
+                    {
+                        // operator moze biti bilo sta
+                        if (!operatori_ar.Contains(tokens[1]))
+                            loseDefinisanUpit = true;
+                    }
+
+                    if (loseDefinisanUpit)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Loše definisan upit u pretrazi smerova!");
+                        SmerPretragaUnos.Focus();
+                        SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
+                    }
+                    else
+                    {
+                        // obrada uslova
+                        string prviOperand = tokens[0].Substring(1, tokens[0].Length - 1);
+                        string operatorToken = tokens[1].Substring(1, tokens[1].Length - 1);
+                        
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 2; i < tokens.Count; i++)
+                        {
+                            if (i == tokens.Count - 1)
+                                sb.Append(tokens[i]);
+                            else
+                                sb.Append(tokens[i] + " ");
+                        }
+                        string drugiOperand = sb.ToString();
+                        
+
+                        int brojPrviOperand = 0;
+                        int brojOperator = 0;
+
+                        if (prviOperand == "oznaka")
+                            brojPrviOperand = 1;
+                        else if (prviOperand == "naziv")
+                            brojPrviOperand = 2;
+                        else if (prviOperand == "opis")
+                            brojPrviOperand = 3;
+
+                        if (operatorToken == "!=")
+                            brojOperator = 1;
+                        else if (operatorToken == "=")
+                            brojOperator = 2;
+
+                        if (brojPrviOperand == 1)
+                        {
+                            // filter po oznaci
+                            cv.Filter = o =>
+                            {
+                                Smer s = o as Smer;
+                                if (brojOperator == 1)
+                                    // oznaka != vrednost
+                                    return (!s.Oznaka.Equals(drugiOperand));
+                                else
+                                    // oznaka = vrednost
+                                    return (s.Oznaka.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 2)
+                        {
+                            // filter po nazivu
+                            cv.Filter = o =>
+                            {
+                                Smer s = o as Smer;
+                                if (brojOperator == 1)
+                                    // naziv != vrednost
+                                    return (!s.Naziv.Equals(drugiOperand));
+                                else
+                                    // naziv = vrednost
+                                    return (s.Naziv.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 3)
+                        {
+                            // filter po opisu
+                            cv.Filter = o =>
+                            {
+                                Smer s = o as Smer;
+                                if (brojOperator == 1)
+                                    // opis != vrednost
+                                    return (!s.Opis.Equals(drugiOperand));
+                                else
+                                    // opis = vrednost
+                                    return (s.Opis.Equals(drugiOperand));
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
+        public void pronadjiSoftverClick(object sender, EventArgs e)
+        {
+            string upit = SoftverPretragaUnos.Text.Trim();
+            List<string> tokens = System.Text.RegularExpressions.Regex.Split(upit, @"\s{1,}").ToList();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
+            if (tokens.Count == 1 && tokens[0] == "")
+                cv.Filter = null;
+            else
+            {
+                bool nemaReciSaUpitnikom = true;
+                foreach (string token in tokens)
+                {
+                    if (token.StartsWith("?"))
+                    {
+                        nemaReciSaUpitnikom = false;
+                        break;
+                    }
+                }
+
+                if (nemaReciSaUpitnikom)
+                {
+                    // radimo pretragu po svim kolonama na osnovu unetog stringa
+                    pretraziSoftvere(upit);
+                }
+                else
+                {
+                    // postoje kljucne reci za definisanje upita, pa radimo pretragu po datom upitu
+                    //provera da li je redosled tokena dobar
+                    List<string> kljucne_reci_1 = new List<string>() { "?oznaka", "?naziv", "?opis", "?proizvodjac", "?sajt", "?godina_izdavanja", "?cena" };
+                    List<string> operatori_ar = new List<string>() { "?<", "?>", "?<=", "?>=", "?=", "?!=" };
+                    bool loseDefinisanUpit = false;
+
+                    int brojReciSaUpitnikom = 0;
+                    foreach (string token in tokens)
+                    {
+                        if (token.StartsWith("?"))
+                            brojReciSaUpitnikom++;
+                    }
+
+                    if (brojReciSaUpitnikom > 2)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        SoftverPretragaUnos.Focus();
+                        SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
+                        return;
+                    }
+
+                    // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
+                    if (!kljucne_reci_1.Contains(tokens[0]))
+                        loseDefinisanUpit = true;
+                    else
+                    {
+                        if (tokens[0] == "?godina_izdavanja" || tokens[0] == "?cena")
+                        {
+                            if (tokens.Count > 3)
+                                loseDefinisanUpit = true;
+                            else {
+                                // operator moze biti bilo sta
+                                if (!operatori_ar.Contains(tokens[1]))
+                                    loseDefinisanUpit = true;
+                                else
+                                {
+                                    if (tokens[0] == "?godina_izdavanja")
+                                    {
+                                        // vrednost iza operatora mora biti int vrednost
+                                        try
+                                        {
+                                            Int32.Parse(tokens[2]);
+                                        }
+                                        catch
+                                        {
+                                            loseDefinisanUpit = true;
+                                        }
+                                    }
+                                    else if (tokens[0] == "?cena")
+                                    {
+                                        // vrednost iza operatora mora biti double vrednost
+                                        try
+                                        {
+                                            Double.Parse(tokens[2]);
+                                        }
+                                        catch
+                                        {
+                                            loseDefinisanUpit = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // operator moze biti != ili =
+                            if (tokens[1] != "?=" && tokens[1] != "?!=")
+                                loseDefinisanUpit = true;
+                        }
+                    }
+
+                    if (loseDefinisanUpit)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Loše definisan upit u pretrazi softvera!");
+                        SoftverPretragaUnos.Focus();
+                        SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
+                    }
+                    else
+                    {
+                        // obrada uslova
+                        string prviOperand = tokens[0].Substring(1, tokens[0].Length - 1);
+                        string operatorToken = tokens[1].Substring(1, tokens[1].Length - 1);
+                        string drugiOperand = "";
+                        if (prviOperand == "godina_izdavanja" || prviOperand == "cena")
+                            drugiOperand = tokens[2];
+                        else
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 2; i < tokens.Count; i++)
+                            {
+                                if (i == tokens.Count - 1)
+                                    sb.Append(tokens[i]);
+                                else
+                                    sb.Append(tokens[i] + " ");
+                            }
+                            drugiOperand = sb.ToString();
+                        }
+
+                        int brojPrviOperand = 0;
+                        int brojOperator = 0;
+
+                        if (prviOperand == "oznaka")
+                            brojPrviOperand = 1;
+                        else if (prviOperand == "naziv")
+                            brojPrviOperand = 2;
+                        else if (prviOperand == "opis")
+                            brojPrviOperand = 3;
+                        else if (prviOperand == "proizvodjac")
+                            brojPrviOperand = 4;
+                        else if (prviOperand == "sajt")
+                            brojPrviOperand = 5;
+                        else if (prviOperand == "godina_izdavanja")
+                            brojPrviOperand = 6;
+                        else if (prviOperand == "cena")
+                            brojPrviOperand = 7;
+
+                        if (operatorToken == "!=")
+                            brojOperator = 1;
+                        else if (operatorToken == "=")
+                            brojOperator = 2;
+                        else if (operatorToken == ">")
+                            brojOperator = 3;
+                        else if (operatorToken == "<")
+                            brojOperator = 4;
+                        else if (operatorToken == ">=")
+                            brojOperator = 5;
+                        else if (operatorToken == "<=")
+                            brojOperator = 6;
+
+                        
+                        if (brojPrviOperand == 1)
+                        {
+                            // filter po oznaci
+                            cv.Filter = o =>
+                            {
+                                Softver s = o as Softver;
+                                if (brojOperator == 1)
+                                    // oznaka != vrednost
+                                    return (!s.Oznaka.Equals(drugiOperand));
+                                else
+                                    // oznaka = vrednost
+                                    return (s.Oznaka.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 2)
+                        {
+                            // filter po nazivu
+                            cv.Filter = o =>
+                            {
+                                Softver s = o as Softver;
+                                if (brojOperator == 1)
+                                    // naziv != vrednost
+                                    return (!s.Naziv.Equals(drugiOperand));
+                                else
+                                    // naziv = vrednost
+                                    return (s.Naziv.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 3)
+                        {
+                            // filter po opisu
+                            cv.Filter = o =>
+                            {
+                                Softver s = o as Softver;
+                                if (brojOperator == 1)
+                                    // opis != vrednost
+                                    return (!s.Opis.Equals(drugiOperand));
+                                else
+                                    // opis = vrednost
+                                    return (s.Opis.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 4)
+                        {
+                            // filter po proizvodjacu
+                            cv.Filter = o =>
+                            {
+                                Softver s = o as Softver;
+                                if (brojOperator == 1)
+                                    // proizvodjac != vrednost
+                                    return (!s.Proizvodjac.Equals(drugiOperand));
+                                else
+                                    // proizvodjac = vrednost
+                                    return (s.Proizvodjac.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 5)
+                        {
+                            // filter po sajtu
+                            cv.Filter = o =>
+                            {
+                                Softver s = o as Softver;
+                                if (brojOperator == 1)
+                                    // sajt != vrednost
+                                    return (!s.Sajt.Equals(drugiOperand));
+                                else
+                                    // sajt = vrednost
+                                    return (s.Sajt.Equals(drugiOperand));
+                            };
+                        }
+                        else if (brojPrviOperand == 6)
+                        {
+                            // filter po godini izdavanja
+                            int vrednost = Int32.Parse(drugiOperand);
+
+                            cv.Filter = o =>
+                            {
+                                Softver s = o as Softver;
+                                if (brojOperator == 1)
+                                    // godina izdavanja != vrednost
+                                    return (s.GodIzdavanja != vrednost);
+                                else if (brojOperator == 2)
+                                    // godina izdavanja = vrednost
+                                    return (s.GodIzdavanja == vrednost);
+                                else if (brojOperator == 3)
+                                    // godina izdavanja > vrednost
+                                    return (s.GodIzdavanja > vrednost);
+                                else if (brojOperator == 4)
+                                    // godina izdavanja < vrednost
+                                    return (s.GodIzdavanja < vrednost);
+                                else if (brojOperator == 5)
+                                    // godina izdavanja >= vrednost
+                                    return (s.GodIzdavanja >= vrednost);
+                                else
+                                    // godina izdavanja <= vrednost
+                                    return (s.GodIzdavanja <= vrednost);
+                            };
+                        }
+                        else if (brojPrviOperand == 7)
+                        {
+                            // filter po ceni
+                            double vrednost = Int32.Parse(drugiOperand);
+
+                            cv.Filter = o =>
+                            {
+                                Softver s = o as Softver;
+                                if (brojOperator == 1)
+                                    // cena != vrednost
+                                    return (s.Cena != vrednost);
+                                else if (brojOperator == 2)
+                                    // cena = vrednost
+                                    return (s.Cena == vrednost);
+                                else if (brojOperator == 3)
+                                    // cena > vrednost
+                                    return (s.Cena > vrednost);
+                                else if (brojOperator == 4)
+                                    // cena < vrednost
+                                    return (s.Cena < vrednost);
+                                else if (brojOperator == 5)
+                                    // cena >= vrednost
+                                    return (s.Cena >= vrednost);
+                                else
+                                    // cena <= vrednost
+                                    return (s.Cena <= vrednost);
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
+        void pretragaDobilaFokus(object sender, EventArgs e)
+        {
+            if (tabControl.SelectedIndex == 1)
+            {
+                UcionicaFilterKriterijum.Text = "";
+                UcionicaFilterUnos.Text = "";
+                UcionicaFilterUnos.Visibility = Visibility.Visible;
+                UcionicaFilterTablaVrednost.Visibility = Visibility.Hidden;
+                UcionicaFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                UcionicaFilterOSVrednost.Visibility = Visibility.Hidden;
+            }
+            else if (tabControl.SelectedIndex == 2)
+            {
+                PredmetFilterKriterijum.Text = "";
+                PredmetFilterUnos.Text = "";
+                PredmetFilterUnos.Visibility = Visibility.Visible;
+                PredmetFilterTablaVrednost.Visibility = Visibility.Hidden;
+                PredmetFilterProjektorVrednost.Visibility = Visibility.Hidden;
+                PredmetFilterOSVrednost.Visibility = Visibility.Hidden;
+            }
+            else if (tabControl.SelectedIndex == 3)
+            {
+                SmerFilterKriterijum.Text = "";
+                SmerFilterUnos.Text = "";
+                FilterGrid.Visibility = Visibility.Visible;
+                DateGrid.Visibility = Visibility.Hidden;
+            }
+            else if (tabControl.SelectedIndex == 4)
+            {
+                SoftverFilterKriterijum.Text = "";
+                SoftverFilterUnos.Text = "";
+                SoftverFilterUnos.Visibility = Visibility.Visible;
+                SoftverFilterOSVrednost.Visibility = Visibility.Hidden;
+            }
+        }
+
+        void txtAuto_TextChanged(object sender, EventArgs e)
+        {
+            string typedString = "";
+            if (tabControl.SelectedIndex == 1)
+                typedString = UcionicaPretragaUnos.Text;
+            else if (tabControl.SelectedIndex == 2)
+                typedString = PredmetPretragaUnos.Text;
+            else if (tabControl.SelectedIndex == 3)
+                typedString = SmerPretragaUnos.Text;
+            else if (tabControl.SelectedIndex == 4)
+                typedString = SoftverPretragaUnos.Text;
+
+            if(typedString.Trim() == "")
+            {
+                ICollectionView cv = null;
+                if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijeUcionicaListBox.Visibility = Visibility.Collapsed;
+                    sugestijeUcionicaListBox.ItemsSource = null;
+                    cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
+                }
+                else if(tabControl.SelectedIndex == 2)
+                {
+                    sugestijePredmetaListBox.Visibility = Visibility.Collapsed;
+                    sugestijePredmetaListBox.ItemsSource = null;
+                    cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+                }
+                else if(tabControl.SelectedIndex == 3)
+                {
+                    sugestijeSmerListBox.Visibility = Visibility.Collapsed;
+                    sugestijeSmerListBox.ItemsSource = null;
+                    cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
+                }
+                else if(tabControl.SelectedIndex == 4)
+                {
+                    sugestijeSoftveraListBox.Visibility = Visibility.Collapsed;
+                    sugestijeSoftveraListBox.ItemsSource = null;
+                    cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
+                }
+                cv.Filter = null;
+                return;
+            }
+
+            string[] tokens = System.Text.RegularExpressions.Regex.Split(typedString, @"\s{1,}");
+            string lastWord = tokens[tokens.Length - 1];
+   
+            List<string> autoList = new List<string>();
+            autoList.Clear();
+
+            List<string> sugestije = null;
+            if (tabControl.SelectedIndex == 1)
+                sugestije = sugestijeUcionica;
+            else if (tabControl.SelectedIndex == 2)
+                sugestije = sugestijePredmeta;
+            else if (tabControl.SelectedIndex == 3)
+                sugestije = sugestijeSmerova;
+            else if (tabControl.SelectedIndex == 4)
+                sugestije = sugestijeSoftvera;
+
+
+            string parametar = "";
+            if (tabControl.SelectedIndex == 1)
+                parametar = UcionicaPretragaUnos.Text;
+            else if (tabControl.SelectedIndex == 2)
+                parametar = PredmetPretragaUnos.Text;
+            else if (tabControl.SelectedIndex == 3)
+                parametar = SmerPretragaUnos.Text;
+            else if (tabControl.SelectedIndex == 4)
+                parametar = SoftverPretragaUnos.Text;
+
+            foreach (string item in sugestije)
+            {
+                if (!string.IsNullOrEmpty(parametar))
+                {
+                    if (lastWord.StartsWith("?") && item.Contains(lastWord))
+                    {
+                        autoList.Add(item);
+                    }
+                }
+            }
+
+            if (autoList.Count > 0)
+            {
+                if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijeUcionicaListBox.ItemsSource = autoList;
+                    sugestijeUcionicaListBox.Visibility = Visibility.Visible;
+                }
+                else if (tabControl.SelectedIndex == 2)
+                {
+                    sugestijePredmetaListBox.ItemsSource = autoList;
+                    sugestijePredmetaListBox.Visibility = Visibility.Visible;
+                }
+                else if (tabControl.SelectedIndex == 3)
+                {
+                    sugestijeSmerListBox.ItemsSource = autoList;
+                    sugestijeSmerListBox.Visibility = Visibility.Visible;
+                }
+                else if (tabControl.SelectedIndex == 4)
+                {
+                    sugestijeSoftveraListBox.ItemsSource = autoList;
+                    sugestijeSoftveraListBox.Visibility = Visibility.Visible;
+                }
+            }
+            else if (parametar.Equals(""))
+            {
+                if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijeUcionicaListBox.Visibility = Visibility.Collapsed;
+                    sugestijeUcionicaListBox.ItemsSource = null;
+                }
+                else if (tabControl.SelectedIndex == 2)
+                {
+                    sugestijePredmetaListBox.Visibility = Visibility.Collapsed;
+                    sugestijePredmetaListBox.ItemsSource = null;
+                }
+                else if (tabControl.SelectedIndex == 3)
+                {
+                    sugestijeSmerListBox.Visibility = Visibility.Collapsed;
+                    sugestijeSmerListBox.ItemsSource = null;
+                }
+                else if (tabControl.SelectedIndex == 4)
+                {
+                    sugestijeSoftveraListBox.Visibility = Visibility.Collapsed;
+                    sugestijeSoftveraListBox.ItemsSource = null;
+                }
+            }
+            else
+            {
+                if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijeUcionicaListBox.Visibility = Visibility.Collapsed;
+                    sugestijeUcionicaListBox.ItemsSource = null;
+                }
+                else if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijePredmetaListBox.Visibility = Visibility.Collapsed;
+                    sugestijePredmetaListBox.ItemsSource = null;
+                }
+                else if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijeSmerListBox.Visibility = Visibility.Collapsed;
+                    sugestijeSmerListBox.ItemsSource = null;
+                }
+                else if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijeSoftveraListBox.Visibility = Visibility.Collapsed;
+                    sugestijeSoftveraListBox.ItemsSource = null;
+                }
+            }
+        }
+
+        private void pretragaKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                if (tabControl.SelectedIndex == 1)
+                {
+                    sugestijeUcionicaListBox.Visibility = Visibility.Collapsed;
+                    sugestijeUcionicaListBox.ItemsSource = null;
+                }
+                else if (tabControl.SelectedIndex == 2)
+                {
+                    sugestijePredmetaListBox.Visibility = Visibility.Collapsed;
+                    sugestijePredmetaListBox.ItemsSource = null;
+                }
+                else if(tabControl.SelectedIndex == 3)
+                {
+                    sugestijeSmerListBox.Visibility = Visibility.Collapsed;
+                    sugestijeUcionicaListBox.ItemsSource = null;
+                }
+                if (tabControl.SelectedIndex == 4)
+                {
+                    sugestijeSoftveraListBox.Visibility = Visibility.Collapsed;
+                    sugestijeSoftveraListBox.ItemsSource = null;
+                }
+                return;
+            }
+            if (e.Key == Key.Down)
+            {
+                if (tabControl.SelectedIndex == 1)
+                    sugestijeUcionicaListBox.Focus();
+                else if (tabControl.SelectedIndex == 2)
+                    sugestijePredmetaListBox.Focus();
+                else if (tabControl.SelectedIndex == 3)
+                    sugestijeSmerListBox.Focus();
+                else if (tabControl.SelectedIndex == 4)
+                    sugestijeSoftveraListBox.Focus();
+            }
+        }
+
+        private void sugestijeUcionica_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (ReferenceEquals(sender, sugestijeUcionicaListBox))
+            {
+                if (e.Key == Key.Enter)
+                {
+                    UcionicaPretragaUnos.Text = UcionicaPretragaUnos.Text.Substring(0, UcionicaPretragaUnos.Text.Length-1) + sugestijeUcionicaListBox.SelectedItem.ToString();
+                    sugestijeUcionicaListBox.Visibility = Visibility.Collapsed;
+                    UcionicaPretragaUnos.Focus();
+                    UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
+                }
+
+                if (e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijeUcionicaListBox.Items.MoveCurrentToNext();
+                }
+                if (e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijeUcionicaListBox.Items.MoveCurrentToPrevious();
+                }
+                if(e.Key == Key.LeftAlt && e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijeUcionicaListBox.IsDropDownOpen = false;
+                }
+                if(e.Key == Key.LeftAlt && e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijeUcionicaListBox.IsDropDownOpen = true;
+                }
+            }
+        }
+
+        private void sugestijePredmeta_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (ReferenceEquals(sender, sugestijePredmetaListBox))
+            {
+                if (e.Key == Key.Enter)
+                {
+                    PredmetPretragaUnos.Text = PredmetPretragaUnos.Text.Substring(0, PredmetPretragaUnos.Text.Length - 1) + sugestijePredmetaListBox.SelectedItem.ToString();
+                    sugestijePredmetaListBox.Visibility = Visibility.Collapsed;
+                    PredmetPretragaUnos.Focus();
+                    PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
+                }
+
+                if (e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijePredmetaListBox.Items.MoveCurrentToNext();
+                }
+                if (e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijePredmetaListBox.Items.MoveCurrentToPrevious();
+                }
+                if (e.Key == Key.LeftAlt && e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijePredmetaListBox.IsDropDownOpen = false;
+                }
+                if (e.Key == Key.LeftAlt && e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijePredmetaListBox.IsDropDownOpen = true;
+                }
+            }
+        }
+
+        private void sugestijeSmerova_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (ReferenceEquals(sender, sugestijeSmerListBox))
+            {
+                if (e.Key == Key.Enter)
+                {
+                    SmerPretragaUnos.Text = SmerPretragaUnos.Text.Substring(0, SmerPretragaUnos.Text.Length - 1) + sugestijeSmerListBox.SelectedItem.ToString();
+                    sugestijeSmerListBox.Visibility = Visibility.Collapsed;
+                    SmerPretragaUnos.Focus();
+                    SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
+                }
+
+                if (e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijeSmerListBox.Items.MoveCurrentToNext();
+                }
+                if (e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijeSmerListBox.Items.MoveCurrentToPrevious();
+                }
+                if (e.Key == Key.LeftAlt && e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijeSmerListBox.IsDropDownOpen = false;
+                }
+                if (e.Key == Key.LeftAlt && e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijeSmerListBox.IsDropDownOpen = true;
+                }
+            }
+        }
+
+        private void sugestijeSoftvera_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (ReferenceEquals(sender, sugestijeSoftveraListBox))
+            {
+                if (e.Key == Key.Enter)
+                {
+                    SoftverPretragaUnos.Text = SoftverPretragaUnos.Text.Substring(0, SoftverPretragaUnos.Text.Length - 1) + sugestijeSoftveraListBox.SelectedItem.ToString();
+                    sugestijeSoftveraListBox.Visibility = Visibility.Collapsed;
+                    SoftverPretragaUnos.Focus();
+                    SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
+                }
+
+                if (e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijeSoftveraListBox.Items.MoveCurrentToNext();
+                }
+                if (e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijeSoftveraListBox.Items.MoveCurrentToPrevious();
+                }
+                if (e.Key == Key.LeftAlt && e.Key == Key.Up)
+                {
+                    e.Handled = true;
+                    sugestijeSoftveraListBox.IsDropDownOpen = false;
+                }
+                if (e.Key == Key.LeftAlt && e.Key == Key.Down)
+                {
+                    e.Handled = true;
+                    sugestijeSoftveraListBox.IsDropDownOpen = true;
+                }
+            }
+        }
+
+        private void pretraziUcionice(string parametar)
+        {
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
             if (parametar == "")
                 cv.Filter = null;
@@ -1117,6 +2504,59 @@ namespace HCI_Projekat
                     || u.ProjektorString.ToUpper().Contains(parametar.ToUpper()) || u.TablaString.ToUpper().Contains(parametar.ToUpper())
                     || u.PametnaTablaString.ToUpper().Contains(parametar.ToUpper()) || u.OperativniSistem.ToUpper().Contains(parametar.ToUpper())
                     || u.OperativniSistem.ToUpper().Contains(parametar.ToUpper()));
+                };
+            }
+        }
+
+        private void pretraziPredmete(string parametar)
+        {
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
+            if (parametar == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Predmet p = o as Predmet;
+                    return (p.Naziv.ToUpper().Contains(parametar.ToUpper()) || p.Oznaka.ToUpper().Contains(parametar.ToUpper())
+                    || p.VelicinaGrupe.ToString().Contains(parametar) || p.Opis.ToUpper().Contains(parametar.ToUpper())
+                    || p.MinDuzinaTermina.ToString().Contains(parametar) || p.BrTermina.ToString().Contains(parametar)
+                    || p.ProjektorString.ToUpper().Contains(parametar.ToUpper()) || p.TablaString.ToUpper().Contains(parametar.ToUpper())
+                    || p.PametnaTablaString.ToUpper().Contains(parametar.ToUpper()) || p.OperativniSistem.ToUpper().Contains(parametar.ToUpper()));
+                };
+            }
+        }
+
+        private void pretraziSmerove(string parametar)
+        {
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
+            if (parametar == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Smer s = o as Smer;
+                    return (s.Naziv.ToUpper().Contains(parametar.ToUpper()) || s.Oznaka.ToUpper().Contains(parametar.ToUpper())
+                    || s.Datum.ToString().Contains(parametar) || s.Opis.ToUpper().Contains(parametar.ToUpper()));
+                };
+            }
+        }
+
+        private void pretraziSoftvere(string parametar)
+        {
+            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
+            if (parametar == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Softver s = o as Softver;
+                    return (s.Naziv.ToUpper().Contains(parametar.ToUpper()) || s.Oznaka.ToUpper().Contains(parametar.ToUpper())
+                    || s.OperativniSistem.ToUpper().Contains(parametar.ToUpper()) || s.Proizvodjac.ToUpper().Contains(parametar.ToUpper())
+                    || s.GodIzdavanja.ToString().Contains(parametar) || s.Cena.ToString().Contains(parametar)
+                    || s.Sajt.ToUpper().Contains(parametar.ToUpper()) || s.Opis.ToUpper().Contains(parametar.ToUpper()));
                 };
             }
         }
@@ -1141,28 +2581,6 @@ namespace HCI_Projekat
                         return (u.BrojRadnihMesta.ToString().StartsWith(filter));
                     else
                         return (u.Opis.ToUpper().StartsWith(filter.ToUpper()));
-                };
-            }
-        }
-
-        private void pretraziPredmete(object sender, TextChangedEventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-            string parametar = t.Text.Trim();
-
-            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
-            if (parametar == "")
-                cv.Filter = null;
-            else
-            {
-                cv.Filter = o =>
-                {
-                    Predmet p = o as Predmet;
-                    return (p.Naziv.ToUpper().Contains(parametar.ToUpper()) || p.Oznaka.ToUpper().Contains(parametar.ToUpper())
-                    || p.VelicinaGrupe.ToString().Contains(parametar) || p.Opis.ToUpper().Contains(parametar.ToUpper())
-                    || p.MinDuzinaTermina.ToString().Contains(parametar) || p.BrTermina.ToString().Contains(parametar)
-                    || p.ProjektorString.ToUpper().Contains(parametar.ToUpper()) || p.TablaString.ToUpper().Contains(parametar.ToUpper())
-                    || p.PametnaTablaString.ToUpper().Contains(parametar.ToUpper()) || p.OperativniSistem.ToUpper().Contains(parametar.ToUpper()));
                 };
             }
         }
@@ -1197,27 +2615,6 @@ namespace HCI_Projekat
             }
         }
 
-        private void pretraziSoftvere(object sender, TextChangedEventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-            string parametar = t.Text.Trim();
-
-            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
-            if (parametar == "")
-                cv.Filter = null;
-            else
-            {
-                cv.Filter = o =>
-                {
-                    Softver s = o as Softver;
-                    return (s.Naziv.ToUpper().Contains(parametar.ToUpper()) || s.Oznaka.ToUpper().Contains(parametar.ToUpper())
-                    || s.OperativniSistem.ToUpper().Contains(parametar.ToUpper()) || s.Proizvodjac.ToUpper().Contains(parametar.ToUpper())
-                    || s.GodIzdavanja.ToString().Contains(parametar) || s.Cena.ToString().Contains(parametar)
-                    || s.Sajt.ToUpper().Contains(parametar.ToUpper()) || s.Opis.ToUpper().Contains(parametar.ToUpper()));
-                };
-            }
-        }
-
         private void filtrirajSoftver(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;
@@ -1246,25 +2643,6 @@ namespace HCI_Projekat
                         return (s.Sajt.ToUpper().StartsWith(filter.ToUpper()));
                     else
                         return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));
-                };
-            }
-        }
-
-        private void pretraziSmerove(object sender, TextChangedEventArgs e)
-        {
-            TextBox t = (TextBox)sender;
-            string parametar = t.Text.Trim();
-
-            ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
-            if (parametar == "")
-                cv.Filter = null;
-            else
-            {
-                cv.Filter = o =>
-                {
-                    Smer s = o as Smer;
-                    return (s.Naziv.ToUpper().Contains(parametar.ToUpper()) || s.Oznaka.ToUpper().Contains(parametar.ToUpper())
-                    || s.Datum.ToString().Contains(parametar) || s.Opis.ToUpper().Contains(parametar.ToUpper()));
                 };
             }
         }

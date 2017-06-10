@@ -10,6 +10,7 @@ using ToastNotifications.Messages;
 using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Generic;
 
 namespace HCI_Projekat
 {
@@ -347,7 +348,6 @@ namespace HCI_Projekat
                 if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
                     DatumUvodjenja.IsDropDownOpen = true;
             }
-
         }
 
         private void otvoriUnazad(object sender, KeyEventArgs e)

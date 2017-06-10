@@ -784,13 +784,12 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid>
                                         <Label FontWeight="Bold" Grid.Column="1" Grid.Row="0" Content="Filter:"/>
-                                        <tb:TaskbarIcon x:Name="tb" VerticalAlignment="Top" Visibility="Hidden"></tb:TaskbarIcon>
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0*"/>
                                             <ColumnDefinition Width="9*"/>
-                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="0.2*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
@@ -845,13 +844,30 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="9*"/>
                                             <ColumnDefinition Width="0.1*"/>
+                                            <ColumnDefinition Width="3*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <TextBox Grid.Column="0" Grid.Row="1" Name="UcionicaPretragaUnos" TextChanged="pretraziUcionice"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="UcionicaPretragaUnos" PreviewKeyDown="pretragaKeyDown" GotFocus="pretragaDobilaFokus"/>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" x:Name="sugestijeUcionicaListBox" HorizontalAlignment="Right" Visibility="Collapsed" 
+                                                 KeyDown="sugestijeUcionica_KeyDown" IsEditable="True" Width="Auto"/>
+                                        <Grid Grid.Column="2" Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.5*"/>
+                                                <ColumnDefinition Width="8*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="1" Click="pronadjiUcionicuClick" Name="PronadjiUcionicu" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                                <Button.Content>
+                                                    <Viewbox>
+                                                        <TextBlock>Pronađi</TextBlock>
+                                                    </Viewbox>
+                                                </Button.Content>
+                                            </Button>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -1071,7 +1087,7 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0*"/>
                                             <ColumnDefinition Width="9*"/>
-                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="0.2*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
@@ -1129,13 +1145,30 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="9*"/>
                                             <ColumnDefinition Width="0.1*"/>
+                                            <ColumnDefinition Width="3*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <TextBox Grid.Column="0" Grid.Row="1" Name="PredmetPretragaUnos" TextChanged="pretraziPredmete"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="PredmetPretragaUnos" PreviewKeyDown="pretragaKeyDown" GotFocus="pretragaDobilaFokus"/>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" x:Name="sugestijePredmetaListBox" HorizontalAlignment="Right" Visibility="Collapsed" 
+                                                 KeyDown="sugestijePredmeta_KeyDown" IsEditable="True" Width="Auto"/>
+                                        <Grid Grid.Column="2" Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.5*"/>
+                                                <ColumnDefinition Width="8*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="1" Click="pronadjiPredmetClick" Name="PronadjiPredmet" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                                <Button.Content>
+                                                    <Viewbox>
+                                                        <TextBlock>Pronađi</TextBlock>
+                                                    </Viewbox>
+                                                </Button.Content>
+                                            </Button>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -1388,21 +1421,21 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0*"/>
                                             <ColumnDefinition Width="9*"/>
-                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="0.2*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SmerFilterKriterijum" KeyUp="ponudaOpcija" SelectionChanged="proveriKriterijumFiltriranja">
+                                        <ComboBox Grid.Column="1" Grid.Row="1" IsEditable="True" Name="SmerFilterKriterijum" KeyUp="ponudaOpcija" SelectionChanged="proveriKriterijumFiltriranja" KeyDown="otvoriDatum1">
                                             <ComboBoxItem Content="Naziv"/>
                                             <ComboBoxItem Content="Oznaka"/>
                                             <ComboBoxItem Content="Datum uvođenja"/>
                                             <ComboBoxItem Content="Opis"/>
                                         </ComboBox>
                                     </Grid>
-                                    <Grid Grid.Column="2">
+                                    <Grid Grid.Column="2" Name="FilterGrid">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="9*"/>
                                             <ColumnDefinition Width="1*"/>
@@ -1413,7 +1446,24 @@
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="0" Grid.Row="1" Name="SmerFilterUnos" TextChanged="filtrirajSmer"/>
-                                        <DatePicker Grid.Column="0" Grid.Row="1" Name="SmerFilterDatumVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden"/>
+                                    </Grid>
+                                    <Grid Grid.Column="2" Name="DateGrid" Visibility="Hidden">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.7*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="0.1*"/>
+                                            <ColumnDefinition Width="0.7*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="9*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Od" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <DatePicker Grid.Column="1" Grid.Row="1" Name="SmerFilterDatumOdVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" VerticalAlignment="Center" KeyDown="otvoriDatum2" FirstDayOfWeek="Monday" AllowDrop="True"/>
+                                        <TextBlock Grid.Column="3" Grid.Row="1" Text="Do" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <DatePicker Grid.Column="4" Grid.Row="1" Name="SmerFilterDatumDoVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" VerticalAlignment="Center" KeyDown="otvoriUnazadDatum1" FirstDayOfWeek="Monday" AllowDrop="True"/>
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Column="1">
@@ -1428,13 +1478,30 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="9*"/>
                                             <ColumnDefinition Width="0.1*"/>
+                                            <ColumnDefinition Width="3*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SmerPretragaUnos" TextChanged="pretraziSmerove"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SmerPretragaUnos" PreviewKeyDown="pretragaKeyDown" GotFocus="pretragaDobilaFokus"/>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" x:Name="sugestijeSmerListBox" HorizontalAlignment="Right" Visibility="Collapsed" 
+                                                 KeyDown="sugestijeSmerova_KeyDown" IsEditable="True" Width="Auto"/>
+                                        <Grid Grid.Column="2" Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.5*"/>
+                                                <ColumnDefinition Width="8*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="1" Click="pronadjiSmerClick" Name="PronadjiSmer" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                                <Button.Content>
+                                                    <Viewbox>
+                                                        <TextBlock>Pronađi</TextBlock>
+                                                    </Viewbox>
+                                                </Button.Content>
+                                            </Button>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -1617,7 +1684,7 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0*"/>
                                             <ColumnDefinition Width="9*"/>
-                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="0.2*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
@@ -1665,13 +1732,30 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="9*"/>
                                             <ColumnDefinition Width="0.1*"/>
+                                            <ColumnDefinition Width="3*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="1*"/>
                                             <RowDefinition Height="9*"/>
                                             <RowDefinition Height="1*"/>
                                         </Grid.RowDefinitions>
-                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SoftverPretragaUnos" TextChanged="pretraziSoftvere"/>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Name="SoftverPretragaUnos" PreviewKeyDown="pretragaKeyDown" GotFocus="pretragaDobilaFokus"/>
+                                        <ComboBox Grid.Column="0" Grid.Row="1" x:Name="sugestijeSoftveraListBox" HorizontalAlignment="Right" Visibility="Collapsed" 
+                                                 KeyDown="sugestijeSoftvera_KeyDown" IsEditable="True" Width="Auto"/>
+                                        <Grid Grid.Column="2" Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.5*"/>
+                                                <ColumnDefinition Width="8*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="1" Click="pronadjiSoftverClick" Name="PronadjiSoftver" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                                <Button.Content>
+                                                    <Viewbox>
+                                                        <TextBlock>Pronađi</TextBlock>
+                                                    </Viewbox>
+                                                </Button.Content>
+                                            </Button>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>

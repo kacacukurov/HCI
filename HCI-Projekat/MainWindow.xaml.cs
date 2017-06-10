@@ -111,7 +111,7 @@ namespace HCI_Projekat
             InitializeChromium();
             sugestijeUcionica = new List<string>() { "?br_mesta", "?oznaka", "?opis", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
             sugestijePredmeta = new List<string>() { "?oznaka", "?naziv", "?opis", "?velicina_grupe", "?min_duzina_termina", "?br_termina", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
-            sugestijeSmerova = new List<string>() { "?naziv", "?oznaka", "?opis", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
+            sugestijeSmerova = new List<string>() { "?naziv", "?oznaka", "?opis", "?=", "?!=" };
             sugestijeSoftvera = new List<string>() { "?oznaka", "?naziv", "?opis", "?proizvodjac", "?sajt", "?godina_izdavanja", "?cena", "?=", "?!=", "?>", "?<", "?>=", "?<=" };
             cef = new CefCustomObject(chromeBrowser, this, racunarskiCentar, notifierError, stekStanja, prethodnaStanjaAplikacije);
             chromeBrowser.RegisterJsObject("cefCustomObject", cef);

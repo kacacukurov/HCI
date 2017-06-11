@@ -685,7 +685,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="0.6*"/>
-                                        <RowDefinition Height="1.2*"/>
+                                        <RowDefinition Height="1.3*"/>
                                         <RowDefinition Height="3*"/>
                                         <RowDefinition Height="2*"/>
                                     </Grid.RowDefinitions>
@@ -895,7 +895,7 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1.5*"/>
+                                <RowDefinition Height="1.6*"/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Column="1" Grid.Row="0">
                                 <Grid.ColumnDefinitions>
@@ -914,7 +914,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="1*"/>
-                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="2*"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
@@ -929,7 +929,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="1*"/>
-                                        <RowDefinition Height="1.8*"/>
+                                        <RowDefinition Height="2*"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left">
@@ -944,7 +944,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="1*"/>
-                                        <RowDefinition Height="2.5*"/>
+                                        <RowDefinition Height="2.6*"/>
                                         <RowDefinition Height="7*"/>
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
@@ -973,9 +973,10 @@
                             </Grid>
                             <Grid Grid.Column="1" Grid.Row="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="1.8*"/>
                                     <RowDefinition Height="0.3*"/>
-                                    <RowDefinition Height="15*"/>
+                                    <RowDefinition Height="1.5*"/>
+                                    <RowDefinition Height="13*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
                                 <Grid Grid.Row="0">
@@ -989,6 +990,18 @@
                                     </Viewbox>
                                 </Grid>
                                 <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border BorderThickness="1" BorderBrush="#FFAEA8A8" Grid.Column="0">
+                                        <Viewbox>
+                                            <TextBlock VerticalAlignment="Top" Text="Pretraga: "/>
+                                        </Viewbox>
+                                    </Border>
+                                    <TextBox Grid.Column="1" TextChanged="softverUnosProvera" VerticalAlignment="Center"></TextBox>
+                                </Grid>
+                                <Grid Grid.Row="3">
                                     <DataGrid Name="softverTabela" SelectedItem="{Binding RelativeSource={RelativeSource Self}, Path=CurrentCell.Item, Mode=OneWay}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" Background="White" ColumnHeaderStyle="{StaticResource HeaderStyle}" HeadersVisibility="Column">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Path = Naziv, FallbackValue='-'}" Header="Naziv" Width="1*" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource CellStyle}">

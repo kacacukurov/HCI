@@ -228,6 +228,25 @@ namespace HCI_Projekat
             t.ClearValue(Border.BorderBrushProperty);
         }
 
+        private void softverUnosProvera(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            string vrednost = t.Text.Trim();
+
+            ICollectionView cv = CollectionViewSource.GetDefaultView(softverTabela.ItemsSource);
+            if (vrednost == "")
+                cv.Filter = null;
+            else
+            {
+                cv.Filter = o =>
+                {
+                    Softver s = o as Softver;
+                    return (s.Naziv.ToUpper().Contains(vrednost.ToUpper()) || s.Oznaka.ToUpper().Contains(vrednost.ToUpper())
+                    || s.OperativniSistem.ToUpper().Contains(vrednost.ToUpper()));
+                };
+            }
+        }
+
         private void UnetaOznakaPredmeta(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox)sender;

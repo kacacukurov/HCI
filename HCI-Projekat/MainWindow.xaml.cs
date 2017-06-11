@@ -2702,13 +2702,23 @@ namespace HCI_Projekat
 
         private void obrisiElement(object sender, RoutedEventArgs e)
         {
-            var brisanjeProzor = new PotvrdaBrisanja();
-
             // trenutno smo u tabu za ucionice
             if (tabControl.SelectedIndex == 1)
             {
+                var brisanjeProzor = new PotvrdaBrisanja();
                 if (tabelaUcionica.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaUcionica.SelectedItems.Count + " izabrane ucionice?";
+                {
+                    if(tabelaUcionica.SelectedItems.Count < 5)
+                        brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaUcionica.SelectedItems.Count + " izabrane učionice?";
+                    else
+                        brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaUcionica.SelectedItems.Count + " izabranih učionica?";
+                    brisanjeProzor.Title = "Potvrda brisanja učionica";
+                }
+                else
+                {
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete izabranu učionicu?";
+                    brisanjeProzor.Title = "Potvrda brisanja učionice";
+                }
                 brisanjeProzor.ShowDialog();
                 if (brisanjeProzor.daKlik)
                     obrisiUcionicuClick(sender, e);
@@ -2716,8 +2726,17 @@ namespace HCI_Projekat
             // trenutno smo u tabu za predmete
             else if (tabControl.SelectedIndex == 2)
             {
+                var brisanjeProzor = new PotvrdaBrisanja();
+                brisanjeProzor.Title = "Potvrda brisanja predmeta";
                 if (tabelaPredmeta.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaPredmeta.SelectedItems.Count + " izabrana predmeta?";
+                {
+                    if(tabelaPredmeta.SelectedItems.Count < 5)
+                        brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaPredmeta.SelectedItems.Count + " izabrana predmeta?";
+                    else
+                        brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaPredmeta.SelectedItems.Count + " izabranih predmeta?";
+                }
+                else
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete izabrani predmet?";
                 brisanjeProzor.ShowDialog();
                 if (brisanjeProzor.daKlik)
                     obrisiPredmetClick(sender, e);
@@ -2725,8 +2744,16 @@ namespace HCI_Projekat
             // trenutno smo u tabu za smerove
             else if (tabControl.SelectedIndex == 3)
             {
+                var brisanjeProzor = new PotvrdaBrisanjaSmera();
                 if (tabelaSmerova.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSmerova.SelectedItems.Count + " izabrana smera?";
+                {
+                    brisanjeProzor.PorukaBrisanja.Text = "Ukoliko izbrišete izabrane smerove obrisaće se\ni svi predmeti koji im pripadaju!\n\nDa li ste sigurni da želite da ih obrišete?";
+                    brisanjeProzor.Title = "Potvrda brisanja smerova";
+                }
+                else {
+                    brisanjeProzor.PorukaBrisanja.Text = "Ukoliko izbrišete izabrani smer obrisaće se\ni svi predmeti koji mu pripadaju!\n\nDa li ste sigurni da želite da ga obrišete?";
+                    brisanjeProzor.Title = "Potvrda brisanja smera";
+                }
                 brisanjeProzor.ShowDialog();
                 if (brisanjeProzor.daKlik)
                     obrisiSmerClick(sender, e);
@@ -2734,8 +2761,17 @@ namespace HCI_Projekat
             // trenutno smo u tabu za softvere
             else if (tabControl.SelectedIndex == 4)
             {
+                var brisanjeProzor = new PotvrdaBrisanja();
+                brisanjeProzor.Title = "Potvrda brisanja softvera";
                 if (tabelaSoftvera.SelectedItems.Count > 1)
-                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSoftvera.SelectedItems.Count + " izabrana softvera?";
+                {
+                    if(tabelaSoftvera.SelectedItems.Count < 5)
+                        brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSoftvera.SelectedItems.Count + " izabrana softvera?";
+                    else
+                        brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete " + tabelaSoftvera.SelectedItems.Count + " izabranih softvera?";
+                }
+                else
+                    brisanjeProzor.PorukaBrisanja.Text = "Da li ste sigurni da želite da \nobrišete izabrani softver?";
                 brisanjeProzor.ShowDialog();
                 if (brisanjeProzor.daKlik)
                     obrisiSoftverClick(sender, e);

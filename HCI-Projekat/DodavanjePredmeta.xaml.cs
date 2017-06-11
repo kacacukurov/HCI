@@ -652,6 +652,13 @@ namespace HCI_Projekat
 
                 if (oznakaPromenjena)
                 {
+                    foreach(KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if (polje.NazivPolja.Split('-')[0].Trim().Equals(staraOznaka))
+                        {
+                            polje.NazivPolja = predmetIzmena.Oznaka + '-' + polje.NazivPolja.Split('-')[1].Trim();
+                        }
+                    }
                     racunarskiCentar.Predmeti.Remove(staraOznaka);
                     racunarskiCentar.Predmeti.Add(predmetIzmena.Oznaka, predmetIzmena);
                 }

@@ -621,7 +621,7 @@
                                         <RowDefinition Height="1*"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
-                                    <TextBox Text="" Name="oznakaSoftver" Grid.Column="0" Grid.Row="1" LostFocus="oznakaIzgubilaFocus" GotFocus="oznakaDobilaFokus" TextChanged="UnetaOznakaSoftvera" ContextMenu="{StaticResource TextBoxContextMenu}"/>
+                                    <TextBox Text="" Name="oznakaSoftver" Grid.Column="0" Grid.Row="1" LostFocus="oznakaIzgubilaFocus" GotFocus="oznakaDobilaFokus" TextChanged="UnetaOznakaSoftvera" ContextMenu="{StaticResource TextBoxContextMenu}" Grid.ColumnSpan="2" Margin="2,3,5,18" Grid.RowSpan="2"/>
                                     <TextBlock Grid.Row="1" Grid.Column="2" Name="GreskaOznakaSoftvera" FontSize="12" VerticalAlignment="Bottom" Foreground="Red"/>
                                     <Popup Name="popupOznaka"
                                             PlacementRectangle="80,0,0,0"

@@ -3391,7 +3391,11 @@ namespace HCI_Projekat
                         foreach (string id in oznakePolja)
                             racunarskiCentar.PoljaKalendara.Remove(id);
                         foreach (string poz in predmetiUcionice)
+                        {
+                            Console.WriteLine(poz);
                             racunarskiCentar.Predmeti[poz].PreostaliTermini++;
+                        }
+                            
                     }
                     else
                         return;

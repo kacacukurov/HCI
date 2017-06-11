@@ -924,7 +924,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60">
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1*" MinWidth="60">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -932,7 +932,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="40">
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1*" MinWidth="40">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -940,7 +940,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="1.5*" MinWidth="85">
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="1.2*" MinWidth="85">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1233,7 +1233,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Min dužina termina" Width="2*" MinWidth="115">
+                                <DataGridTextColumn Binding="{Binding Path = MinDuzinaTermina, FallbackValue='-'}" Header="Min dužina termina" Width="1.5*" MinWidth="115">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1241,7 +1241,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Broj termina" Width="1.5*" MinWidth="80">
+                                <DataGridTextColumn Binding="{Binding Path = BrTermina, FallbackValue='-'}" Header="Broj termina" Width="1*" MinWidth="80">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1249,7 +1249,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1.5*" MinWidth="60">
+                                <DataGridTextColumn Binding="{Binding Path = ProjektorString, FallbackValue='-'}" Header="Projektor" Width="1*" MinWidth="60">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1257,7 +1257,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1.5*" MinWidth="50">
+                                <DataGridTextColumn Binding="{Binding Path = TablaString, FallbackValue='-'}" Header="Tabla" Width="1*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1265,7 +1265,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="2*" MinWidth="85">
+                                <DataGridTextColumn Binding="{Binding Path = PametnaTablaString, FallbackValue='-'}" Header="Pametna tabla" Width="1.2*" MinWidth="85">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1281,7 +1281,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="1.5*" MinWidth="70">
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="2*" MinWidth="70">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1750,7 +1750,7 @@
                                         <ComboBox Grid.Column="0" Grid.Row="1" IsEditable="True" Name="SoftverFilterOSVrednost" TextBoxBase.TextChanged="filtrirajPoVrednosti" Visibility="Hidden">
                                             <ComboBoxItem Content="Linux"/>
                                             <ComboBoxItem Content="Windows"/>
-                                            <ComboBoxItem Content="Linux i Windows"/>
+                                            <ComboBoxItem Content="Windows i Linux"/>
                                         </ComboBox>
                                     </Grid>
                                 </Grid>
@@ -1828,7 +1828,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = GodIzdavanja, FallbackValue='-'}" Header="Godina izdavanja" Width="2*" MinWidth="100">
+                                <DataGridTextColumn Binding="{Binding Path = GodIzdavanja, FallbackValue='-'}" Header="Godina izdavanja" Width="1.5*" MinWidth="100">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1844,7 +1844,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Sajt , FallbackValue='-'}" Header="Sajt" Width="0.5*" MinWidth="50">
+                                <DataGridTextColumn Binding="{Binding Path = Sajt , FallbackValue='-'}" Header="Sajt" Width="1.5*" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -1852,7 +1852,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="*" MinWidth="70">
+                                <DataGridTextColumn Binding="{Binding Path = Opis, FallbackValue='-'}" Header="Opis" Width="2*" MinWidth="70">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

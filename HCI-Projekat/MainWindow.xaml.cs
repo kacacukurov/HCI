@@ -915,15 +915,15 @@ namespace HCI_Projekat
                 if (index == 2)
                 {
                     // kao kriterijum za filtriranje je izabran operativni sistem
-                    PredmetFilterUnos.Visibility = Visibility.Hidden;
-                    PredmetFilterOSVrednost.Visibility = Visibility.Visible;
-                    PredmetFilterOSVrednost.Text = "";
+                    SoftverFilterUnos.Visibility = Visibility.Hidden;
+                    SoftverFilterOSVrednost.Visibility = Visibility.Visible;
+                    SoftverFilterOSVrednost.Text = "";
                 }
                 else
                 {
-                    PredmetFilterOSVrednost.Text = "";
-                    PredmetFilterUnos.Visibility = Visibility.Visible;
-                    PredmetFilterOSVrednost.Visibility = Visibility.Hidden;
+                    SoftverFilterOSVrednost.Text = "";
+                    SoftverFilterUnos.Visibility = Visibility.Visible;
+                    SoftverFilterOSVrednost.Visibility = Visibility.Hidden;
                 }
                 ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
                 cv.Filter = null;
@@ -1206,7 +1206,7 @@ namespace HCI_Projekat
                 if (indexKriterijuma == 2)
                 {
                     // izabrano je filtriranje po operativnom sistemu
-                    string vrednost = UcionicaFilterOSVrednost.Text.Trim();
+                    string vrednost = SoftverFilterOSVrednost.Text.Trim();
 
                     ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
                     if (vrednost == "")
@@ -1216,7 +1216,7 @@ namespace HCI_Projekat
                         cv.Filter = o =>
                         {
                             Softver s = o as Softver;
-                            if (vrednost.ToLower() == "linux" || vrednost.ToLower() == "windows" || vrednost.ToLower() == "linux i windows")
+                            if (vrednost.ToLower() == "linux" || vrednost.ToLower() == "windows" || vrednost.ToLower() == "windows i linux")
                                 return (s.OperativniSistem.ToUpper().Contains(vrednost.ToUpper()));
                             else
                                 return (s.OperativniSistem.ToUpper().StartsWith(vrednost.ToUpper()));

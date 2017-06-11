@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCI_Projekat"
         mc:Ignorable="d"
-        Title="Dodavanje novog predmeta" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Height="500" Width="400">
+        Title="Dodavanje novog predmeta" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Height="500" Width="450">
     <Window.Resources>
         <Style x:Key="ButtonStyleZavrsi" TargetType="{x:Type Button}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -183,7 +183,7 @@
                 <Button Width="110" Content="Sačuvaj novi unos" Click="noviUnos" Name="potvrdiUnos" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}"/>
             </Viewbox>
             <Viewbox Grid.Column="1" Margin="10,1,10,1">
-                <Button Width="140" Content="Vrati postojeći predmet" Click="stariUnos" Name="odbaciUnos" Foreground="White" Style="{StaticResource ButtonStyleNastavi}"/>
+                <Button Width="145" Content="Vrati postojeći predmet" Click="stariUnos" Name="odbaciUnos" Foreground="White" Style="{StaticResource ButtonStyleNastavi}"/>
             </Viewbox>
         </Grid>
     </Grid>

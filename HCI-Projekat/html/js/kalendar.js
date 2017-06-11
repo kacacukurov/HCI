@@ -548,7 +548,7 @@ function filtrirajPodatke() {       //u zavisnosti od toga koji je filter odabra
         prikaziCeluNedelju();
     } else if (vrstaFiltera == "Dan") {
         prikaziPoDanu();
-    } else if (vrstaFiltera == "Ucionica") {
+    } else if (vrstaFiltera == "Učionica") {
         prikaziPoUcionici();
     } else if (vrstaFiltera == "Smer") {
         prikaziPoSmeru();
@@ -567,7 +567,7 @@ function vrstaFilteraPromenjena() {     //kada se promeni vrsta filtera, da se m
         $('#podaciFiltera').append('<option>Četvrtak</option>');
         $('#podaciFiltera').append('<option>Petak</option>');
         $('#podaciFiltera').append('<option>Subota</option>');
-    } else if (vrstaFiltera == "Ucionica") {
+    } else if (vrstaFiltera == "Učionica") {
         for (var i = 0; i < ucioniceLista.length; i++) {
             $('#podaciFiltera').append('<option>' + ucioniceLista[i].oznaka + '</option>');
         }

@@ -530,6 +530,13 @@ namespace HCI_Projekat
 
                 if (oznakaIzmenjena)
                 {
+                    foreach (KalendarPolje polje in racunarskiCentar.PoljaKalendara.Values)
+                    {
+                        if (polje.Ucionica.Trim().Equals(staraOznaka))
+                        {
+                            polje.Ucionica = ucionicaIzmena.Oznaka;
+                        }
+                    }
                     racunarskiCentar.Ucionice.Remove(staraOznaka);
                     racunarskiCentar.Ucionice.Add(ucionicaIzmena.Oznaka, ucionicaIzmena);
                 }

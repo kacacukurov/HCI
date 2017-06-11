@@ -975,7 +975,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -985,7 +985,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Text="Oznaka: " FontWeight="Bold" />
+                                    <TextBlock Text="Oznaka: " FontWeight="Bold"/>
                                     <TextBlock Text="{Binding Oznaka}" Grid.Column="1" />
                                     <TextBlock Text="Broj radnih mesta: " FontWeight="Bold" Grid.Row="1" />
                                     <TextBlock Text="{Binding BrojRadnihMesta}" Grid.Column="1" Grid.Row="1" />
@@ -1017,7 +1017,7 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="8">
+                            <Grid Grid.Column="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1028,10 +1028,10 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeUcioniceClick" Name="dodajUcionicuButton" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniUcionicuClick" Name="izmeniUcionicuButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Dodaj</TextBlock>
+                                            <TextBlock>Izmeni</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
@@ -1055,7 +1055,7 @@
                                     </Button.Content>
                                 </Button>
                             </Grid>
-                            <Grid Grid.Column="6">
+                            <Grid Grid.Column="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1066,10 +1066,10 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniUcionicuClick" Name="izmeniUcionicuButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeUcioniceClick" Name="dodajUcionicuButton" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Izmeni</TextBlock>
+                                            <TextBlock>Dodaj</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
@@ -1351,7 +1351,7 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="8">
+                            <Grid Grid.Column="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1362,10 +1362,10 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjePredmetaClick" Name="dodajPredmetButton" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniPredmetClick" Name="izmeniPredmetButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Dodaj</TextBlock>
+                                            <TextBlock>Izmeni</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
@@ -1389,7 +1389,7 @@
                                     </Button.Content>
                                 </Button>
                             </Grid>
-                            <Grid Grid.Column="6">
+                            <Grid Grid.Column="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1400,10 +1400,10 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniPredmetClick" Name="izmeniPredmetButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjePredmetaClick" Name="dodajPredmetButton" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Izmeni</TextBlock>
+                                            <TextBlock>Dodaj</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
@@ -1481,7 +1481,7 @@
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="0" Grid.Row="1" Name="SmerFilterUnos" TextChanged="filtrirajSmer"/>
                                     </Grid>
-                                    <Grid Grid.Column="2" Name="DateGrid" Visibility="Hidden">
+                                    <Grid Grid.Column="2" Name="DateGrid" Visibility="Collapsed">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.7*"/>
                                             <ColumnDefinition Width="2*"/>
@@ -1613,7 +1613,7 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="8">
+                            <Grid Grid.Column="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1624,10 +1624,10 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSmeraClick" Name="dodajSmerButton" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSmerClick" Name="izmeniSmerButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Dodaj</TextBlock>
+                                            <TextBlock>Izmeni</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
@@ -1651,7 +1651,7 @@
                                     </Button.Content>
                                 </Button>
                             </Grid>
-                            <Grid Grid.Column="6">
+                            <Grid Grid.Column="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1662,10 +1662,10 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSmerClick" Name="izmeniSmerButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSmeraClick" Name="dodajSmerButton" Foreground="White" Style="{StaticResource ButtonStyleZavrsi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Izmeni</TextBlock>
+                                            <TextBlock>Dodaj</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
@@ -1913,7 +1913,7 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="8">
+                            <Grid Grid.Column="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1924,14 +1924,10 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSoftveraClick" Name="dodajSoftverButton" 
-                                        Foreground="White" Style="{StaticResource ButtonStyleZavrsi}"
-                                        Command="{Binding CmdOpenDialog}"
-                                        featureTouring:TourHelper.ElementID="klikniDodavanje"
-                                        featureTouring:TourHelper.Placement="BottomCenter">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSoftverClick" Name="izmeniSoftverButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Dodaj</TextBlock>
+                                            <TextBlock>Izmeni</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
@@ -1955,7 +1951,7 @@
                                     </Button.Content>
                                 </Button>
                             </Grid>
-                            <Grid Grid.Column="6">
+                            <Grid Grid.Column="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="8*"/>
@@ -1966,10 +1962,14 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSoftverClick" Name="izmeniSoftverButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="dodavanjeSoftveraClick" Name="dodajSoftverButton" 
+                                        Foreground="White" Style="{StaticResource ButtonStyleZavrsi}"
+                                        Command="{Binding CmdOpenDialog}"
+                                        featureTouring:TourHelper.ElementID="klikniDodavanje"
+                                        featureTouring:TourHelper.Placement="BottomCenter">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
-                                            <TextBlock>Izmeni</TextBlock>
+                                            <TextBlock>Dodaj</TextBlock>
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>

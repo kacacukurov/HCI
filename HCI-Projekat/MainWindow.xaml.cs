@@ -932,22 +932,28 @@ namespace HCI_Projekat
 
         private void otvoriDatum1(object sender, KeyEventArgs e)
         {
-            if (SmerFilterDatumDoVrednost.IsDropDownOpen)
-                SmerFilterDatumDoVrednost.IsDropDownOpen = false;
-            if (e.Key == Key.Tab)
+            if (SmerFilterKriterijum.Text.Trim() == "Datum uvođenja")
             {
-                if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
-                    SmerFilterDatumOdVrednost.IsDropDownOpen = true; 
+                if (SmerFilterDatumDoVrednost.IsDropDownOpen)
+                    SmerFilterDatumDoVrednost.IsDropDownOpen = false;
+                if (e.Key == Key.Tab)
+                {
+                    if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
+                        SmerFilterDatumOdVrednost.IsDropDownOpen = true;
+                }
             }
         }
 
         private void otvoriDatum2(object sender, KeyEventArgs e)
         {
-            SmerFilterDatumOdVrednost.IsDropDownOpen = false;
-            if (e.Key == Key.Tab)
+            if (SmerFilterKriterijum.Text.Trim() == "Datum uvođenja")
             {
-                if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
-                    SmerFilterDatumDoVrednost.IsDropDownOpen = true;
+                SmerFilterDatumOdVrednost.IsDropDownOpen = false;
+                if (e.Key == Key.Tab)
+                {
+                    if (!((Keyboard.Modifiers & (ModifierKeys.Shift)) == ModifierKeys.Shift))
+                        SmerFilterDatumDoVrednost.IsDropDownOpen = true;
+                }
             }
         }
 
@@ -3262,9 +3268,9 @@ namespace HCI_Projekat
 
                 string tekstUpozorenja = potvrda.porukaUpozorenja.Text;
                 if (predmetiUcioniceBezDupl.Count == 1)
-                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + " predmet u izabranoj učionici!";
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + "predmet u izabranoj učionici!";
                 else
-                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + " predmete u izabranoj učionici!";
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + "predmete u izabranoj učionici!";
 
                 if (oznakePolja.Count > 0)
                 {
@@ -3366,6 +3372,13 @@ namespace HCI_Projekat
                     brojAktivnihSmerova--;
                 }
                 List<string> predmetiUcioniceBezDupl = predmetiUcionice.Distinct().ToList();
+
+                string tekstUpozorenja = potvrda.porukaUpozorenja.Text;
+                if (predmetiUcioniceBezDupl.Count == 1)
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + "predmet u izabranoj učionici!";
+                else
+                    potvrda.porukaUpozorenja.Text = tekstUpozorenja + "predmete u izabranoj učionici!";
+
                 if (oznakePolja.Count > 0)
                 {
                     for (int i = 0; i < predmetiUcioniceBezDupl.Count; i++)

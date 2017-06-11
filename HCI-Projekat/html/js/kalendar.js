@@ -368,8 +368,7 @@ function dodajDogadjaje(data) {     //dodavanje vec postojecih  polja u kalendar
 }
 
 function predmetPromenjen() {   //kada se odabere novi predmet u comboboxu
-    var select = document.getElementById("predmeti");
-    var id = select.options[select.selectedIndex].id;
+    var id = document.getElementById('predmeti').value;
     cefCustomObject.dobaviSmerovePredmeta(id);
     $('#poljeKalendara').text(id + '-' + $('#poljeKalendara').text().split('-')[1]);
     $('#poljeKalendara').data('event', {

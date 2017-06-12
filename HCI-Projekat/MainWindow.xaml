@@ -549,7 +549,7 @@
                         </MenuItem.Style>
                         <MenuItem Header="_Dodavanje" Background="White">
                             <MenuItem.Icon>
-                                <Image Source="picture/plus.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/plus.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem Click="dodavanjeUcioniceClick" Header="_Učionica" InputGestureText="Ctrl+U">
                                 <MenuItem.InputBindings>
@@ -578,7 +578,7 @@
 
                         <MenuItem Header="_Pregled" Background="White">
                             <MenuItem.Icon>
-                                <Image Source="picture/view.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/view.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem Click="pregledKalendaraClick" Header="_Kalendar" InputGestureText="Ctrl+Alt+K" Background="White">
                                 <MenuItem.InputBindings>
@@ -615,7 +615,7 @@
 
                         <MenuItem Click="sacuvajKalendar" Header="_Sačuvaj" InputGestureText="Ctrl+S">
                             <MenuItem.Icon>
-                                <Image Source="picture/save.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/save.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource save}"></KeyBinding>
@@ -624,7 +624,7 @@
 
                         <MenuItem Click="otvoriKalendar" Header="_Otvori" InputGestureText="Ctrl+O">
                             <MenuItem.Icon>
-                                <Image Source="picture/open.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/open.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="O" Modifiers="Ctrl" Command="{StaticResource open}"></KeyBinding>
@@ -635,7 +635,7 @@
 
                         <MenuItem Click="exitClick" Header="_Ugasi" InputGestureText="Ctrl+Q" Name="MenuItemUgasi" Background="White">
                             <MenuItem.Icon>
-                                <Image Source="picture/power.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/power.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource exit}"></KeyBinding>
@@ -652,7 +652,7 @@
                         </MenuItem.Style>
                         <MenuItem Click="undoClick" Header="_Undo" InputGestureText="Ctrl+Z" Name="MenuItemUndo" IsEnabled="False" Background="White">
                             <MenuItem.Icon>
-                                <Image Source="picture/undo.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/undo.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Z" Modifiers="Ctrl" Command="{StaticResource undo}"></KeyBinding>
@@ -661,7 +661,7 @@
 
                         <MenuItem Click="redoClick" Header="_Redo" InputGestureText="Ctrl+Y" Name="MenuItemRedo" IsEnabled="False" Background="White">
                             <MenuItem.Icon>
-                                <Image Source="picture/redo.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/redo.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Y" Modifiers="Ctrl" Command="{StaticResource redo}"></KeyBinding>
@@ -672,7 +672,7 @@
 
                         <MenuItem Click="izmeniElement" Header="_Izmeni element tabele" InputGestureText="Ctrl+I" Name="MenuItemIzmeni" IsEnabled="False" Background="White">
                             <MenuItem.Icon>
-                                <Image Source="picture/edit.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/edit.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="I" Modifiers="Ctrl" Command="{StaticResource izmeni}"></KeyBinding>
@@ -681,7 +681,7 @@
 
                         <MenuItem Click="obrisiElement" Header="_Obriši element tabele" InputGestureText="Ctrl+delete" Name="MenuItemObrisi" IsEnabled="False" Background="White">
                             <MenuItem.Icon>
-                                <Image Source="picture/delete.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/delete.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Delete" Modifiers="Ctrl" Command="{StaticResource obrisi}"></KeyBinding>
@@ -692,7 +692,7 @@
 
                         <MenuItem Click="otvoriKriterijumFilter" Header="_Filtriranje elemenata tabele" InputGestureText="Ctrl+Shift+F" Name="MenuItemIzborFiltera" IsEnabled="False">
                             <MenuItem.Icon>
-                                <Image Source="picture/filter.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/filter.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{StaticResource filter}"></KeyBinding>
@@ -701,7 +701,7 @@
 
                         <MenuItem Click="pretragaFokus" Header="_Pretraga elemenata tabele" InputGestureText="Ctrl+Shift+P" Name="MenuItemPretraga" IsEnabled="False">
                             <MenuItem.Icon>
-                                <Image Source="picture/find.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/find.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="P" Modifiers="Ctrl+Shift" Command="{StaticResource pretraga}"></KeyBinding>
@@ -1028,7 +1028,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniUcionicuClick" Name="izmeniUcionicuButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniElement" Name="izmeniUcionicuButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Izmeni</TextBlock>
@@ -1362,7 +1362,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniPredmetClick" Name="izmeniPredmetButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniElement" Name="izmeniPredmetButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Izmeni</TextBlock>
@@ -1624,7 +1624,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSmerClick" Name="izmeniSmerButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniElement" Name="izmeniSmerButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Izmeni</TextBlock>
@@ -1924,7 +1924,7 @@
                                     <RowDefinition Height="6*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniSoftverClick" Name="izmeniSoftverButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
+                                <Button Grid.Column="1" Grid.Row="1" Click="izmeniElement" Name="izmeniSoftverButton" Foreground="White" Style="{StaticResource ButtonStyleNastavi}">
                                     <Button.Content>
                                         <Viewbox Margin="5,0,5,0">
                                             <TextBlock>Izmeni</TextBlock>

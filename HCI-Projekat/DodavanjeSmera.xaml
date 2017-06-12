@@ -320,7 +320,7 @@
                         </MenuItem.Style>
                         <MenuItem Click="finishClick" Header="_Sačuvaj" InputGestureText="Ctrl+S">
                             <MenuItem.Icon>
-                                <Image Source="picture/save.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/save.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="S" Modifiers="Ctrl" Command="{StaticResource zavrsi}"></KeyBinding>
@@ -329,7 +329,7 @@
 
                         <MenuItem Click="cancelClick" Header="_Odustani" InputGestureText="Ctrl+Q">
                             <MenuItem.Icon>
-                                <Image Source="picture/leave.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/leave.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="Q" Modifiers="Ctrl" Command="{StaticResource odustani}"></KeyBinding>
@@ -346,7 +346,7 @@
                         </MenuItem.Style>
                         <MenuItem Header="_Cut" InputGestureText="Ctrl+X" Command="ApplicationCommands.Cut">
                             <MenuItem.Icon>
-                                <Image Source="picture/cut.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/cut.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="X" Modifiers="Ctrl" Command="ApplicationCommands.Cut"></KeyBinding>
@@ -355,7 +355,7 @@
 
                         <MenuItem Header="_Copy" InputGestureText="Ctrl+C" Command="ApplicationCommands.Copy">
                             <MenuItem.Icon>
-                                <Image Source="picture/copy.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/copy.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Ctrl" Command="ApplicationCommands.Copy"></KeyBinding>
@@ -364,7 +364,7 @@
 
                         <MenuItem Header="_Paste" InputGestureText="Ctrl+V" Command="ApplicationCommands.Paste">
                             <MenuItem.Icon>
-                                <Image Source="picture/paste.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/paste.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="V" Modifiers="Ctrl" Command="ApplicationCommands.Paste"></KeyBinding>
@@ -376,7 +376,7 @@
                     <MenuItem Header="_Help" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <MenuItem Click="otvoriHelp" Header="_Help" InputGestureText="F1" Name="MenuItemHelp">
                             <MenuItem.Icon>
-                                <Image Source="picture/help.png" Stretch="UniformToFill" Width="17" Height="17" ToolTip="Undo"/>
+                                <Image Source="picture/help.png" Stretch="UniformToFill" Width="17" Height="17"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem.Style>

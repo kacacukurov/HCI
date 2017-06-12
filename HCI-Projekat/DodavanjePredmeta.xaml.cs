@@ -121,6 +121,7 @@ namespace HCI_Projekat
         {
             if (inicijalizacija)
             {
+                softverPretragaPoljePredmet.Text = "";
                 if ((bool)Linux.IsChecked)
                 {
                     // ukoliko postoje vec prethodno izabrani softveri, proverava se da li medju njima ima neki
@@ -241,8 +242,15 @@ namespace HCI_Projekat
                 cv.Filter = o =>
                 {
                     Softver s = o as Softver;
-                    return (s.Naziv.ToUpper().Contains(vrednost.ToUpper()) || s.Oznaka.ToUpper().Contains(vrednost.ToUpper())
-                    || s.OperativniSistem.ToUpper().Contains(vrednost.ToUpper()));
+                    if ((bool)Linux.IsChecked)
+                        return ((s.Naziv.ToUpper().Contains(vrednost.ToUpper()) || s.Oznaka.ToUpper().Contains(vrednost.ToUpper())
+                    || s.OperativniSistem.ToUpper().Contains(vrednost.ToUpper())) && (s.OperativniSistem.ToUpper().Equals("LINUX") || s.OperativniSistem.ToUpper().Contains("LINUX")));
+                    else if ((bool)Windows.IsChecked)
+                        return ((s.Naziv.ToUpper().Contains(vrednost.ToUpper()) || s.Oznaka.ToUpper().Contains(vrednost.ToUpper())
+                    || s.OperativniSistem.ToUpper().Contains(vrednost.ToUpper())) && (s.OperativniSistem.ToUpper().Equals("WINDOWS") || s.OperativniSistem.ToUpper().Contains("WINDOWS")));
+                    else
+                        return ((s.Naziv.ToUpper().Contains(vrednost.ToUpper()) || s.Oznaka.ToUpper().Contains(vrednost.ToUpper())
+                    || s.OperativniSistem.ToUpper().Contains(vrednost.ToUpper())) && (s.OperativniSistem.ToUpper().Contains("LINUX") || s.OperativniSistem.ToUpper().Contains("WINDOWS")));
                 };
             }
         }

@@ -1265,7 +1265,7 @@ namespace HCI_Projekat
                 bool nemaReciSaUpitnikom = true;
                 foreach(string token in tokens)
                 {
-                    if(token.StartsWith("?"))
+                    if(token.StartsWith("?") && sugestijeUcionica.Contains(token))
                     {
                         nemaReciSaUpitnikom = false;
                         break;
@@ -1293,10 +1293,19 @@ namespace HCI_Projekat
                             brojReciSaUpitnikom++;
                     }
 
+                    if(brojReciSaUpitnikom == 1)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući dve ključne reči!");
+                        UcionicaPretragaUnos.Focus();
+                        UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
+                        return;
+                    }
+
                     if(brojReciSaUpitnikom > 2)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući samo dve ključne reči!");
                         UcionicaPretragaUnos.Focus();
                         UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
                         return;
@@ -1304,19 +1313,28 @@ namespace HCI_Projekat
 
                     // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
                     if (!kljucne_reci_1.Contains(tokens[0]))
+                    {
+                        notifierError.ShowError("Loše definisan upit u pretrazi učionica - nepostojeća ključna reč!");
                         loseDefinisanUpit = true;
+                    }
                     else
                     {
-                        if(tokens[0] == kljucna_rec_2)
+                        if (tokens[0] == kljucna_rec_2)
                         {
                             // operator moze biti bilo sta
                             if (!operatori_ar.Contains(tokens[1]))
+                            {
+                                notifierError.ShowError("Loše definisan upit u pretrazi učionica - nepostojeći operator!");
                                 loseDefinisanUpit = true;
+                            }
                             else
                             {
                                 // proveravamo da li iza operatora ima dva stringa
                                 if (tokens.Count > 3)
+                                {
+                                    notifierError.ShowError("Loše definisan upit u pretrazi učionica - iza operatora može biti samo jedan operand!");
                                     loseDefinisanUpit = true;
+                                }
                                 else {
                                     // vrednost iza operatora mora biti int vrednost
                                     try
@@ -1325,6 +1343,7 @@ namespace HCI_Projekat
                                     }
                                     catch
                                     {
+                                        notifierError.ShowError("Loše definisan upit u pretrazi učionica - operand mora biti ceo broj!");
                                         loseDefinisanUpit = true;
                                     }
                                 }
@@ -1334,14 +1353,16 @@ namespace HCI_Projekat
                         {
                             // operator moze biti != ili =
                             if (tokens[1] != "?=" && tokens[1] != "?!=")
+                            {
+                                notifierError.ShowError("Loše definisan upit u pretrazi učionica - iza izabrane ključne reči može doći isključivo operator za jednakost ili nejednakost!");
                                 loseDefinisanUpit = true;
+                            }
                         }
                     }
 
                     if(loseDefinisanUpit)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Loše definisan upit u pretrazi učionica!");
                         UcionicaPretragaUnos.Focus();
                         UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
                     }
@@ -1463,7 +1484,7 @@ namespace HCI_Projekat
                 bool nemaReciSaUpitnikom = true;
                 foreach (string token in tokens)
                 {
-                    if (token.StartsWith("?"))
+                    if (token.StartsWith("?") && sugestijePredmeta.Contains(token))
                     {
                         nemaReciSaUpitnikom = false;
                         break;
@@ -1490,10 +1511,19 @@ namespace HCI_Projekat
                             brojReciSaUpitnikom++;
                     }
 
+                    if(brojReciSaUpitnikom == 1)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući dve ključne reči!");
+                        PredmetPretragaUnos.Focus();
+                        PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
+                        return;
+                    }
+
                     if (brojReciSaUpitnikom > 2)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući samo dve ključne reči!");
                         PredmetPretragaUnos.Focus();
                         PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
                         return;
@@ -1501,18 +1531,27 @@ namespace HCI_Projekat
 
                     // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
                     if (!kljucne_reci_1.Contains(tokens[0]))
+                    {
+                        notifierError.ShowError("Loše definisan upit u pretrazi predmeta - nepostojeća ključna reč!");
                         loseDefinisanUpit = true;
+                    }
                     else
                     {
-                        if (tokens[0] == "?velicina_grupe" || tokens[0] == "?min_duzina_termina" || tokens[0] == "?br_termina") 
+                        if (tokens[0] == "?velicina_grupe" || tokens[0] == "?min_duzina_termina" || tokens[0] == "?br_termina")
                         {
                             if (tokens.Count > 3)
+                            {
+                                notifierError.ShowError("Loše definisan upit u pretrazi predmeta - iza operatora može biti samo jedan operand!");
                                 loseDefinisanUpit = true;
+                            }
                             else
                             {
                                 // operator moze biti bilo sta
                                 if (!operatori_ar.Contains(tokens[1]))
+                                {
+                                    notifierError.ShowError("Loše definisan upit u pretrazi predmeta - nepostojeći operator!");
                                     loseDefinisanUpit = true;
+                                }
                                 else
                                 {
                                     // vrednost iza operatora mora biti int vrednost
@@ -1522,6 +1561,7 @@ namespace HCI_Projekat
                                     }
                                     catch
                                     {
+                                        notifierError.ShowError("Loše definisan upit u pretrazi predmeta - operand mora biti ceo broj!");
                                         loseDefinisanUpit = true;
                                     }
                                 }
@@ -1531,14 +1571,16 @@ namespace HCI_Projekat
                         {
                             // operator moze biti != ili =
                             if (tokens[1] != "?=" && tokens[1] != "?!=")
+                            {
+                                notifierError.ShowError("Loše definisan upit u pretrazi predmeta - iza izabrane ključne reči može doći isključivo operator za jednakost ili nejednakost!");
                                 loseDefinisanUpit = true;
+                            }
                         }
                     }
 
                     if (loseDefinisanUpit)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Loše definisan upit u pretrazi predmeta!");
                         PredmetPretragaUnos.Focus();
                         PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
                     }
@@ -1736,7 +1778,7 @@ namespace HCI_Projekat
                 bool nemaReciSaUpitnikom = true;
                 foreach (string token in tokens)
                 {
-                    if (token.StartsWith("?"))
+                    if (token.StartsWith("?") && sugestijeSmerova.Contains(token))
                     {
                         nemaReciSaUpitnikom = false;
                         break;
@@ -1763,10 +1805,19 @@ namespace HCI_Projekat
                             brojReciSaUpitnikom++;
                     }
 
+                    if(brojReciSaUpitnikom == 1)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući dve ključne reči!");
+                        SmerPretragaUnos.Focus();
+                        SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
+                        return;
+                    }
+
                     if (brojReciSaUpitnikom > 2)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući samo dve ključne reči!");
                         SmerPretragaUnos.Focus();
                         SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
                         return;
@@ -1774,18 +1825,23 @@ namespace HCI_Projekat
 
                     // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
                     if (!kljucne_reci_1.Contains(tokens[0]))
+                    {
+                        notifierError.ShowError("Loše definisan upit u pretrazi smerova - nepostojeća ključna reč!");
                         loseDefinisanUpit = true;
+                    }
                     else
                     {
                         // operator moze biti bilo sta
                         if (!operatori_ar.Contains(tokens[1]))
+                        {
+                            notifierError.ShowError("Loše definisan upit u pretrazi smerova - nepostojeći operator!");
                             loseDefinisanUpit = true;
+                        }
                     }
 
                     if (loseDefinisanUpit)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Loše definisan upit u pretrazi smerova!");
                         SmerPretragaUnos.Focus();
                         SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
                     }
@@ -1881,7 +1937,7 @@ namespace HCI_Projekat
                 bool nemaReciSaUpitnikom = true;
                 foreach (string token in tokens)
                 {
-                    if (token.StartsWith("?"))
+                    if (token.StartsWith("?") && sugestijeSoftvera.Contains(token))
                     {
                         nemaReciSaUpitnikom = false;
                         break;
@@ -1908,10 +1964,19 @@ namespace HCI_Projekat
                             brojReciSaUpitnikom++;
                     }
 
+                    if(brojReciSaUpitnikom == 1)
+                    {
+                        cv.Filter = null;
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući dve ključne reči!");
+                        SoftverPretragaUnos.Focus();
+                        SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
+                        return;
+                    }
+
                     if (brojReciSaUpitnikom > 2)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Upit može da sadrži samo jedan uslov!");
+                        notifierError.ShowError("Upit može da sadrži samo jedan uslov, uključujući samo dve ključne reči!");
                         SoftverPretragaUnos.Focus();
                         SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
                         return;
@@ -1919,17 +1984,26 @@ namespace HCI_Projekat
 
                     // izgled iskaza KLJUCNA_REC OPERATOR VREDNOST
                     if (!kljucne_reci_1.Contains(tokens[0]))
+                    {
+                        notifierError.ShowError("Loše definisan upit u pretrazi softvera - nepostojeća ključna reč!");
                         loseDefinisanUpit = true;
+                    }
                     else
                     {
                         if (tokens[0] == "?godina_izdavanja" || tokens[0] == "?cena")
                         {
                             if (tokens.Count > 3)
+                            {
+                                notifierError.ShowError("Loše definisan upit u pretrazi softvera - iza operatora može biti samo jedan operand!");
                                 loseDefinisanUpit = true;
+                            }
                             else {
                                 // operator moze biti bilo sta
                                 if (!operatori_ar.Contains(tokens[1]))
+                                {
+                                    notifierError.ShowError("Loše definisan upit u pretrazi softvera - nepostojeći operator!");
                                     loseDefinisanUpit = true;
+                                }
                                 else
                                 {
                                     if (tokens[0] == "?godina_izdavanja")
@@ -1941,6 +2015,7 @@ namespace HCI_Projekat
                                         }
                                         catch
                                         {
+                                            notifierError.ShowError("Loše definisan upit u pretrazi softvera - operand mora biti ceo broj!");
                                             loseDefinisanUpit = true;
                                         }
                                     }
@@ -1953,6 +2028,7 @@ namespace HCI_Projekat
                                         }
                                         catch
                                         {
+                                            notifierError.ShowError("Loše definisan upit u pretrazi softvera - operand mora biti realan broj!");
                                             loseDefinisanUpit = true;
                                         }
                                     }
@@ -1963,14 +2039,16 @@ namespace HCI_Projekat
                         {
                             // operator moze biti != ili =
                             if (tokens[1] != "?=" && tokens[1] != "?!=")
+                            {
+                                notifierError.ShowError("Loše definisan upit u pretrazi softvera - iza izabrane ključne reči može doći isključivo operator za jednakost ili nejednakost!");
                                 loseDefinisanUpit = true;
+                            }
                         }
                     }
 
                     if (loseDefinisanUpit)
                     {
                         cv.Filter = null;
-                        notifierError.ShowError("Loše definisan upit u pretrazi softvera!");
                         SoftverPretragaUnos.Focus();
                         SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
                     }
@@ -2391,10 +2469,13 @@ namespace HCI_Projekat
             {
                 if (e.Key == Key.Enter)
                 {
-                    UcionicaPretragaUnos.Text = UcionicaPretragaUnos.Text.Substring(0, UcionicaPretragaUnos.Text.Length-1) + sugestijeUcionicaListBox.SelectedItem.ToString();
-                    sugestijeUcionicaListBox.Visibility = Visibility.Collapsed;
-                    UcionicaPretragaUnos.Focus();
-                    UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
+                    if (sugestijeUcionicaListBox.SelectedItem != null && sugestijeUcionica.Contains(sugestijeUcionicaListBox.SelectedItem.ToString().Trim()))
+                    {
+                        UcionicaPretragaUnos.Text = UcionicaPretragaUnos.Text.Substring(0, UcionicaPretragaUnos.Text.Length - 1) + sugestijeUcionicaListBox.SelectedItem.ToString();
+                        sugestijeUcionicaListBox.Visibility = Visibility.Collapsed;
+                        UcionicaPretragaUnos.Focus();
+                        UcionicaPretragaUnos.CaretIndex = UcionicaPretragaUnos.Text.Length;
+                    }
                 }
 
                 if (e.Key == Key.Down)
@@ -2426,10 +2507,13 @@ namespace HCI_Projekat
             {
                 if (e.Key == Key.Enter)
                 {
-                    PredmetPretragaUnos.Text = PredmetPretragaUnos.Text.Substring(0, PredmetPretragaUnos.Text.Length - 1) + sugestijePredmetaListBox.SelectedItem.ToString();
-                    sugestijePredmetaListBox.Visibility = Visibility.Collapsed;
-                    PredmetPretragaUnos.Focus();
-                    PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
+                    if (sugestijePredmetaListBox.SelectedItem != null && sugestijePredmeta.Contains(sugestijePredmetaListBox.SelectedItem.ToString().Trim()))
+                    {
+                        PredmetPretragaUnos.Text = PredmetPretragaUnos.Text.Substring(0, PredmetPretragaUnos.Text.Length - 1) + sugestijePredmetaListBox.SelectedItem.ToString();
+                        sugestijePredmetaListBox.Visibility = Visibility.Collapsed;
+                        PredmetPretragaUnos.Focus();
+                        PredmetPretragaUnos.CaretIndex = PredmetPretragaUnos.Text.Length;
+                    }
                 }
 
                 if (e.Key == Key.Down)
@@ -2461,10 +2545,13 @@ namespace HCI_Projekat
             {
                 if (e.Key == Key.Enter)
                 {
-                    SmerPretragaUnos.Text = SmerPretragaUnos.Text.Substring(0, SmerPretragaUnos.Text.Length - 1) + sugestijeSmerListBox.SelectedItem.ToString();
-                    sugestijeSmerListBox.Visibility = Visibility.Collapsed;
-                    SmerPretragaUnos.Focus();
-                    SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
+                    if (sugestijeSmerListBox.SelectedItem != null && sugestijeSmerova.Contains(sugestijeSmerListBox.SelectedItem.ToString().Trim()))
+                    {
+                        SmerPretragaUnos.Text = SmerPretragaUnos.Text.Substring(0, SmerPretragaUnos.Text.Length - 1) + sugestijeSmerListBox.SelectedItem.ToString();
+                        sugestijeSmerListBox.Visibility = Visibility.Collapsed;
+                        SmerPretragaUnos.Focus();
+                        SmerPretragaUnos.CaretIndex = SmerPretragaUnos.Text.Length;
+                    }
                 }
 
                 if (e.Key == Key.Down)
@@ -2496,10 +2583,13 @@ namespace HCI_Projekat
             {
                 if (e.Key == Key.Enter)
                 {
-                    SoftverPretragaUnos.Text = SoftverPretragaUnos.Text.Substring(0, SoftverPretragaUnos.Text.Length - 1) + sugestijeSoftveraListBox.SelectedItem.ToString();
-                    sugestijeSoftveraListBox.Visibility = Visibility.Collapsed;
-                    SoftverPretragaUnos.Focus();
-                    SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
+                    if (sugestijeSoftveraListBox.SelectedItem != null && sugestijeSoftvera.Contains(sugestijeSoftveraListBox.SelectedItem.ToString().Trim()))
+                    {
+                        SoftverPretragaUnos.Text = SoftverPretragaUnos.Text.Substring(0, SoftverPretragaUnos.Text.Length - 1) + sugestijeSoftveraListBox.SelectedItem.ToString();
+                        sugestijeSoftveraListBox.Visibility = Visibility.Collapsed;
+                        SoftverPretragaUnos.Focus();
+                        SoftverPretragaUnos.CaretIndex = SoftverPretragaUnos.Text.Length;
+                    }
                 }
 
                 if (e.Key == Key.Down)
@@ -2603,20 +2693,30 @@ namespace HCI_Projekat
             string parametar = UcionicaFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaUcionica.ItemsSource);
-            if (filter == "")
-                cv.Filter = null;
-            else
+
+            if (parametar.ToUpper() != "OZNAKA" && parametar.ToUpper() != "BROJ RADNIH MESTA" && parametar.ToUpper() != "PROJEKTOR"
+                && parametar.ToUpper() != "TABLA" && parametar.ToUpper() != "PAMETNA TABLA" && parametar.ToUpper() != "OPERATIVNI SISTEM"
+                && parametar.ToUpper() != "OPIS")
             {
-                cv.Filter = o =>
+                notifierError.ShowError("Nepostojeći kriterijum za filtriranje učionica!");
+                cv.Filter = null;
+            }
+            else {
+                if (filter == "")
+                    cv.Filter = null;
+                else
                 {
-                    Ucionica u = o as Ucionica;
-                    if (parametar == "Oznaka")
-                        return (u.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Broj radnih mesta")
-                        return (u.BrojRadnihMesta.ToString().StartsWith(filter));
-                    else
-                        return (u.Opis.ToUpper().StartsWith(filter.ToUpper()));
-                };
+                    cv.Filter = o =>
+                    {
+                        Ucionica u = o as Ucionica;
+                        if (parametar == "Oznaka")
+                            return (u.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Broj radnih mesta")
+                            return (u.BrojRadnihMesta.ToString().StartsWith(filter));
+                        else
+                            return (u.Opis.ToUpper().StartsWith(filter.ToUpper()));
+                    };
+                }
             }
         }
 
@@ -2627,26 +2727,38 @@ namespace HCI_Projekat
             string parametar = PredmetFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaPredmeta.ItemsSource);
-            if (filter == "")
-                cv.Filter = null;
-            else
+
+            if (parametar.ToUpper() != "NAZIV" && parametar.ToUpper() != "OZNAKA" && parametar.ToUpper() != "VELIČINA GRUPE"
+                && parametar.ToUpper() != "OPIS" && parametar.ToUpper() != "MINIMALNA DUŽINA TERMINA" && parametar.ToUpper() != "BROJ TERMINA"
+                && parametar.ToUpper() != "PROJEKTOR" && parametar.ToUpper() != "TABLA" && parametar.ToUpper() != "PAMETNA TABLA"
+                && parametar.ToUpper() != "OPERATIVNI SISTEM")
             {
-                cv.Filter = o =>
+                notifierError.ShowError("Nepostojeći kriterijum za filtriranje predmeta!");
+                cv.Filter = null;
+            }
+
+            else {
+                if (filter == "")
+                    cv.Filter = null;
+                else
                 {
-                    Predmet p = o as Predmet;
-                    if (parametar == "Naziv")
-                        return (p.Naziv.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Oznaka")
-                        return (p.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Veličina grupe")
-                        return (p.VelicinaGrupe.ToString().StartsWith(filter));
-                    else if (parametar == "Opis")
-                        return (p.Opis.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Minimalna dužina termina")
-                        return (p.MinDuzinaTermina.ToString().StartsWith(filter));
-                    else
-                        return (p.BrTermina.ToString().StartsWith(filter));
-                };
+                    cv.Filter = o =>
+                    {
+                        Predmet p = o as Predmet;
+                        if (parametar == "Naziv")
+                            return (p.Naziv.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Oznaka")
+                            return (p.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Veličina grupe")
+                            return (p.VelicinaGrupe.ToString().StartsWith(filter));
+                        else if (parametar == "Opis")
+                            return (p.Opis.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Minimalna dužina termina")
+                            return (p.MinDuzinaTermina.ToString().StartsWith(filter));
+                        else
+                            return (p.BrTermina.ToString().StartsWith(filter));
+                    };
+                }
             }
         }
 
@@ -2657,28 +2769,38 @@ namespace HCI_Projekat
             string parametar = SoftverFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSoftvera.ItemsSource);
-            if (filter == "")
-                cv.Filter = null;
-            else
+
+            if (parametar.ToUpper() != "NAZIV" && parametar.ToUpper() != "OZNAKA" && parametar.ToUpper() != "OPERATIVNI SISTEM"
+                && parametar.ToUpper() != "PROIZVOĐAČ" && parametar.ToUpper() != "GODINA IZDAVANJA" && parametar.ToUpper() != "CENA"
+                && parametar.ToUpper() != "SAJT" && parametar.ToUpper() != "OPIS")
             {
-                cv.Filter = o =>
+                notifierError.ShowError("Nepostojeći kriterijum za filtriranje softvera!");
+                cv.Filter = null;
+            }
+            else {
+                if (filter == "")
+                    cv.Filter = null;
+                else
                 {
-                    Softver s = o as Softver;
-                    if (parametar == "Naziv")
-                        return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Oznaka")
-                        return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Proizvođač")
-                        return (s.Proizvodjac.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Godina izdavanja")
-                        return (s.GodIzdavanja.ToString().StartsWith(filter));
-                    else if (parametar == "Cena")
-                        return (s.Cena.ToString().StartsWith(filter));
-                    else if (parametar == "Sajt")
-                        return (s.Sajt.ToUpper().StartsWith(filter.ToUpper()));
-                    else
-                        return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));
-                };
+                    cv.Filter = o =>
+                    {
+                        Softver s = o as Softver;
+                        if (parametar == "Naziv")
+                            return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Oznaka")
+                            return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Proizvođač")
+                            return (s.Proizvodjac.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Godina izdavanja")
+                            return (s.GodIzdavanja.ToString().StartsWith(filter));
+                        else if (parametar == "Cena")
+                            return (s.Cena.ToString().StartsWith(filter));
+                        else if (parametar == "Sajt")
+                            return (s.Sajt.ToUpper().StartsWith(filter.ToUpper()));
+                        else
+                            return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));
+                    };
+                }
             }
         }
 
@@ -2689,20 +2811,28 @@ namespace HCI_Projekat
             string parametar = SmerFilterKriterijum.Text.Trim();
 
             ICollectionView cv = CollectionViewSource.GetDefaultView(tabelaSmerova.ItemsSource);
-            if (filter == "")
-                cv.Filter = null;
-            else
+
+            if (parametar.ToUpper() != "OZNAKA" && parametar.ToUpper() != "NAZIV" && parametar.ToUpper() != "OPIS" && parametar.ToUpper() != "DATUM UVOĐENJA")
             {
-                cv.Filter = o =>
+                notifierError.ShowError("Nepostojeći kriterijum za filtriranje smerova!");
+                cv.Filter = null;
+            }
+            else {
+                if (filter == "")
+                    cv.Filter = null;
+                else
                 {
-                    Smer s = o as Smer;
-                    if (parametar == "Naziv")
-                        return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
-                    else if (parametar == "Oznaka")
-                        return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
-                    else
-                        return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));
-                };
+                    cv.Filter = o =>
+                    {
+                        Smer s = o as Smer;
+                        if (parametar == "Naziv")
+                            return (s.Naziv.ToUpper().StartsWith(filter.ToUpper()));
+                        else if (parametar == "Oznaka")
+                            return (s.Oznaka.ToUpper().StartsWith(filter.ToUpper()));
+                        else
+                            return (s.Opis.ToUpper().StartsWith(filter.ToUpper()));
+                    };
+                }
             }
         }
 

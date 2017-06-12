@@ -397,9 +397,20 @@ namespace HCI_Projekat
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    notifierError.ShowError("Godina nije dobro unesena, unesite broj!");
+                    notifierError.ShowError("Godina nije dobro unesena, unesite ceo pozitivan broj!");
                 });
-                godinaSoftver.Text = "";
+                vratiNaKorak2();
+                UpdateLayout();
+                godinaSoftver.Focus();
+                return false;
+            }
+
+            if (godina <= 0)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Godina nije dobro unesena, unesite ceo pozitivan broj!");
+                });
                 vratiNaKorak2();
                 UpdateLayout();
                 godinaSoftver.Focus();
@@ -411,9 +422,20 @@ namespace HCI_Projekat
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    notifierError.ShowError("Cena nije dobro unesena, unesite broj!");
+                    notifierError.ShowError("Cena nije dobro unesena, unesite realan pozitivan broj!");
                 });
-                cenaSoftver.Text = "";
+                vratiNaKorak2();
+                UpdateLayout();
+                cenaSoftver.Focus();
+                return false;
+            }
+
+            if (cena <= 0)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    notifierError.ShowError("Cena nije dobro unesena, unesite realan pozitivan broj!");
+                });
                 vratiNaKorak2();
                 UpdateLayout();
                 cenaSoftver.Focus();

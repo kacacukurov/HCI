@@ -215,7 +215,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 3)
+                if (prethodnaStanjaAplikacije.Count >= 10)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
@@ -239,7 +239,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 3)
+                if (prethodnaStanjaAplikacije.Count >= 10)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
@@ -601,6 +601,10 @@ namespace HCI_Projekat
                                 u.InstaliraniSoftveri.Remove(staraOznaka);
                                 ucioniceZaIzmenu.Add(u.Oznaka);
                             }
+                            else if(promenioSeNaziv && !promenilaSeOznaka)
+                            {
+                                ucioniceZaIzmenu.Add(u.Oznaka);
+                            }
                         }
                     }
                     // idemo kroz sve ucionice u kojima treba azurirati stanje softvera i menjamo staru oznaku novom (izbacili smo
@@ -608,7 +612,8 @@ namespace HCI_Projekat
                     foreach (string oznaka in ucioniceZaIzmenu)
                     {
                         Ucionica u = racunarskiCentar.Ucionice[oznaka];
-                        u.InstaliraniSoftveri.Add(softverIzmena.Oznaka);
+                        if(promenilaSeOznaka)
+                            u.InstaliraniSoftveri.Add(softverIzmena.Oznaka);
 
                         foreach (string s in u.InstaliraniSoftveri)
                         {
@@ -646,6 +651,10 @@ namespace HCI_Projekat
                                 p.Softveri.Remove(staraOznaka);
                                 predmetiZaIzmenu.Add(p.Oznaka);
                             }
+                            else if(promenioSeNaziv && !promenilaSeOznaka)
+                            {
+                                predmetiZaIzmenu.Add(p.Oznaka);
+                            }
                         }
                     }
                     // idemo kroz sve predmete u kojima treba azurirati stanje softvera i menjamo staru oznaku novom (izbacili smo
@@ -653,7 +662,8 @@ namespace HCI_Projekat
                     foreach (string oznaka in predmetiZaIzmenu)
                     {
                         Predmet p = racunarskiCentar.Predmeti[oznaka];
-                        p.Softveri.Add(softverIzmena.Oznaka);
+                        if(promenilaSeOznaka)
+                            p.Softveri.Add(softverIzmena.Oznaka);
 
                         foreach (string s in p.Softveri)
                         {
@@ -696,7 +706,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 3)
+                if (prethodnaStanjaAplikacije.Count >= 10)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);

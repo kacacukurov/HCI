@@ -315,7 +315,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 3)
+                if (prethodnaStanjaAplikacije.Count >= 10)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
@@ -339,7 +339,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 3)
+                if (prethodnaStanjaAplikacije.Count >= 10)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
@@ -560,7 +560,7 @@ namespace HCI_Projekat
                 string kljuc = Guid.NewGuid().ToString();
                 // proveravamo da li vec ima 10 koraka za undo operaciju, ako ima, izbacujemo prvi koji je ubacen kako bismo 
                 // i dalje imali 10 mogucih koraka, ali ukljucujuci i ovaj novi
-                if (prethodnaStanjaAplikacije.Count >= 3)
+                if (prethodnaStanjaAplikacije.Count >= 10)
                     prethodnaStanjaAplikacije.RemoveAt(0);
                 prethodnaStanjaAplikacije.Add(kljuc, staroStanje);
                 stekStanja.GetUndo().Push(kljuc);
